@@ -5,6 +5,7 @@
 *.suo
 *.user
 *.sln.docstates
+.vs/
 
 # Build results
 [Dd]ebug/
@@ -204,6 +205,14 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+
+# ==============================================================
+# StyleCop files
+# ==============================================================
+[Ss]tyle[Cc]op.*
+# Cache settings file
+Settings.StyleCop
+![Ss]tyle[Cc]op.json
 
 # ==============================================================
 # Special Folders/Files that have to be in the repository

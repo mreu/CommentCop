@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="DiagnosticAnalyzer.cs" author="Michael Reukauff">
-//   Copyright © 2016 Michael Reukauff
+// <copyright file="DiagnosticAnalyzer.cs" company="Michael Reukauff">
+//   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -21,17 +21,19 @@ namespace XmlDocAnalyzer
     public class XmlDocAnalyzerAnalyzer : DiagnosticAnalyzer
     {
         public const string DiagnosticId = "MR0001";
-        private const string Category = "Naming";
 
-        private const string MessageFormat = "Methods must be documented.";
+        private const string Category = "Documentation";
 
-        private static readonly string title = $"Methods must be documented ({DiagnosticId}).";
+        private static readonly string MessageFormat = $"Methods must have a xml documentation header ({DiagnosticId}).";
 
-        private const string Description = "A method element is missing a documentation header.";
+        private const string Title = "Methods must have a xml documentation header.";
 
-        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
+        private const string Description = "Methods must have a xml documentation header.";
+
+        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description);
 
         private static readonly Action<CompilationStartAnalysisContext> CompilationStartAction = HandleCompilationStart;
+
         private static readonly Action<SyntaxNodeAnalysisContext> MethodDeclarationAction = AnalyzeSymbol;
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

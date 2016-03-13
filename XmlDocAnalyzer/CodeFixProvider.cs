@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CodeFixProvider.cs" author="Michael Reukauff">
-//   Copyright © 2016 Michael Reukauff
+// <copyright file="CodeFixProvider.cs" company="Michael Reukauff">
+//   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ namespace XmlDocAnalyzer
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(XmlDocAnalyzerCodeFixProvider)), Shared]
     public class XmlDocAnalyzerCodeFixProvider : CodeFixProvider
     {
-        private const string Title = "Insert XML Documentation";
+        private const string Title = "Insert XML documentation header (MR0001)";
 
         public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(XmlDocAnalyzerAnalyzer.DiagnosticId);
 
@@ -56,7 +56,6 @@ namespace XmlDocAnalyzer
                     cancellationToken => GetTransformedDocumentAsync(context.Document, diagnostic, root, identifierToken, cancellationToken),
                     Title),
                 diagnostic);
-
         }
 
         private static async Task<Document> GetTransformedDocumentAsync(

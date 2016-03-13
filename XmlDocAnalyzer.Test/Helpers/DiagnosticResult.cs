@@ -1,8 +1,14 @@
-﻿using Microsoft.CodeAnalysis;
-using System;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="DiagnosticResult.cs" company="Michael Reukauff">
+//   Copyright © 2016 Michael Reukauff. All rights reserved.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace TestHelper
 {
+    using Microsoft.CodeAnalysis;
+    using System;
+
     /// <summary>
     /// Location where the diagnostic appears, as determined by path, line number, and column number.
     /// </summary>
@@ -20,13 +26,15 @@ namespace TestHelper
                 throw new ArgumentOutOfRangeException(nameof(column), "column must be >= -1");
             }
 
-            this.Path = path;
-            this.Line = line;
-            this.Column = column;
+            Path = path;
+            Line = line;
+            Column = column;
         }
 
         public string Path { get; }
+
         public int Line { get; }
+
         public int Column { get; }
     }
 
@@ -41,16 +49,12 @@ namespace TestHelper
         {
             get
             {
-                if (this.locations == null)
-                {
-                    this.locations = new DiagnosticResultLocation[] { };
-                }
-                return this.locations;
+                return locations ?? (locations = new DiagnosticResultLocation[] { });
             }
 
             set
             {
-                this.locations = value;
+                locations = value;
             }
         }
 
@@ -60,28 +64,10 @@ namespace TestHelper
 
         public string Message { get; set; }
 
-        public string Path
-        {
-            get
-            {
-                return this.Locations.Length > 0 ? this.Locations[0].Path : "";
-            }
-        }
+        public string Path => Locations.Length > 0 ? Locations[0].Path : string.Empty;
 
-        public int Line
-        {
-            get
-            {
-                return this.Locations.Length > 0 ? this.Locations[0].Line : -1;
-            }
-        }
+        public int Line => Locations.Length > 0 ? Locations[0].Line : -1;
 
-        public int Column
-        {
-            get
-            {
-                return this.Locations.Length > 0 ? this.Locations[0].Column : -1;
-            }
-        }
+        public int Column => Locations.Length > 0 ? Locations[0].Column : -1;
     }
 }
