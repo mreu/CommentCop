@@ -12,6 +12,8 @@ namespace XmlDocAnalyzer.Test
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using TestHelper;
 
+    using XmlDocAnalyzer.Methods;
+
     [TestClass]
     public class UnitTest : CodeFixVerifier
     {
@@ -49,7 +51,7 @@ namespace XmlDocAnalyzer.Test
             var expected = new DiagnosticResult
             {
                 Id = "MR0001",
-                Message = $"Methods must be documented.",
+                Message = "Methods must have a xml documentation header (MR0001).",
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[] {
@@ -98,7 +100,7 @@ namespace XmlDocAnalyzer.Test
         /// <returns>The diagnostic analyer.</returns>
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new XmlDocAnalyzerAnalyzer();
+            return new MR0001();
         }
         #endregion overrides
     }

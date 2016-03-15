@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer
+namespace XmlDocAnalyzer.Methods
 {
     using System;
     using System.Collections.Immutable;
@@ -28,7 +28,7 @@ namespace XmlDocAnalyzer
     {
         private const string Title = "Insert XML documentation header (MR0001)";
 
-        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(XmlDocAnalyzerAnalyzer.DiagnosticId);
+        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MR0001.DiagnosticId);
 
         public sealed override FixAllProvider GetFixAllProvider()
         {
@@ -41,7 +41,6 @@ namespace XmlDocAnalyzer
         {
             var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-            // TODO: Replace the following code with your own analysis, generating a CodeAction for each fix to suggest
             var diagnostic = context.Diagnostics.First();
             var diagnosticSpan = diagnostic.Location.SourceSpan;
 
@@ -149,13 +148,13 @@ namespace XmlDocAnalyzer
 
             var trivia = Trivia(doc);
 
-            SyntaxTriviaList newLeadingTrivia = leadingTrivia.Insert(insertionIndex, trivia);
+            SyntaxTriviaList newLeadingTrivia = leadingTrivia.Insert(insertionIndex, xmldoc2);
             SyntaxNode newElement = syntaxNode.WithLeadingTrivia(newLeadingTrivia);
 
             return document.WithSyntaxRoot(root.ReplaceNode(syntaxNode, newElement));
         }
 
-        private static SyntaxNode GetXmlDoc()
+        private static SyntaxTrivia GetXmlDoc()
         {
             var code = "/// <summary>" + Environment.NewLine +
                        "/// Summary text." + Environment.NewLine +
@@ -163,10 +162,9 @@ namespace XmlDocAnalyzer
                        "/// <param name=\"x\">The parm.</param>" + Environment.NewLine +
                        "/// <returns>Return text</returns>" + Environment.NewLine;
 
-            var tree = CSharpSyntaxTree.ParseText(code);
-            var root = tree.GetRoot();
+            var comment = Comment(code).WithAdditionalAnnotations(SyntaxAnnotation.ElasticAnnotation);
 
-            return root;
+            return comment;
         }
 
         private static SyntaxList<XmlNodeSyntax> GetSummary()
@@ -182,6 +180,7 @@ namespace XmlDocAnalyzer
                                     " ",
                                     " ",
                                     TriviaList()))),
+
                     XmlElement(
                         XmlElementStartTag(XmlName(Identifier("summary")))
                         .WithLessThanToken(Token(SyntaxKind.LessThanToken))
@@ -208,63 +207,6 @@ namespace XmlDocAnalyzer
 
                                 XmlText().WithTextTokens(TokenList(XmlTextNewLine(TriviaList(), "\n", "\n", TriviaList())))
                 });
-        }
-
-        private static CompilationUnitSyntax Summary()
-        {
-            return CompilationUnit()
-                .WithEndOfFileToken(
-                    Token(
-                        TriviaList(
-                            Trivia(
-                                DocumentationCommentTrivia(
-                                    SyntaxKind.SingleLineDocumentationCommentTrivia,
-                                    List<XmlNodeSyntax>(
-                                        new XmlNodeSyntax[]
-                                        {
-                                            XmlText()
-                                                .WithTextTokens(
-                                                    TokenList(
-                                                        XmlTextLiteral(
-                                                            TriviaList(DocumentationCommentExterior("///")),
-                                                            " ",
-                                                            " ",
-                                                            TriviaList()))),
-                                            XmlElement(
-                                                XmlElementStartTag(XmlName(Identifier("summary")))
-                                                .WithLessThanToken(Token(SyntaxKind.LessThanToken))
-                                                .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken)),
-                                                XmlElementEndTag(XmlName(Identifier("summary")))
-                                                .WithLessThanSlashToken(Token(SyntaxKind.LessThanSlashToken))
-                                                .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken)))
-                                                .WithContent(
-                                                    SingletonList<XmlNodeSyntax>(
-                                                        XmlText()
-                                                .WithTextTokens(
-                                                    TokenList(
-                                                        new[]
-                                                        {
-                                                            XmlTextNewLine(TriviaList(), "\n", "\n", TriviaList()),
-                                                            XmlTextLiteral(
-                                                                TriviaList(DocumentationCommentExterior("///")),
-                                                                " Summary text here",
-                                                                " Summary text here",
-                                                                TriviaList()),
-                                                            XmlTextNewLine(TriviaList(), "\n", "\n", TriviaList()),
-                                                            XmlTextLiteral(
-                                                                TriviaList(DocumentationCommentExterior("///")),
-                                                                " ",
-                                                                " ",
-                                                                TriviaList())
-                                                        })))),
-                                            XmlText()
-                                                .WithTextTokens(
-                                                    TokenList(
-                                                        XmlTextNewLine(TriviaList(), "\n", "\n", TriviaList())))
-                                        }))
-                                    .WithEndOfComment(Token(SyntaxKind.EndOfDocumentationCommentToken)))),
-                        SyntaxKind.EndOfFileToken,
-                        TriviaList())).NormalizeWhitespace();
         }
     }
 }

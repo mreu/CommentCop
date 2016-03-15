@@ -33,9 +33,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AnalyzerExtensions.cs" />
-    <Compile Include="CodeFixProvider.cs" />
-    <Compile Include="DiagnosticAnalyzer.cs" />
+    <Compile Include="Helper\Extensions.cs" />
+    <Compile Include="Methods\CodeFixProvider.cs" />
+    <Compile Include="Methods\MR0001PublicMethodsMustHaveXMLComment.cs" />
+    <Compile Include="Methods\MR0002InternalMethodsMustHaveXMLComment.cs" />
+    <Compile Include="Methods\MR0003InternalProtcetedMethodsMustHaveXMLComment.cs" />
+    <Compile Include="Methods\MR0004ProtectedMethodsMustHaveXMLComment.cs" />
+    <Compile Include="Methods\MR0005PrivateMethodsMustHaveXMLComment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -124,6 +128,7 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\v4.6\Microsoft.Portable.CSharp.targets" />
   <Target Name="AfterBuild">
     <GetAssemblyIdentity AssemblyFiles="$(OutDir)\$(AssemblyName).dll">
