@@ -1,0 +1,7 @@
+﻿https://johnkoerner.com/csharp/analyzing-xml-comments-in-your-roslyn-code-analyzer/
+
+https://joshvarty.wordpress.com/learn-roslyn-now/
+
+http://roslynquoter.azurewebsites.net/
+
+http://www.coderesx.com/roslyn/html/Welcome.htm

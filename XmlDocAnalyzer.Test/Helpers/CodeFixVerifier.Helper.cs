@@ -1,13 +1,19 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeActions;
-using Microsoft.CodeAnalysis.Formatting;
-using Microsoft.CodeAnalysis.Simplification;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CodeFixVerifier.Helper.cs" company="Michael Reukauff">
+//   Copyright © 2016 Michael Reukauff. All rights reserved.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace TestHelper
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CodeActions;
+    using Microsoft.CodeAnalysis.Formatting;
+    using Microsoft.CodeAnalysis.Simplification;
+
     /// <summary>
     /// Diagnostic Producer class with extra methods dealing with applying codefixes
     /// All methods are static
@@ -82,4 +88,3 @@ namespace TestHelper
         }
     }
 }
-

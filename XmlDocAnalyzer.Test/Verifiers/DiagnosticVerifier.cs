@@ -1,13 +1,17 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="DiagnosticVerifier.cs" company="Michael Reukauff">
+//   Copyright © 2016 Michael Reukauff. All rights reserved.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace TestHelper
 {
+    using System.Linq;
+    using System.Text;
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.Diagnostics;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     /// <summary>
     /// Superclass of all Unit Tests for DiagnosticAnalyzers
     /// </summary>
@@ -17,6 +21,7 @@ namespace TestHelper
         /// <summary>
         /// Get the CSharp analyzer being tested - to be implemented in non-abstract class
         /// </summary>
+        /// <returns>The disgnostic analayer.</returns>
         protected virtual DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
             return null;
@@ -25,6 +30,7 @@ namespace TestHelper
         /// <summary>
         /// Get the Visual Basic analyzer being tested (C#) - to be implemented in non-abstract class
         /// </summary>
+        /// <returns>The disgnostic analayer.</returns>
         protected virtual DiagnosticAnalyzer GetBasicDiagnosticAnalyzer()
         {
             return null;
@@ -32,7 +38,6 @@ namespace TestHelper
         #endregion
 
         #region Verifier wrappers
-
         /// <summary>
         /// Called to test a C# DiagnosticAnalyzer when applied on the single inputted string as a source
         /// Note: input a DiagnosticResult for each Diagnostic expected
@@ -78,7 +83,7 @@ namespace TestHelper
         }
 
         /// <summary>
-        /// General method that gets a collection of actual diagnostics found in the source after the analyzer is run, 
+        /// General method that gets a collection of actual diagnostics found in the source after the analyzer is run,
         /// then verifies each of them.
         /// </summary>
         /// <param name="sources">An array of strings to create source documents from to run the analyzers on</param>
@@ -90,8 +95,7 @@ namespace TestHelper
             var diagnostics = GetSortedDiagnostics(sources, language, analyzer);
             VerifyDiagnosticResults(diagnostics, analyzer, expected);
         }
-
-        #endregion
+        #endregion Verifier wrappers
 
         #region Actual comparisons and verifications
         /// <summary>
@@ -101,10 +105,10 @@ namespace TestHelper
         /// <param name="actualResults">The Diagnostics found by the compiler after running the analyzer on the source code</param>
         /// <param name="analyzer">The analyzer that was being run on the sources</param>
         /// <param name="expectedResults">Diagnostic Results that should have appeared in the code</param>
-        private static void VerifyDiagnosticResults(IEnumerable<Diagnostic> actualResults, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expectedResults)
+        private static void VerifyDiagnosticResults(Diagnostic[] actualResults, DiagnosticAnalyzer analyzer, params DiagnosticResult[] expectedResults)
         {
             int expectedCount = expectedResults.Length;
-            int actualCount = actualResults.Count();
+            int actualCount = actualResults.Length;
 
             if (expectedCount != actualCount)
             {
@@ -193,7 +197,7 @@ namespace TestHelper
                 }
             }
         }
-        #endregion
+        #endregion Actual comparisons and verifications
 
         #region Formatting Diagnostics
         /// <summary>
@@ -252,6 +256,6 @@ namespace TestHelper
 
             return builder.ToString();
         }
-        #endregion
+        #endregion Formatting Diagnostics
     }
 }

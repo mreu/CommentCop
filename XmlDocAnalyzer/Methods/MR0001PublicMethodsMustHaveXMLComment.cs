@@ -3,7 +3,6 @@
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-// https://johnkoerner.com/csharp/analyzing-xml-comments-in-your-roslyn-code-analyzer/
 
 namespace XmlDocAnalyzer.Methods
 {
@@ -22,12 +21,12 @@ namespace XmlDocAnalyzer.Methods
     /// MR0001 public methods must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR0001 : DiagnosticAnalyzer
+    public class MR0001PublicMethodsMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId = nameof(MR0001);
+        public const string DiagnosticId = "MR0001";
 
         /// <summary>
         /// The category.
@@ -35,19 +34,19 @@ namespace XmlDocAnalyzer.Methods
         private const string Category = "Documentation";
 
         /// <summary>
-        /// The message.
-        /// </summary>
-        private static readonly string Message = $"Public methods must have a xml documentation header ({DiagnosticId}).";
-
-        /// <summary>
         /// The title.
         /// </summary>
         private const string Title = "Public methods must have a xml documentation header.";
 
         /// <summary>
+        /// The message.
+        /// </summary>
+        private static readonly string Message = $"{Title} ({DiagnosticId}).";
+
+        /// <summary>
         /// The description.
         /// </summary>
-        private const string Description = "Public methods must have a xml documentation header.";
+        private const string Description = Title;
 
         /// <summary>
         /// The rule.
@@ -58,8 +57,8 @@ namespace XmlDocAnalyzer.Methods
             Message,
             Category,
             DiagnosticSeverity.Warning,
-            isEnabledByDefault: true,
-            description: Description);
+            true,
+            Description);
 
         /// <summary>
         /// Gets the supported diagnostics.

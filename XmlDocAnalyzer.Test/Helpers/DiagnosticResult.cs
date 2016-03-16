@@ -6,14 +6,20 @@
 
 namespace TestHelper
 {
-    using Microsoft.CodeAnalysis;
     using System;
+    using Microsoft.CodeAnalysis;
 
     /// <summary>
     /// Location where the diagnostic appears, as determined by path, line number, and column number.
     /// </summary>
     public struct DiagnosticResultLocation
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiagnosticResultLocation"/> struct.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="line">The line.</param>
+        /// <param name="column">The column.</param>
         public DiagnosticResultLocation(string path, int line, int column)
         {
             if (line < -1)

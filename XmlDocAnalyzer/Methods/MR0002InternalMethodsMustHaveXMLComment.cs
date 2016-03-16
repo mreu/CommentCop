@@ -21,12 +21,12 @@ namespace XmlDocAnalyzer.Methods
     /// MR0001 public methods must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR0002 : DiagnosticAnalyzer
+    public class MR0002InternalMethodsMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId = nameof(MR0002);
+        public const string DiagnosticId = "MR0002";
 
         /// <summary>
         /// The category.
@@ -34,19 +34,19 @@ namespace XmlDocAnalyzer.Methods
         private const string Category = "Documentation";
 
         /// <summary>
-        /// The message.
-        /// </summary>
-        private static readonly string Message = $"Internal methods must have a xml documentation header ({DiagnosticId}).";
-
-        /// <summary>
         /// The title.
         /// </summary>
         private const string Title = "Internal methods must have a xml documentation header.";
 
         /// <summary>
+        /// The message.
+        /// </summary>
+        private static readonly string Message = $"{Title} ({DiagnosticId}).";
+
+        /// <summary>
         /// The description.
         /// </summary>
-        private const string Description = "Internal methods must have a xml documentation header.";
+        private const string Description = Title;
 
         /// <summary>
         /// The rule.
@@ -57,8 +57,8 @@ namespace XmlDocAnalyzer.Methods
             Message,
             Category,
             DiagnosticSeverity.Warning,
-            isEnabledByDefault: true,
-            description: Description);
+            true,
+            Description);
 
         /// <summary>
         /// Gets the supported diagnostics.

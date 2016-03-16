@@ -1,32 +1,39 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.CodeAnalysis.Text;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="DiagnosticVerifier.Helper.cs" company="Michael Reukauff">
+//   Copyright © 2016 Michael Reukauff. All rights reserved.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace TestHelper
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.Immutable;
+    using System.Linq;
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
+    using Microsoft.CodeAnalysis.Diagnostics;
+    using Microsoft.CodeAnalysis.Text;
+
     /// <summary>
     /// Class for turning strings into documents and getting the diagnostics on them
     /// All methods are static
     /// </summary>
     public abstract partial class DiagnosticVerifier
     {
+#pragma warning disable SA1600 // Elements must be documented
         private static readonly MetadataReference CorlibReference = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
         private static readonly MetadataReference SystemCoreReference = MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
         private static readonly MetadataReference CSharpSymbolsReference = MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
         private static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
 
-        internal static string DefaultFilePathPrefix = "Test";
-        internal static string CSharpDefaultFileExt = "cs";
-        internal static string VisualBasicDefaultExt = "vb";
-        internal static string TestProjectName = "TestProject";
+        private const string DefaultFilePathPrefix = "Test";
+        private const string CSharpDefaultFileExt = "cs";
+        private const string VisualBasicDefaultExt = "vb";
+        private const string TestProjectName = "TestProject";
+#pragma warning restore SA1600 // Elements must be documented
 
-        #region  Get Diagnostics
-
+        #region Get Diagnostics
         /// <summary>
         /// Given classes in the form of strings, their language, and an IDiagnosticAnlayzer to apply to it, return the diagnostics found in the string after converting it to a document.
         /// </summary>
@@ -55,6 +62,8 @@ namespace TestHelper
             }
 
             var diagnostics = new List<Diagnostic>();
+
+            // ReSharper disable once LoopCanBePartlyConvertedToQuery
             foreach (var project in projects)
             {
                 var compilationWithAnalyzers = project.GetCompilationAsync().Result.WithAnalyzers(ImmutableArray.Create(analyzer));
@@ -67,7 +76,7 @@ namespace TestHelper
                     }
                     else
                     {
-                        for (int i = 0; i < documents.Length; i++)
+                        for (var i = 0; i < documents.Length; i++)
                         {
                             var document = documents[i];
                             var tree = document.GetSyntaxTreeAsync().Result;
@@ -82,6 +91,7 @@ namespace TestHelper
 
             var results = SortDiagnostics(diagnostics);
             diagnostics.Clear();
+
             return results;
         }
 
@@ -94,8 +104,7 @@ namespace TestHelper
         {
             return diagnostics.OrderBy(d => d.Location.SourceSpan.Start).ToArray();
         }
-
-        #endregion
+        #endregion Get Diagnostics
 
         #region Set up compilation and documents
         /// <summary>
@@ -141,10 +150,10 @@ namespace TestHelper
         /// <returns>A Project created out of the Documents created from the source strings</returns>
         private static Project CreateProject(string[] sources, string language = LanguageNames.CSharp)
         {
-            string fileNamePrefix = DefaultFilePathPrefix;
-            string fileExt = language == LanguageNames.CSharp ? CSharpDefaultFileExt : VisualBasicDefaultExt;
+            var fileNamePrefix = DefaultFilePathPrefix;
+            var fileExt = language == LanguageNames.CSharp ? CSharpDefaultFileExt : VisualBasicDefaultExt;
 
-            var projectId = ProjectId.CreateNewId(debugName: TestProjectName);
+            var projectId = ProjectId.CreateNewId(TestProjectName);
 
             var solution = new AdhocWorkspace()
                 .CurrentSolution
@@ -154,17 +163,17 @@ namespace TestHelper
                 .AddMetadataReference(projectId, CSharpSymbolsReference)
                 .AddMetadataReference(projectId, CodeAnalysisReference);
 
-            int count = 0;
+            var count = 0;
             foreach (var source in sources)
             {
                 var newFileName = fileNamePrefix + count + "." + fileExt;
-                var documentId = DocumentId.CreateNewId(projectId, debugName: newFileName);
+                var documentId = DocumentId.CreateNewId(projectId, newFileName);
                 solution = solution.AddDocument(documentId, newFileName, SourceText.From(source));
                 count++;
             }
+
             return solution.GetProject(projectId);
         }
-        #endregion
+        #endregion Set up compilation and documents
     }
 }
-
