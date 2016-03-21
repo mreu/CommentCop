@@ -52,6 +52,8 @@
     <Compile Include="Helper\Extensions.cs" />
     <Compile Include="Interfaces\MR2001PublicInterfacesMustHaveXMLComment.cs" />
     <Compile Include="Interfaces\MR2002InternalInterfacesMustHaveXMLComment.cs" />
+    <Compile Include="Interfaces\MR2003CodeFixProvider.cs" />
+    <Compile Include="Interfaces\MR2003MethodDefinitionsInInterfacesMustHaveXMLComment.cs" />
     <Compile Include="Interfaces\MR200nCodeFixProvider.cs" />
     <Compile Include="Methods\MR100nCodeFixProvider.cs" />
     <Compile Include="Methods\MR1001PublicMethodsMustHaveXMLComment.cs" />

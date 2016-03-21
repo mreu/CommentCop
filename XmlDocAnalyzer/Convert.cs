@@ -7,9 +7,10 @@
 namespace XmlDocAnalyzer
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
-    using System.Net.Http.Headers;
     using System.Text.RegularExpressions;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
     /// The convert class.
@@ -19,7 +20,27 @@ namespace XmlDocAnalyzer
         /// <summary>
         /// The work items.
         /// </summary>
-        private static readonly string[] WorkItems = { "get", "put", "set", "display", "show", "register", "initialize", "insert", "delete", "update", "select" };
+        private static readonly string[] WorkItems =
+        {
+            "create",
+            "delete",
+            "display",
+            "get",
+            "initialize",
+            "insert",
+            "put",
+            "register",
+            "remove",
+            "select",
+            "set",
+            "show",
+            "update"
+        };
+
+        /// <summary>
+        /// Split at uppercase letter regex.
+        /// </summary>
+        private static readonly Regex SplitAtUppercase = new Regex(@"([A-Z])(?<=[a-z]\1|[A-Za-z]\1(?=[a-z]))", RegexOptions.CultureInvariant | RegexOptions.Singleline);
 
         /// <summary>
         /// Try to convert the name of a class to useful comment.
@@ -81,13 +102,22 @@ namespace XmlDocAnalyzer
                 {
                     MakeLowerCase(parts, false);
 
-                    var newName = parts[0] + ' ' + string.Join(" ", parts.Skip(1)) + '.';
+                    if (parts.Length > 1)
+                    {
+                        return parts[0] + ' ' + string.Join(" ", parts.Skip(1)) + '.';
+                    }
 
-                    return newName;
+                    return parts[0] + '.';
                 }
 
                 MakeLowerCase(parts, true);
-                return "The " + string.Join(" ", parts) + '.';
+
+                if (parts.Length > 1)
+                {
+                    return "The " + string.Join(" ", parts) + '.';
+                }
+
+                return "The " + parts[0] + '.';
             }
 
             return "The " + name.ToLower() + '.';
@@ -97,10 +127,51 @@ namespace XmlDocAnalyzer
         /// Try to convert the return type of a method to useful comment.
         /// </summary>
         /// <param name="name">The name of the return type.</param>
+        /// <param name="typeArgumentList">The type argument list or null</param>
         /// <returns>The comment.</returns>
-        public static string Returns(string name)
+        public static string Returns(string name, TypeArgumentListSyntax typeArgumentList)
         {
+            // if this list is not null the return value is generic.
+            var generics = new List<string>();
+
+            if (typeArgumentList != null)
+            {
+                foreach (var argument in typeArgumentList.Arguments)
+                {
+                    if (argument is IdentifierNameSyntax)
+                    {
+                        generics.Add(((IdentifierNameSyntax)argument).Identifier.ValueText);
+                    }
+                    else
+                    {
+                        if (argument is PredefinedTypeSyntax)
+                        {
+                            generics.Add(((PredefinedTypeSyntax)argument).Keyword.ValueText);
+                        }
+                        else
+                        {
+                            generics.Add($"Unknown type: {argument.GetType()}");
+                        }
+                    }
+                }
+            }
+
+            if (generics.Any())
+            {
+                return $"The <see cref=\"{name}{{{string.Join(", ", generics)}}}\"/>.";
+            }
+
             return $"The <see cref=\"{name}\"/>.";
+        }
+
+        /// <summary>
+        /// Try to convert the parameter to a useful comment.
+        /// </summary>
+        /// <param name="name">The name of the parameter.</param>
+        /// <returns>The comment.</returns>
+        public static string Parameter(string name)
+        {
+            return "The " + name + '.';
         }
 
         /// <summary>
@@ -111,8 +182,7 @@ namespace XmlDocAnalyzer
         private static string[] SplitName(string name)
         {
             // split the name at the uppercase letterss
-            var regex = new Regex(@"([A-Z])(?<=[a-z]\1|[A-Za-z]\1(?=[a-z]))", RegexOptions.CultureInvariant | RegexOptions.Singleline);
-            var str = regex.Replace(name, " $1");
+            var str = SplitAtUppercase.Replace(name, " $1");
             var parts = str.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             return parts;
         }
@@ -156,11 +226,6 @@ namespace XmlDocAnalyzer
                     parts[ix] = parts[ix].ToLower();
                 }
             }
-        }
-
-        public static string Parameter(string name)
-        {
-            return "The " + name + '.';
         }
     }
 }
