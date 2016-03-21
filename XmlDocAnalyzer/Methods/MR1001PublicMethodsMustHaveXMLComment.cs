@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR0001PublicMethodsMustHaveXMLComment.cs" company="Michael Reukauff">
+// <copyright file="MR1001PublicMethodsMustHaveXMLComment.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -18,15 +18,15 @@ namespace XmlDocAnalyzer.Methods
     using XmlElementSyntax = Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax;
 
     /// <summary>
-    /// MR0001 public methods must have XML comment.
+    /// MR1001 public methods must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR0001PublicMethodsMustHaveXMLComment : DiagnosticAnalyzer
+    public class MR1001PublicMethodsMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId = "MR0001";
+        public const string DiagnosticId = "MR1001";
 
         /// <summary>
         /// The category.
@@ -71,14 +71,14 @@ namespace XmlDocAnalyzer.Methods
         /// <param name="context">The analysis context.</param>
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(CheckMethods, SyntaxKind.MethodDeclaration);
+            context.RegisterSyntaxNodeAction(Check, SyntaxKind.MethodDeclaration);
         }
 
         /// <summary>
-        /// Check the method.
+        /// Check if xml comment exists.
         /// </summary>
         /// <param name="syntaxNodeAnalysisContext">The systax node analysis context.</param>
-        private void CheckMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private void Check(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
             var node = syntaxNodeAnalysisContext.Node as MethodDeclarationSyntax;
 

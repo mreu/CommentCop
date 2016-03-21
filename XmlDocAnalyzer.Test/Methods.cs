@@ -98,7 +98,7 @@ namespace XmlDocAnalyzer.Test
         /// <returns>The code fix provider.</returns>
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
-            return new MR0001CodeFixProvider();
+            return new MR100nCodeFixProvider();
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace XmlDocAnalyzer.Test
         /// <returns>The diagnostic analyer.</returns>
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new MR0001PublicMethodsMustHaveXMLComment();
+            return new MR1001PublicMethodsMustHaveXMLComment();
         }
         #endregion overrides
     }

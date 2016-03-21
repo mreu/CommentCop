@@ -1,10 +1,10 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR0003InternalProtectedMethodsMustHaveXMLComment.cs" company="Michael Reukauff">
+// <copyright file="MR1103InternalProtectedConstructorsMustHaveXMLComment.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Methods
+namespace XmlDocAnalyzer.Constructors
 {
     using System.Collections.Immutable;
     using System.Linq;
@@ -18,15 +18,15 @@ namespace XmlDocAnalyzer.Methods
     using XmlElementSyntax = Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax;
 
     /// <summary>
-    /// MR0001 public methods must have XML comment.
+    /// MR1103 internal protected constructors must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR0003InternalProtectedMethodsMustHaveXMLComment : DiagnosticAnalyzer
+    public class MR1103InternalProtectedConstrutorsMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId = "MR0003";
+        public const string DiagnosticId = "MR1103";
 
         /// <summary>
         /// The category.
@@ -36,7 +36,7 @@ namespace XmlDocAnalyzer.Methods
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Internal protected methods must have a xml documentation header.";
+        private const string Title = "Internal protected constructors must have a xml documentation header.";
 
         /// <summary>
         /// The message.
@@ -71,16 +71,16 @@ namespace XmlDocAnalyzer.Methods
         /// <param name="context">The analysis context.</param>
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(CheckMethods, SyntaxKind.MethodDeclaration);
+            context.RegisterSyntaxNodeAction(Check, SyntaxKind.ConstructorDeclaration);
         }
 
         /// <summary>
-        /// Check the method.
+        /// Check if xml comment exists.
         /// </summary>
         /// <param name="syntaxNodeAnalysisContext">The systax node analysis context.</param>
-        private void CheckMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private void Check(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            var node = syntaxNodeAnalysisContext.Node as MethodDeclarationSyntax;
+            var node = syntaxNodeAnalysisContext.Node as ConstructorDeclarationSyntax;
 
             if (node == null)
             {

@@ -5,3 +5,10 @@ https://joshvarty.wordpress.com/learn-roslyn-now/
 http://roslynquoter.azurewebsites.net/
 
 http://www.coderesx.com/roslyn/html/Welcome.htm
+
+All elements
+https://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k%28class_CSharpKeyword%29;k%28TargetFrameworkMoniker-.NETFramework,Version%3Dv4.5.2%29;k%28DevLang-csharp%29&rd=true
+
+XML-Documentation Syntax
+https://msdn.microsoft.com/de-de/library/5ast78ax.aspx
+http://www.codeproject.com/Articles/11082/C-and-XML-Source-Code-Documentation

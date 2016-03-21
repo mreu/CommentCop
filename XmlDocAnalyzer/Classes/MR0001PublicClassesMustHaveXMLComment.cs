@@ -1,10 +1,10 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR0002InternalMethodsMustHaveXMLComment.cs" company="Michael Reukauff">
-//   Copyright © 2016 Michael Reukauff. All rights reserved.
+// <copyright file="MR0001PublicClassesMustHaveXMLComment.cs" author="Michael Reukauff">
+//   Copyright © 2016 Michael Reukauff
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Methods
+namespace XmlDocAnalyzer.Classes
 {
     using System.Collections.Immutable;
     using System.Linq;
@@ -21,12 +21,12 @@ namespace XmlDocAnalyzer.Methods
     /// MR0001 public methods must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR0002InternalMethodsMustHaveXMLComment : DiagnosticAnalyzer
+    public class MR0001PublicClassesMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId = "MR0002";
+        public const string DiagnosticId = "MR0001";
 
         /// <summary>
         /// The category.
@@ -36,7 +36,7 @@ namespace XmlDocAnalyzer.Methods
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Internal methods must have a xml documentation header.";
+        private const string Title = "Public classes must have a xml documentation header.";
 
         /// <summary>
         /// The message.
@@ -71,28 +71,23 @@ namespace XmlDocAnalyzer.Methods
         /// <param name="context">The analysis context.</param>
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(CheckMethods, SyntaxKind.MethodDeclaration);
+            context.RegisterSyntaxNodeAction(Check, SyntaxKind.ClassDeclaration);
         }
 
         /// <summary>
-        /// Check the method.
+        /// Check if xml comment exists.
         /// </summary>
         /// <param name="syntaxNodeAnalysisContext">The systax node analysis context.</param>
-        private void CheckMethods(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private void Check(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            var node = syntaxNodeAnalysisContext.Node as MethodDeclarationSyntax;
+            var node = syntaxNodeAnalysisContext.Node as ClassDeclarationSyntax;
 
             if (node == null)
             {
                 return;
             }
 
-            if (!node.Modifiers.Any(SyntaxKind.InternalKeyword))
-            {
-                return;
-            }
-
-            if (node.Modifiers.Any(SyntaxKind.ProtectedKeyword))
+            if (!node.Modifiers.Any(SyntaxKind.PublicKeyword))
             {
                 return;
             }

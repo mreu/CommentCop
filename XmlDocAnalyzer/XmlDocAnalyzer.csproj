@@ -33,14 +33,32 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Classes\MR0001PublicClassesMustHaveXMLComment.cs" />
+    <Compile Include="Classes\MR0002InternalClassesMustHaveXMLComment.cs" />
+    <Compile Include="Classes\MR0003InternalProtectedClassesMustHaveXMLComment.cs" />
+    <Compile Include="Classes\MR0004ProtectedClassesMustHaveXMLComment.cs" />
+    <Compile Include="Classes\MR0005PrivateClassesMustHaveXMLComment.cs" />
+    <Compile Include="Classes\MR000nCodeFixProvider.cs" />
+    <Compile Include="Constructors\MR1101PublicConstructorsMustHaveXMLComment.cs" />
+    <Compile Include="Constructors\MR1102InternalConstructorsMustHaveXMLComment.cs" />
+    <Compile Include="Constructors\MR1103InternalProtectedConstructorsMustHaveXMLComment.cs" />
+    <Compile Include="Constructors\MR1104ProtectedConstructorsMustHaveXMLComment.cs" />
+    <Compile Include="Constructors\MR1105PrivateConstructorsMustHaveXMLComment.cs" />
+    <Compile Include="Constructors\MR1106StaticConstructorsMustHaveXMLComment.cs" />
+    <Compile Include="Constructors\MR110nCodeFixProvider.cs" />
     <Compile Include="Convert.cs" />
+    <Compile Include="Destructors\MR1201DestructorsMustHaveXMLComment.cs" />
+    <Compile Include="Destructors\MR1201CodeFixProvider.cs" />
     <Compile Include="Helper\Extensions.cs" />
-    <Compile Include="Methods\MR0001CodeFixProvider.cs" />
-    <Compile Include="Methods\MR0001PublicMethodsMustHaveXMLComment.cs" />
-    <Compile Include="Methods\MR0002InternalMethodsMustHaveXMLComment.cs" />
-    <Compile Include="Methods\MR0003InternalProtectedMethodsMustHaveXMLComment.cs" />
-    <Compile Include="Methods\MR0004ProtectedMethodsMustHaveXMLComment.cs" />
-    <Compile Include="Methods\MR0005PrivateMethodsMustHaveXMLComment.cs" />
+    <Compile Include="Interfaces\MR2001PublicInterfacesMustHaveXMLComment.cs" />
+    <Compile Include="Interfaces\MR2002InternalInterfacesMustHaveXMLComment.cs" />
+    <Compile Include="Interfaces\MR200nCodeFixProvider.cs" />
+    <Compile Include="Methods\MR100nCodeFixProvider.cs" />
+    <Compile Include="Methods\MR1001PublicMethodsMustHaveXMLComment.cs" />
+    <Compile Include="Methods\MR1002InternalMethodsMustHaveXMLComment.cs" />
+    <Compile Include="Methods\MR1003InternalProtectedMethodsMustHaveXMLComment.cs" />
+    <Compile Include="Methods\MR1004ProtectedMethodsMustHaveXMLComment.cs" />
+    <Compile Include="Methods\MR1005PrivateMethodsMustHaveXMLComment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -131,6 +149,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Links.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Events\" />
+    <Folder Include="Fields\" />
+    <Folder Include="Property\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\v4.6\Microsoft.Portable.CSharp.targets" />
   <Target Name="AfterBuild">
