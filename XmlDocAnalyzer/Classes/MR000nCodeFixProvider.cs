@@ -51,8 +51,7 @@ namespace XmlDocAnalyzer.Classes
         public sealed override FixAllProvider GetFixAllProvider()
         {
             // See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/FixAllProvider.md for more information on Fix All Providers
-            // return WellKnownFixAllProviders.BatchFixer;
-            return null;
+            return WellKnownFixAllProviders.BatchFixer;
         }
 
         /// <summary>
@@ -195,7 +194,7 @@ namespace XmlDocAnalyzer.Classes
                                         TokenList(
                                             XmlTextLiteral(
                                                 TriviaList(),
-                                                Convert.Parameter(parameter.Identifier.ValueText),
+                                                string.Empty,
                                                 "comment",
                                                 TriviaList()))))),
 

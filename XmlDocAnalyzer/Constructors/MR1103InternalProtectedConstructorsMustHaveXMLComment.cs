@@ -21,7 +21,7 @@ namespace XmlDocAnalyzer.Constructors
     /// MR1103 internal protected constructors must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR1103InternalProtectedConstrutorsMustHaveXMLComment : DiagnosticAnalyzer
+    public class MR1103InternalProtectedConstructorsMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
         /// The diagnostic id.

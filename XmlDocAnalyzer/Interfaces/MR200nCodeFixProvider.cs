@@ -1,10 +1,10 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR000nCodeFixProvider.cs" author="Michael Reukauff">
-//   Copyright © 2016 Michael Reukauff
+// <copyright file="MR200nCodeFixProvider.cs" company="Michael Reukauff">
+//   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Classes
+namespace XmlDocAnalyzer.Interfaces
 {
     using System.Collections.Immutable;
     using System.Composition;
@@ -23,7 +23,7 @@ namespace XmlDocAnalyzer.Classes
     /// <summary>
     /// The xml doc code fix provider.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR000nCodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR200nCodeFixProvider))]
     [Shared]
     public class MR200nCodeFixProvider : CodeFixProvider
     {
@@ -35,11 +35,7 @@ namespace XmlDocAnalyzer.Classes
         /// <summary>
         /// Gets the fixable diagnostic ids.
         /// </summary>
-        public sealed override ImmutableArray<string> FixableDiagnosticIds
-            =>
-                ImmutableArray.Create(
-                    MR2001PublicInterfacesMustHaveXMLComment.DiagnosticId,
-                    MR2002InternalInterfacesMustHaveXMLComment.DiagnosticId);
+        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MR2001PublicInterfacesMustHaveXMLComment.DiagnosticId, MR2002InternalInterfacesMustHaveXMLComment.DiagnosticId);
 
         /// <summary>
         /// Get fix all provider.
@@ -48,8 +44,7 @@ namespace XmlDocAnalyzer.Classes
         public sealed override FixAllProvider GetFixAllProvider()
         {
             // See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/FixAllProvider.md for more information on Fix All Providers
-            // return WellKnownFixAllProviders.BatchFixer;
-            return null;
+            return WellKnownFixAllProviders.BatchFixer;
         }
 
         /// <summary>

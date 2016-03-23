@@ -22,9 +22,12 @@ namespace XmlDocAnalyzer
         /// </summary>
         private static readonly string[] WorkItems =
         {
+            "build",
+            "check",
             "create",
             "delete",
             "display",
+            "fill",
             "get",
             "initialize",
             "insert",
@@ -34,6 +37,9 @@ namespace XmlDocAnalyzer
             "select",
             "set",
             "show",
+            "start",
+            "stop",
+            "test",
             "update"
         };
 
@@ -172,6 +178,54 @@ namespace XmlDocAnalyzer
         public static string Parameter(string name)
         {
             return "The " + name + '.';
+        }
+
+        /// <summary>
+        /// Generate the comment for a property.
+        /// </summary>
+        /// <param name="name">The name of the property.</param>
+        /// <param name="hasGetter">True if property has a getter otherwise false.</param>
+        /// <param name="hasSetter">True if property has a setter otherwise false.</param>
+        /// <param name="isBool">True if property is of type boolean otherwise false.</param>
+        /// <returns>The comment.</returns>
+        public static object Property(string name, bool hasGetter, bool hasSetter, bool isBool)
+        {
+            string comment;
+
+            if (hasGetter)
+            {
+                comment = "Gets";
+
+                if (hasSetter)
+                {
+                    comment += " or sets";
+                }
+            }
+            else
+            {
+                comment = "Sets";
+            }
+
+            if (isBool)
+            {
+                comment += " a value indicating whether ";
+            }
+            else
+            {
+                comment += " the " + name + '.';
+            }
+
+            return comment;
+        }
+
+        /// <summary>
+        /// Generate the comment for a property.
+        /// </summary>
+        /// <param name="propType">The type of the property.</param>
+        /// <returns>The comment.</returns>
+        public static string PropertyType(string propType)
+        {
+            return $"The <see cref=\"{propType}\"/>.";
         }
 
         /// <summary>

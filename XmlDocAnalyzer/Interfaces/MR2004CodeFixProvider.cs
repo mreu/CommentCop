@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR2003CodeFixProvider.cs" company="Michael Reukauff">
+// <copyright file="MR2004CodeFixProvider.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -23,19 +23,19 @@ namespace XmlDocAnalyzer.Interfaces
     /// <summary>
     /// The xml doc code fix provider.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR2003CodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR2004CodeFixProvider))]
     [Shared]
-    public class MR2003CodeFixProvider : CodeFixProvider
+    public class MR2004CodeFixProvider : CodeFixProvider
     {
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Insert XML documentation header (MR2003)";
+        private const string Title = "Insert XML documentation header (MR2004)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.
         /// </summary>
-        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MR2003MethodDefinitionsInInterfacesMustHaveXMLComment.DiagnosticId);
+        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MR2004PropertyDefinitionsInInterfacesMustHaveXMLComment.DiagnosticId);
 
         /// <summary>
         /// Get fix all provider.
@@ -92,7 +92,7 @@ namespace XmlDocAnalyzer.Interfaces
                 document,
                 root,
                 semanticModel,
-                (MethodDeclarationSyntax)identifierToken.Parent,
+                (PropertyDeclarationSyntax)identifierToken.Parent,
                 cancellationToken);
         }
 
@@ -109,7 +109,7 @@ namespace XmlDocAnalyzer.Interfaces
             Document document,
             SyntaxNode root,
             SemanticModel semanticModel,
-            MethodDeclarationSyntax declaration,
+            PropertyDeclarationSyntax declaration,
             CancellationToken cancellationToken)
         {
             if (declaration.ExplicitInterfaceSpecifier == null && !declaration.Modifiers.Any(SyntaxKind.OverrideKeyword))
@@ -140,9 +140,9 @@ namespace XmlDocAnalyzer.Interfaces
         /// <summary>
         /// Get summary.
         /// </summary>
-        /// <param name="theMethod">The method to add to the summary.</param>
+        /// <param name="theSyntax">The property to add to the summary.</param>
         /// <returns>The syntax list.</returns>
-        private static DocumentationCommentTriviaSyntax GetSummary(MethodDeclarationSyntax theMethod)
+        private static DocumentationCommentTriviaSyntax GetSummary(PropertyDeclarationSyntax theSyntax)
         {
             const string summary = "summary";
 
@@ -154,7 +154,34 @@ namespace XmlDocAnalyzer.Interfaces
                 .WithLessThanSlashToken(Token(SyntaxKind.LessThanSlashToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
-            var summaryComment = " " + Convert.Method(theMethod.Identifier.ValueText);
+            var accessors = theSyntax.AccessorList.ChildNodes().OfType<AccessorDeclarationSyntax>();
+
+            var hasGetter = false;
+            var hasSetter = false;
+            foreach (var accessor in accessors)
+            {
+                if (accessor.Kind() == SyntaxKind.GetAccessorDeclaration)
+                {
+                    if (!accessor.Modifiers.Any(SyntaxKind.PrivateKeyword))
+                    {
+                        hasGetter = true;
+                    }
+
+                    continue;
+                }
+
+                if (accessor.Kind() == SyntaxKind.SetAccessorDeclaration)
+                {
+                    if (!accessor.Modifiers.Any(SyntaxKind.PrivateKeyword))
+                    {
+                        hasSetter = true;
+                    }
+                }
+            }
+
+            var isBool = (theSyntax.Type as PredefinedTypeSyntax)?.Keyword.Kind() == SyntaxKind.BoolKeyword;
+
+            var summaryComment = " " + Convert.Property(theSyntax.Identifier.ValueText, hasGetter, hasSetter, isBool);
 
             var summaryText = SingletonList<XmlNodeSyntax>(
                 XmlText().NormalizeWhitespace()
@@ -188,126 +215,38 @@ namespace XmlDocAnalyzer.Interfaces
 
             var list = List(new XmlNodeSyntax[] { xmlComment, summaryElement, newLine });
 
-            // Add parameter comments
-            if (theMethod.ParameterList.Parameters.Any())
+            // add value comment
+            string propType;
+
+            if (theSyntax.Type is PredefinedTypeSyntax)
             {
-                foreach (var parameter in theMethod.ParameterList.Parameters)
-                {
-                    list = list.AddRange(
-                        List(
-                            new XmlNodeSyntax[]
-                            {
-                                xmlComment,
-
-                                XmlElement(
-                                    XmlElementStartTag(XmlName(Identifier("param")))
-                                    .WithAttributes(
-                                        SingletonList<XmlAttributeSyntax>(
-                                            XmlNameAttribute(
-                                                XmlName(Identifier(TriviaList(Space), "name", TriviaList())),
-                                                Token(SyntaxKind.DoubleQuoteToken),
-                                                IdentifierName(parameter.Identifier.ValueText),
-                                                Token(SyntaxKind.DoubleQuoteToken)))),
-                                    XmlElementEndTag(XmlName(Identifier("param"))))
-                                    .WithContent(
-                                        SingletonList<XmlNodeSyntax>(
-                                            XmlText()
-                                    .WithTextTokens(
-                                        TokenList(
-                                            XmlTextLiteral(
-                                                TriviaList(),
-                                                Convert.Parameter(parameter.Identifier.ValueText),
-                                                "comment",
-                                                TriviaList()))))),
-
-                                newLine
-                            }));
-                }
-            }
-
-            // Add returns comments
-            string returnType;
-            if (theMethod.ReturnType is PredefinedTypeSyntax)
-            {
-                returnType = ((PredefinedTypeSyntax)theMethod.ReturnType).Keyword.ValueText;
+                propType = ((PredefinedTypeSyntax)theSyntax.Type).Keyword.ValueText;
             }
             else
             {
-                if (theMethod.ReturnType is IdentifierNameSyntax)
+                if (theSyntax.Type is IdentifierNameSyntax)
                 {
-                    returnType = ((IdentifierNameSyntax)theMethod.ReturnType).Identifier.ValueText;
+                    propType = ((IdentifierNameSyntax)theSyntax.Type).Identifier.ValueText;
                 }
                 else
                 {
-                    if (theMethod.ReturnType is GenericNameSyntax)
-                    {
-                        returnType = ((GenericNameSyntax)theMethod.ReturnType).Identifier.ValueText;
-                    }
-                    else
-                    {
-                        returnType = "Unknown return type: " + theMethod.ReturnType.GetType();
-                    }
+                    propType = $"unknown type: {theSyntax.Type.GetType()}";
                 }
             }
 
-            if (returnType != "void")
-            {
-                var typeArgumentList = theMethod.ReturnType.ChildNodes().OfType<TypeArgumentListSyntax>().FirstOrDefault();
-
-                list = list.AddRange(
-                    List(
-                        new XmlNodeSyntax[]
-                        {
-                            xmlComment,
-
-                            XmlElement(XmlElementStartTag(XmlName(Identifier("returns"))), XmlElementEndTag(XmlName(Identifier("returns"))))
-                                .WithContent(
-                                    SingletonList<XmlNodeSyntax>(
-                                        XmlText().WithTextTokens(TokenList(XmlTextLiteral(TriviaList(), Convert.Returns(returnType, typeArgumentList), "comment", TriviaList()))))),
-
-                            newLine
-                        }));
-            }
-
-            // Add typeparams comments
-            if (theMethod.TypeParameterList != null)
-            {
-                if (theMethod.TypeParameterList.Parameters.Any())
-                {
-                    foreach (var parameter in theMethod.TypeParameterList.Parameters)
+            list = list.AddRange(
+                List(
+                    new XmlNodeSyntax[]
                     {
-                        list = list.AddRange(
-                            List(
-                                new XmlNodeSyntax[]
-                                {
-                                xmlComment,
+                        xmlComment,
 
-                                XmlElement(
-                                    XmlElementStartTag(XmlName(Identifier("typeparam")))
-                                    .WithAttributes(
-                                        SingletonList<XmlAttributeSyntax>(
-                                            XmlNameAttribute(
-                                                XmlName(Identifier(TriviaList(Space), "name", TriviaList())),
-                                                Token(SyntaxKind.DoubleQuoteToken),
-                                                IdentifierName(parameter.Identifier.ValueText),
-                                                Token(SyntaxKind.DoubleQuoteToken)))),
-                                    XmlElementEndTag(XmlName(Identifier("param"))))
-                                    .WithContent(
-                                        SingletonList<XmlNodeSyntax>(
-                                            XmlText()
-                                    .WithTextTokens(
-                                        TokenList(
-                                            XmlTextLiteral(
-                                                TriviaList(),
-                                                string.Empty,
-                                                "comment",
-                                                TriviaList()))))),
+                        XmlElement(XmlElementStartTag(XmlName(Identifier("value"))), XmlElementEndTag(XmlName(Identifier("value"))))
+                            .WithContent(
+                                SingletonList<XmlNodeSyntax>(
+                                    XmlText().WithTextTokens(TokenList(XmlTextLiteral(TriviaList(), Convert.PropertyType(propType), "comment", TriviaList()))))),
 
-                                newLine
-                                }));
-                    }
-                }
-            }
+                        newLine
+                    }));
 
             return DocumentationCommentTrivia(SyntaxKind.SingleLineDocumentationCommentTrivia, list);
         }

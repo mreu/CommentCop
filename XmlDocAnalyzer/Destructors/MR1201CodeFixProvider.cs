@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Constructors
+namespace XmlDocAnalyzer.Destructors
 {
     using System.Collections.Immutable;
     using System.Composition;
@@ -23,14 +23,14 @@ namespace XmlDocAnalyzer.Constructors
     /// <summary>
     /// The xml doc code fix provider.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR110nCodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR1201CodeFixProvider))]
     [Shared]
     public class MR1201CodeFixProvider : CodeFixProvider
     {
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Insert XML documentation header (MR1101 - MR1106)";
+        private const string Title = "Insert XML documentation header (MR1201)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.
@@ -44,8 +44,7 @@ namespace XmlDocAnalyzer.Constructors
         public sealed override FixAllProvider GetFixAllProvider()
         {
             // See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/FixAllProvider.md for more information on Fix All Providers
-            // return WellKnownFixAllProviders.BatchFixer;
-            return null;
+            return WellKnownFixAllProviders.BatchFixer;
         }
 
         /// <summary>

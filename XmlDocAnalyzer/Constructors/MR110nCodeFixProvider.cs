@@ -40,7 +40,7 @@ namespace XmlDocAnalyzer.Constructors
                 ImmutableArray.Create(
                     MR1101PublicConstructorsMustHaveXMLComment.DiagnosticId,
                     MR1102InternalConstructorsMustHaveXMLComment.DiagnosticId,
-                    MR1103InternalProtectedConstrutorsMustHaveXMLComment.DiagnosticId,
+                    MR1103InternalProtectedConstructorsMustHaveXMLComment.DiagnosticId,
                     MR1104ProtectedConstructorsMustHaveXMLComment.DiagnosticId,
                     MR1105PrivateConstructorsMustHaveXMLComment.DiagnosticId,
                     MR1106StaticConstructorsMustHaveXMLComment.DiagnosticId);
@@ -52,8 +52,7 @@ namespace XmlDocAnalyzer.Constructors
         public sealed override FixAllProvider GetFixAllProvider()
         {
             // See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/FixAllProvider.md for more information on Fix All Providers
-            // return WellKnownFixAllProviders.BatchFixer;
-            return null;
+            return WellKnownFixAllProviders.BatchFixer;
         }
 
         /// <summary>

@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Constructors
+namespace XmlDocAnalyzer.Destructors
 {
     using System.Collections.Immutable;
     using System.Linq;

@@ -1,10 +1,10 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR2003MethodDefinitionsInInterfacesMustHaveXMLComment.cs" company="Michael Reukauff">
-//   Copyright � 2016 Michael Reukauff. All rights reserved.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="MR3004ProtectedPropertiesMustHaveXMLComment.cs" company="Michael Reukauff">
+//   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Interfaces
+namespace XmlDocAnalyzer.Property
 {
     using System.Collections.Immutable;
     using System.Linq;
@@ -18,15 +18,15 @@ namespace XmlDocAnalyzer.Interfaces
     using XmlElementSyntax = Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax;
 
     /// <summary>
-    /// MR2003 Method Definitions In Interfaces Must Have XML Comment.
+    /// MR3004 protected properties must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR2003MethodDefinitionsInInterfacesMustHaveXMLComment : DiagnosticAnalyzer
+    public class MR3004ProtectedPropertiesMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId = "MR2003";
+        public const string DiagnosticId = "MR3004";
 
         /// <summary>
         /// The category.
@@ -36,7 +36,7 @@ namespace XmlDocAnalyzer.Interfaces
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Method definitions in interfaces must have a xml documentation header.";
+        private const string Title = "Protected properties must have a xml documentation header.";
 
         /// <summary>
         /// The message.
@@ -71,7 +71,7 @@ namespace XmlDocAnalyzer.Interfaces
         /// <param name="context">The analysis context.</param>
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(Check, SyntaxKind.MethodDeclaration);
+            context.RegisterSyntaxNodeAction(Check, SyntaxKind.PropertyDeclaration);
         }
 
         /// <summary>
@@ -80,16 +80,19 @@ namespace XmlDocAnalyzer.Interfaces
         /// <param name="syntaxNodeAnalysisContext">The systax node analysis context.</param>
         private void Check(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            var node = syntaxNodeAnalysisContext.Node as MethodDeclarationSyntax;
+            var node = syntaxNodeAnalysisContext.Node as PropertyDeclarationSyntax;
 
-            // ReSharper disable once UseNullPropagation
             if (node == null)
             {
                 return;
             }
 
-            // if not inside of an interface declaration do nothing
-            if (!(node.Parent is InterfaceDeclarationSyntax))
+            if (!node.Modifiers.Any(SyntaxKind.ProtectedKeyword))
+            {
+                return;
+            }
+
+            if (node.Modifiers.Any(SyntaxKind.InternalKeyword))
             {
                 return;
             }

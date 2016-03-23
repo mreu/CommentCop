@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Classes
+namespace XmlDocAnalyzer.Interfaces
 {
     using System.Collections.Immutable;
     using System.Linq;

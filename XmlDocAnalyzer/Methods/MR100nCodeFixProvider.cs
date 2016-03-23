@@ -51,8 +51,7 @@ namespace XmlDocAnalyzer.Methods
         public sealed override FixAllProvider GetFixAllProvider()
         {
             // See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/FixAllProvider.md for more information on Fix All Providers
-            // return WellKnownFixAllProviders.BatchFixer;
-            return null;
+            return WellKnownFixAllProviders.BatchFixer;
         }
 
         /// <summary>
@@ -362,7 +361,6 @@ namespace XmlDocAnalyzer.Methods
 
                                 newLine
                             }));
-
                 }
             }
 
