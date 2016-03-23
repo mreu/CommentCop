@@ -49,6 +49,12 @@
     <Compile Include="Convert.cs" />
     <Compile Include="Destructors\MR1201DestructorsMustHaveXMLComment.cs" />
     <Compile Include="Destructors\MR1201CodeFixProvider.cs" />
+    <Compile Include="Fields\MR4001PublicFieldsMustHaveXMLComment.cs" />
+    <Compile Include="Fields\MR4002InternalFieldsMustHaveXMLComment.cs" />
+    <Compile Include="Fields\MR4003InternalProtectedFieldsMustHaveXMLComment.cs" />
+    <Compile Include="Fields\MR4004ProtectedFieldsMustHaveXMLComment.cs" />
+    <Compile Include="Fields\MR4005PrivateFieldsMustHaveXMLComment.cs" />
+    <Compile Include="Fields\MR400nCodeFixProvider.cs" />
     <Compile Include="Helper\Extensions.cs" />
     <Compile Include="Interfaces\MR2001PublicInterfacesMustHaveXMLComment.cs" />
     <Compile Include="Interfaces\MR2002InternalInterfacesMustHaveXMLComment.cs" />
@@ -162,7 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Events\" />
-    <Folder Include="Fields\" />
+    <Folder Include="Structs\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\v4.6\Microsoft.Portable.CSharp.targets" />
   <Target Name="AfterBuild">
