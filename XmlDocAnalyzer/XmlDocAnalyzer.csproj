@@ -73,12 +73,14 @@
     <Compile Include="Interfaces\MR2006CodeFixProvider.cs" />
     <Compile Include="Interfaces\MR2006IndexerDefinitionsInInterfacesMustHaveXMLComment.cs" />
     <Compile Include="Interfaces\MR200nCodeFixProvider.cs" />
-    <Compile Include="Methods\MR100nCodeFixProvider.cs" />
+    <Compile Include="Methods\MR1001-1005CodeFixProvider.cs" />
     <Compile Include="Methods\MR1001PublicMethodsMustHaveXMLComment.cs" />
     <Compile Include="Methods\MR1002InternalMethodsMustHaveXMLComment.cs" />
     <Compile Include="Methods\MR1003InternalProtectedMethodsMustHaveXMLComment.cs" />
     <Compile Include="Methods\MR1004ProtectedMethodsMustHaveXMLComment.cs" />
     <Compile Include="Methods\MR1005PrivateMethodsMustHaveXMLComment.cs" />
+    <Compile Include="Methods\MR1006CodeFixProvider.cs" />
+    <Compile Include="Methods\MR1006OperatorsMustHaveXMLComment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Property\MR3001-3005CodeFixProvider.cs" />
     <Compile Include="Property\MR3001PublicPropertiesMustHaveXMLComment.cs" />
