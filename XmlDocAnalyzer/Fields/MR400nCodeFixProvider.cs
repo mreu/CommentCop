@@ -140,7 +140,7 @@ namespace XmlDocAnalyzer.Fields
         /// <summary>
         /// Get summary.
         /// </summary>
-        /// <param name="theSyntax">The method to add to the summary.</param>
+        /// <param name="theSyntax">The field to add to the summary.</param>
         /// <returns>The syntax list.</returns>
         private static DocumentationCommentTriviaSyntax GetSummary(FieldDeclarationSyntax theSyntax)
         {
@@ -158,8 +158,15 @@ namespace XmlDocAnalyzer.Fields
             var field = theSyntax.DescendantNodes().OfType<VariableDeclaratorSyntax>().FirstOrDefault();
             if (field != null)
             {
-                summaryComment = " " + Convert.Method(field.Identifier.ValueText);
+                var hasConst = theSyntax.Modifiers.Any(SyntaxKind.ConstKeyword);
+                var hasReadOnly = theSyntax.Modifiers.Any(SyntaxKind.ReadOnlyKeyword);
+
+                var equals = field.DescendantNodes().OfType<EqualsValueClauseSyntax>().FirstOrDefault();
+
+                summaryComment = " " + Convert.Field(field.Identifier.ValueText, hasConst, hasReadOnly, equals);
             }
+
+            //theSyntax.DescendantTokens().OfType<ReadOnlyToken>()
 
             var summaryText = SingletonList<XmlNodeSyntax>(
                 XmlText().NormalizeWhitespace()

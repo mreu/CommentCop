@@ -111,7 +111,7 @@ namespace XmlDocAnalyzer.Fields
 
             var field = node.DescendantNodes().OfType<VariableDeclaratorSyntax>().First();
 
-            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, field.GetLocation(), Message));
+            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, field.Identifier.GetLocation(), Message));
         }
     }
 }

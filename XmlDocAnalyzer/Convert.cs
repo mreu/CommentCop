@@ -9,6 +9,7 @@ namespace XmlDocAnalyzer
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Text.RegularExpressions;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -226,6 +227,42 @@ namespace XmlDocAnalyzer
         public static string PropertyType(string propType)
         {
             return $"The <see cref=\"{propType}\"/>.";
+        }
+
+        /// <summary>
+        /// Generate the comment for a field.
+        /// </summary>
+        /// <param name="name">Name of the field.</param>
+        /// <param name="hasConst">True if const otherwise false.</param>
+        /// <param name="hasReadOnly">True if readonyl otherwise false.</param>
+        /// <param name="equals">The equal synatx clause or null if not present in code.</param>
+        /// <returns>The comment.</returns>
+        public static string Field(string name, bool hasConst, bool hasReadOnly, EqualsValueClauseSyntax equals)
+        {
+            var sb = new StringBuilder("The ");
+
+            if (hasConst)
+            {
+                sb.Append("const ");
+            }
+
+            if (hasReadOnly)
+            {
+                sb.Append("readonly ");
+            }
+
+            sb.Append(name);
+
+            sb.Append('.');
+
+            if (hasConst || hasReadOnly)
+            {
+                sb.Append(" Value: ");
+                sb.Append(@equals.Value);
+                sb.Append('.');
+            }
+
+            return sb.ToString();
         }
 
         /// <summary>
