@@ -1,10 +1,10 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR400nCodeFixProvider.cs" company="Michael Reukauff">
+// <copyright file="MR2005CodeFixProvider.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Fields
+namespace XmlDocAnalyzer.Interface
 {
     using System.Collections.Immutable;
     using System.Composition;
@@ -23,14 +23,14 @@ namespace XmlDocAnalyzer.Fields
     /// <summary>
     /// The xml doc code fix provider.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR400nCodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR2005CodeFixProvider))]
     [Shared]
-    public class MR400nCodeFixProvider : CodeFixProvider
+    public class MR2005CodeFixProvider : CodeFixProvider
     {
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Insert XML documentation header (MR4001 - MR4005)";
+        private const string Title = "Insert XML documentation header (MR2005)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.
@@ -38,11 +38,7 @@ namespace XmlDocAnalyzer.Fields
         public sealed override ImmutableArray<string> FixableDiagnosticIds
             =>
                 ImmutableArray.Create(
-                    MR4001PublicFieldsMustHaveXMLComment.DiagnosticId,
-                    MR4002InternalFieldsMustHaveXMLComment.DiagnosticId,
-                    MR4003InternalProtectedFieldsMustHaveXMLComment.DiagnosticId,
-                    MR4004ProtectedFieldsMustHaveXMLComment.DiagnosticId,
-                    MR4005PrivateFieldsMustHaveXMLComment.DiagnosticId);
+                    MR2005EventDefinitionsInInterfacesMustHaveXMLComment.DiagnosticId);
 
         /// <summary>
         /// Get fix all provider.
@@ -91,18 +87,17 @@ namespace XmlDocAnalyzer.Fields
             Document document,
             SyntaxNode root,
             SyntaxToken identifierToken,
+            //// ReSharper disable once UnusedParameter.Local
             CancellationToken cancellationToken)
         {
-            var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+            //// var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
             var field = identifierToken.Parent.Parent.Parent;
 
-            return GetTransformedDocumentForMethodDeclaration(
+            return await GetTransformedDocumentForMethodDeclaration(
                 document,
                 root,
-                semanticModel,
-                (FieldDeclarationSyntax)field,
-                cancellationToken);
+                (EventFieldDeclarationSyntax)field);
         }
 
         /// <summary>
@@ -110,16 +105,12 @@ namespace XmlDocAnalyzer.Fields
         /// </summary>
         /// <param name="document">The document.</param>
         /// <param name="root">The syntax root.</param>
-        /// <param name="semanticModel">The semantic model.</param>
         /// <param name="declaration">The method declaration syntax.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The modified or unmodified document.</returns>
-        private static Document GetTransformedDocumentForMethodDeclaration(
+        private static async Task<Document> GetTransformedDocumentForMethodDeclaration(
             Document document,
             SyntaxNode root,
-            SemanticModel semanticModel,
-            FieldDeclarationSyntax declaration,
-            CancellationToken cancellationToken)
+            EventFieldDeclarationSyntax declaration)
         {
             var leadingTrivia = declaration.GetLeadingTrivia();
             var insertionIndex = leadingTrivia.Count;
@@ -128,7 +119,7 @@ namespace XmlDocAnalyzer.Fields
                 insertionIndex--;
             }
 
-            var xmldoc = GetSummary(declaration);
+            var xmldoc = await Task.Run(() => GetSummary(declaration));
             var xmldoc1 = Trivia(xmldoc);
 
             var newLeadingTrivia = leadingTrivia.Insert(insertionIndex, xmldoc1);
@@ -142,7 +133,7 @@ namespace XmlDocAnalyzer.Fields
         /// </summary>
         /// <param name="theSyntax">The field to add to the summary.</param>
         /// <returns>The syntax list.</returns>
-        private static DocumentationCommentTriviaSyntax GetSummary(FieldDeclarationSyntax theSyntax)
+        private static DocumentationCommentTriviaSyntax GetSummary(EventFieldDeclarationSyntax theSyntax)
         {
             const string summary = "summary";
 
@@ -155,15 +146,12 @@ namespace XmlDocAnalyzer.Fields
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
             var summaryComment = string.Empty;
-            var field = theSyntax.DescendantNodes().OfType<VariableDeclaratorSyntax>().FirstOrDefault();
+            var variable = theSyntax.ChildNodes().OfType<VariableDeclarationSyntax>().FirstOrDefault();
+            var field = variable?.ChildNodes().OfType<VariableDeclaratorSyntax>().FirstOrDefault();
+
             if (field != null)
             {
-                var hasConst = theSyntax.Modifiers.Any(SyntaxKind.ConstKeyword);
-                var hasReadOnly = theSyntax.Modifiers.Any(SyntaxKind.ReadOnlyKeyword);
-
-                var equals = field.DescendantNodes().OfType<EqualsValueClauseSyntax>().FirstOrDefault();
-
-                summaryComment = " " + Convert.Field(field.Identifier.ValueText, hasConst, hasReadOnly, equals);
+                summaryComment = " " + Convert.Event(field.Identifier.ValueText, variable.Type.ToString());
             }
 
             var summaryText = SingletonList<XmlNodeSyntax>(

@@ -1,10 +1,10 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR3002InternalPropertiesMustHaveXMLComment.cs" company="Michael Reukauff">
+// <copyright file="MR5004ProtectedEventsMustHaveXMLComment.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Property
+namespace XmlDocAnalyzer.Events
 {
     using System.Collections.Immutable;
     using System.Linq;
@@ -18,15 +18,15 @@ namespace XmlDocAnalyzer.Property
     using XmlElementSyntax = Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax;
 
     /// <summary>
-    /// MR3002 internal properties must have XML comment.
+    /// MR5004 protected events must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR3002InternalPropertiesMustHaveXMLComment : DiagnosticAnalyzer
+    public class MR5004ProtectedEventsMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId = "MR3002";
+        public const string DiagnosticId = "MR5004";
 
         /// <summary>
         /// The category.
@@ -36,7 +36,7 @@ namespace XmlDocAnalyzer.Property
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Internal properties must have a xml documentation header.";
+        private const string Title = "Protected events must have a xml documentation header.";
 
         /// <summary>
         /// The message.
@@ -71,7 +71,7 @@ namespace XmlDocAnalyzer.Property
         /// <param name="context">The analysis context.</param>
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(Check, SyntaxKind.PropertyDeclaration);
+            context.RegisterSyntaxNodeAction(Check, SyntaxKind.EventFieldDeclaration);
         }
 
         /// <summary>
@@ -80,19 +80,19 @@ namespace XmlDocAnalyzer.Property
         /// <param name="syntaxNodeAnalysisContext">The systax node analysis context.</param>
         private void Check(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            var node = syntaxNodeAnalysisContext.Node as PropertyDeclarationSyntax;
+            var node = syntaxNodeAnalysisContext.Node as EventFieldDeclarationSyntax;
 
             if (node == null)
             {
                 return;
             }
 
-            if (!node.Modifiers.Any(SyntaxKind.InternalKeyword))
+            if (!node.Modifiers.Any(SyntaxKind.ProtectedKeyword))
             {
                 return;
             }
 
-            if (node.Modifiers.Any(SyntaxKind.ProtectedKeyword))
+            if (node.Modifiers.Any(SyntaxKind.InternalKeyword))
             {
                 return;
             }
@@ -114,7 +114,9 @@ namespace XmlDocAnalyzer.Property
                 }
             }
 
-            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, node.Identifier.GetLocation(), Message));
+            var field = node.DescendantNodes().OfType<VariableDeclaratorSyntax>().First();
+
+            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, field.Identifier.GetLocation(), Message));
         }
     }
 }

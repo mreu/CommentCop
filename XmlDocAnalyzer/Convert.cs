@@ -226,7 +226,7 @@ namespace XmlDocAnalyzer
         /// <returns>The comment.</returns>
         public static string PropertyType(string propType)
         {
-            return $"The <see cref=\"{propType}\"/>.";
+            return $"The <see cref=\"{propType.Replace('<', '{').Replace('>', '}')}\"/>.";
         }
 
         /// <summary>
@@ -261,6 +261,25 @@ namespace XmlDocAnalyzer
                 sb.Append(@equals.Value);
                 sb.Append('.');
             }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Generate the comment for an event.
+        /// </summary>
+        /// <param name="name">Name of the event.</param>
+        /// <param name="delegatenName">The name of the delegate.</param>
+        /// <returns>The comment.</returns>
+        public static string Event(string name, string delegatenName)
+        {
+            var sb = new StringBuilder("The ");
+
+            sb.Append(name);
+
+            sb.Append(" event of the <see cref=\"");
+            sb.Append(delegatenName.Replace('<', '{').Replace('>', '}'));
+            sb.Append("\"/>.");
 
             return sb.ToString();
         }

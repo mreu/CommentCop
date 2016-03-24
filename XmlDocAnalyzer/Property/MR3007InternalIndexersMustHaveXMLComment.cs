@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR3002InternalPropertiesMustHaveXMLComment.cs" company="Michael Reukauff">
+// <copyright file="MR3007InternalIndexersMustHaveXMLComment.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -18,15 +18,15 @@ namespace XmlDocAnalyzer.Property
     using XmlElementSyntax = Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax;
 
     /// <summary>
-    /// MR3002 internal properties must have XML comment.
+    /// MR3007 internal indexers must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR3002InternalPropertiesMustHaveXMLComment : DiagnosticAnalyzer
+    public class MR3007InternalIndexersMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId = "MR3002";
+        public const string DiagnosticId = "MR3007";
 
         /// <summary>
         /// The category.
@@ -36,7 +36,7 @@ namespace XmlDocAnalyzer.Property
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Internal properties must have a xml documentation header.";
+        private const string Title = "Internal indexers must have a xml documentation header.";
 
         /// <summary>
         /// The message.
@@ -71,7 +71,7 @@ namespace XmlDocAnalyzer.Property
         /// <param name="context">The analysis context.</param>
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(Check, SyntaxKind.PropertyDeclaration);
+            context.RegisterSyntaxNodeAction(Check, SyntaxKind.IndexerDeclaration);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace XmlDocAnalyzer.Property
         /// <param name="syntaxNodeAnalysisContext">The systax node analysis context.</param>
         private void Check(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            var node = syntaxNodeAnalysisContext.Node as PropertyDeclarationSyntax;
+            var node = syntaxNodeAnalysisContext.Node as IndexerDeclarationSyntax;
 
             if (node == null)
             {
@@ -114,7 +114,7 @@ namespace XmlDocAnalyzer.Property
                 }
             }
 
-            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, node.Identifier.GetLocation(), Message));
+            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, node.ThisKeyword.GetLocation(), Message));
         }
     }
 }

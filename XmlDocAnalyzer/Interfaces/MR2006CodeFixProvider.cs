@@ -1,10 +1,10 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR300nCodeFixProvider.cs" company="Michael Reukauff">
+// <copyright file="MR3006-3010CodeFixProvider.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Property
+namespace XmlDocAnalyzer.Interface
 {
     using System.Collections.Immutable;
     using System.Composition;
@@ -23,26 +23,19 @@ namespace XmlDocAnalyzer.Property
     /// <summary>
     /// The xml doc code fix provider.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR300nCodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR3006_3010CodeFixProvider))]
     [Shared]
-    public class MR300nCodeFixProvider : CodeFixProvider
+    public class MR3006_3010CodeFixProvider : CodeFixProvider
     {
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Insert XML documentation header (MR3001 - MR3005)";
+        private const string Title = "Insert XML documentation header (MR3006 - MR3010)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.
         /// </summary>
-        public sealed override ImmutableArray<string> FixableDiagnosticIds
-            =>
-                ImmutableArray.Create(
-                    MR3001PublicPropertiesMustHaveXMLComment.DiagnosticId,
-                    MR3002InternalPropertiesMustHaveXMLComment.DiagnosticId,
-                    MR3003InternalProtectedPropertiesMustHaveXMLComment.DiagnosticId,
-                    MR3004ProtectedPropertiesMustHaveXMLComment.DiagnosticId,
-                    MR3005PrivatePropertiesMustHaveXMLComment.DiagnosticId);
+        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MR2006IndexerDefinitionsInInterfacesMustHaveXMLComment.DiagnosticId);
 
         /// <summary>
         /// Get fix all provider.
@@ -99,7 +92,7 @@ namespace XmlDocAnalyzer.Property
                 document,
                 root,
                 semanticModel,
-                (PropertyDeclarationSyntax)identifierToken.Parent,
+                (IndexerDeclarationSyntax)identifierToken.Parent,
                 cancellationToken);
         }
 
@@ -116,7 +109,7 @@ namespace XmlDocAnalyzer.Property
             Document document,
             SyntaxNode root,
             SemanticModel semanticModel,
-            PropertyDeclarationSyntax declaration,
+            IndexerDeclarationSyntax declaration,
             CancellationToken cancellationToken)
         {
             if (declaration.ExplicitInterfaceSpecifier == null && !declaration.Modifiers.Any(SyntaxKind.OverrideKeyword))
@@ -149,7 +142,7 @@ namespace XmlDocAnalyzer.Property
         /// </summary>
         /// <param name="theSyntax">The property to add to the summary.</param>
         /// <returns>The syntax list.</returns>
-        private static DocumentationCommentTriviaSyntax GetSummary(PropertyDeclarationSyntax theSyntax)
+        private static DocumentationCommentTriviaSyntax GetSummary(IndexerDeclarationSyntax theSyntax)
         {
             const string summary = "summary";
 
@@ -161,34 +154,7 @@ namespace XmlDocAnalyzer.Property
                 .WithLessThanSlashToken(Token(SyntaxKind.LessThanSlashToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
-            var accessors = theSyntax.AccessorList.ChildNodes().OfType<AccessorDeclarationSyntax>();
-
-            var hasGetter = false;
-            var hasSetter = false;
-            foreach (var accessor in accessors)
-            {
-                if (accessor.Kind() == SyntaxKind.GetAccessorDeclaration)
-                {
-                    if (!accessor.Modifiers.Any(SyntaxKind.PrivateKeyword))
-                    {
-                        hasGetter = true;
-                    }
-
-                    continue;
-                }
-
-                if (accessor.Kind() == SyntaxKind.SetAccessorDeclaration)
-                {
-                    if (!accessor.Modifiers.Any(SyntaxKind.PrivateKeyword))
-                    {
-                        hasSetter = true;
-                    }
-                }
-            }
-
-            var isBool = (theSyntax.Type as PredefinedTypeSyntax)?.Keyword.Kind() == SyntaxKind.BoolKeyword;
-
-            var summaryComment = " " + Convert.Property(theSyntax.Identifier.ValueText, hasGetter, hasSetter, isBool);
+            var summaryComment = " The Indexer.";
 
             var summaryText = SingletonList<XmlNodeSyntax>(
                 XmlText().NormalizeWhitespace()
@@ -269,6 +235,55 @@ namespace XmlDocAnalyzer.Property
                             }));
                 }
             }
+
+            // Add parameter comments
+            foreach (var parameter in theSyntax.ParameterList.Parameters)
+            {
+                list = list.AddRange(
+                    List(
+                        new XmlNodeSyntax[]
+                        {
+                                xmlComment,
+
+                                XmlElement(
+                                    XmlElementStartTag(XmlName(Identifier("param")))
+                                    .WithAttributes(
+                                        SingletonList<XmlAttributeSyntax>(
+                                            XmlNameAttribute(
+                                                XmlName(Identifier(TriviaList(Space), "name", TriviaList())),
+                                                Token(SyntaxKind.DoubleQuoteToken),
+                                                IdentifierName(parameter.Identifier.ValueText),
+                                                Token(SyntaxKind.DoubleQuoteToken)))),
+                                    XmlElementEndTag(XmlName(Identifier("param"))))
+                                    .WithContent(
+                                        SingletonList<XmlNodeSyntax>(
+                                            XmlText()
+                                    .WithTextTokens(
+                                        TokenList(
+                                            XmlTextLiteral(
+                                                TriviaList(),
+                                                $"The index {parameter.Identifier.ValueText}.",
+                                                "comment",
+                                                TriviaList()))))),
+
+                                newLine
+                        }));
+            }
+
+            // Add returns comments
+            list = list.AddRange(
+                List(
+                    new XmlNodeSyntax[]
+                    {
+                            xmlComment,
+
+                            XmlElement(XmlElementStartTag(XmlName(Identifier("returns"))), XmlElementEndTag(XmlName(Identifier("returns"))))
+                                .WithContent(
+                                    SingletonList<XmlNodeSyntax>(
+                                        XmlText().WithTextTokens(TokenList(XmlTextLiteral(TriviaList(), $"One element of type {theSyntax.Type}.", "comment", TriviaList()))))),
+
+                            newLine
+                    }));
 
             return DocumentationCommentTrivia(SyntaxKind.SingleLineDocumentationCommentTrivia, list);
         }

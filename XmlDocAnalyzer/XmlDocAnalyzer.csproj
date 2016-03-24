@@ -49,6 +49,12 @@
     <Compile Include="Convert.cs" />
     <Compile Include="Destructors\MR1201DestructorsMustHaveXMLComment.cs" />
     <Compile Include="Destructors\MR1201CodeFixProvider.cs" />
+    <Compile Include="Events\MR5001PublicEventsMustHaveXMLComment.cs" />
+    <Compile Include="Events\MR5002InternalEventsMustHaveXMLComment.cs" />
+    <Compile Include="Events\MR5003InternalProtectedEventsMustHaveXMLComment.cs" />
+    <Compile Include="Events\MR5004ProtectedEventsMustHaveXMLComment.cs" />
+    <Compile Include="Events\MR5005PrivateEventsMustHaveXMLComment.cs" />
+    <Compile Include="Events\MR500nCodeFixProvider.cs" />
     <Compile Include="Fields\MR4001PublicFieldsMustHaveXMLComment.cs" />
     <Compile Include="Fields\MR4002InternalFieldsMustHaveXMLComment.cs" />
     <Compile Include="Fields\MR4003InternalProtectedFieldsMustHaveXMLComment.cs" />
@@ -62,6 +68,10 @@
     <Compile Include="Interfaces\MR2003MethodDefinitionsInInterfacesMustHaveXMLComment.cs" />
     <Compile Include="Interfaces\MR2004CodeFixProvider.cs" />
     <Compile Include="Interfaces\MR2004PropertyDefinitionsInInterfacesMustHaveXMLComment.cs" />
+    <Compile Include="Interfaces\MR2005CodeFixProvider.cs" />
+    <Compile Include="Interfaces\MR2005EventDefinitionsInInterfacesMustHaveXMLComment.cs" />
+    <Compile Include="Interfaces\MR2006CodeFixProvider.cs" />
+    <Compile Include="Interfaces\MR2006IndexerDefinitionsInInterfacesMustHaveXMLComment.cs" />
     <Compile Include="Interfaces\MR200nCodeFixProvider.cs" />
     <Compile Include="Methods\MR100nCodeFixProvider.cs" />
     <Compile Include="Methods\MR1001PublicMethodsMustHaveXMLComment.cs" />
@@ -70,12 +80,18 @@
     <Compile Include="Methods\MR1004ProtectedMethodsMustHaveXMLComment.cs" />
     <Compile Include="Methods\MR1005PrivateMethodsMustHaveXMLComment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Property\MR3001-3005CodeFixProvider.cs" />
     <Compile Include="Property\MR3001PublicPropertiesMustHaveXMLComment.cs" />
     <Compile Include="Property\MR3002InternalPropertiesMustHaveXMLComment.cs" />
     <Compile Include="Property\MR3003InternalProtectedPropertiesMustHaveXMLComment.cs" />
     <Compile Include="Property\MR3004ProtectedPropertiesMustHaveXMLComment.cs" />
     <Compile Include="Property\MR3005PrivatePropertiesMustHaveXMLComment.cs" />
-    <Compile Include="Property\MR300nCodeFixProvider.cs" />
+    <Compile Include="Property\MR3006-3010CodeFixProvider.cs" />
+    <Compile Include="Property\MR3006PublicIndexersMustHaveXMLComment.cs" />
+    <Compile Include="Property\MR3007InternalIndexersMustHaveXMLComment.cs" />
+    <Compile Include="Property\MR3008InternalProtectedIndexersMustHaveXMLComment.cs" />
+    <Compile Include="Property\MR3009ProtectedIndexersMustHaveXMLComment.cs" />
+    <Compile Include="Property\MR3010PrivateIndexersMustHaveXMLComment.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -167,7 +183,6 @@
     <Content Include="Links.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Events\" />
     <Folder Include="Structs\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\v4.6\Microsoft.Portable.CSharp.targets" />
