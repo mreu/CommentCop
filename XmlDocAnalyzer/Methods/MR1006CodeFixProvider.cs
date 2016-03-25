@@ -241,8 +241,8 @@ namespace XmlDocAnalyzer.Methods
             {
                 if (syntax.ChildNodes().OfType<ObjectCreationExpressionSyntax>().Any())
                 {
-                    var identifier = syntax.DescendantNodes().OfType<IdentifierNameSyntax>().First();
-                    var argumentList = syntax.DescendantNodes().OfType<ArgumentListSyntax>().First();
+                    var identifier = syntax.DescendantNodes().OfType<IdentifierNameSyntax>().FirstOrDefault();
+                    var argumentList = syntax.DescendantNodes().OfType<ArgumentListSyntax>().FirstOrDefault();
                     var parms = argumentList.DescendantTokens().Where(x => x.IsKind(SyntaxKind.StringLiteralToken)).ToList();
                     var parmText = string.Empty;
 

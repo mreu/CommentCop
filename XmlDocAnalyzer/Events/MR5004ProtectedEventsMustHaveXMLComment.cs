@@ -114,7 +114,7 @@ namespace XmlDocAnalyzer.Events
                 }
             }
 
-            var field = node.DescendantNodes().OfType<VariableDeclaratorSyntax>().First();
+            var field = node.DescendantNodes().OfType<VariableDeclaratorSyntax>().FirstOrDefault();
 
             syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, field.Identifier.GetLocation(), Message));
         }
