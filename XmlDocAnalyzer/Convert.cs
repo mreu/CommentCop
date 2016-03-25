@@ -230,6 +230,35 @@ namespace XmlDocAnalyzer
         }
 
         /// <summary>
+        /// Try to convert the name of a struct to useful comment.
+        /// </summary>
+        /// <param name="name">The name of the struct.</param>
+        /// <returns>The comment.</returns>
+        public static string Struct(string name)
+        {
+            var parts = SplitName(name);
+
+            if (parts.Length > 0)
+            {
+                MakeLowerCase(parts, true);
+
+                string newName;
+                if (parts[parts.Length - 1].Contains("struct"))
+                {
+                    newName = "The " + string.Join(" ", parts) + '.';
+                }
+                else
+                {
+                    newName = "The " + string.Join(" ", parts) + " struct.";
+                }
+
+                return newName;
+            }
+
+            return "The " + name.ToLower() + " struct.";
+        }
+
+        /// <summary>
         /// Generate the comment for a field.
         /// </summary>
         /// <param name="name">Name of the field.</param>

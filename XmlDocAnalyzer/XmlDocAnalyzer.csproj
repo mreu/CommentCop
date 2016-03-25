@@ -99,6 +99,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Structs\MR0006-MR0010CodeFixProvider.cs" />
+    <Compile Include="Structs\MR0006PublicStructsMustHaveXMLComment.cs" />
+    <Compile Include="Structs\MR0007InternalStructsMustHaveXMLComment.cs" />
+    <Compile Include="Structs\MR0008InternalProtectedStructsMustHaveXMLComment.cs" />
+    <Compile Include="Structs\MR0009ProtectedStructsMustHaveXMLComment.cs" />
+    <Compile Include="Structs\MR0010PrivateStructsMustHaveXMLComment.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
@@ -184,9 +190,7 @@
   <ItemGroup>
     <Content Include="Links.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Structs\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\v4.6\Microsoft.Portable.CSharp.targets" />
   <Target Name="AfterBuild">
     <GetAssemblyIdentity AssemblyFiles="$(OutDir)\$(AssemblyName).dll">
