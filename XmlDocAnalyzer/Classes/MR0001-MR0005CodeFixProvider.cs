@@ -1,10 +1,10 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR400nCodeFixProvider.cs" company="Michael Reukauff">
+// <copyright file="MR0001-MR0005CodeFixProvider.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Fields
+namespace XmlDocAnalyzer.Classes
 {
     using System.Collections.Immutable;
     using System.Composition;
@@ -23,14 +23,14 @@ namespace XmlDocAnalyzer.Fields
     /// <summary>
     /// The xml doc code fix provider.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR400nCodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR0001_MR0005CodeFixProvider))]
     [Shared]
-    public class MR400nCodeFixProvider : CodeFixProvider
+    public class MR0001_MR0005CodeFixProvider : CodeFixProvider
     {
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Insert XML documentation header (MR4001 - MR4005)";
+        private const string Title = "Insert XML documentation header (MR0001 - MR0005)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.
@@ -38,11 +38,11 @@ namespace XmlDocAnalyzer.Fields
         public sealed override ImmutableArray<string> FixableDiagnosticIds
             =>
                 ImmutableArray.Create(
-                    MR4001PublicFieldsMustHaveXMLComment.DiagnosticId,
-                    MR4002InternalFieldsMustHaveXMLComment.DiagnosticId,
-                    MR4003InternalProtectedFieldsMustHaveXMLComment.DiagnosticId,
-                    MR4004ProtectedFieldsMustHaveXMLComment.DiagnosticId,
-                    MR4005PrivateFieldsMustHaveXMLComment.DiagnosticId);
+                    MR0001PublicClassesMustHaveXMLComment.DiagnosticId,
+                    MR0002InternalClassesMustHaveXMLComment.DiagnosticId,
+                    MR0003InternalProtectedClassesMustHaveXMLComment.DiagnosticId,
+                    MR0004ProtectedClassesMustHaveXMLComment.DiagnosticId,
+                    MR0005PrivateClassesMustHaveXMLComment.DiagnosticId);
 
         /// <summary>
         /// Get fix all provider.
@@ -93,34 +93,10 @@ namespace XmlDocAnalyzer.Fields
             SyntaxToken identifierToken,
             CancellationToken cancellationToken)
         {
+            // ReSharper disable once UnusedVariable
             var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
-            var field = identifierToken.Parent.Parent.Parent;
-
-            return GetTransformedDocumentForMethodDeclaration(
-                document,
-                root,
-                semanticModel,
-                (FieldDeclarationSyntax)field,
-                cancellationToken);
-        }
-
-        /// <summary>
-        /// Get transformed document for method declaration.
-        /// </summary>
-        /// <param name="document">The document.</param>
-        /// <param name="root">The syntax root.</param>
-        /// <param name="semanticModel">The semantic model.</param>
-        /// <param name="declaration">The method declaration syntax.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The modified or unmodified document.</returns>
-        private static Document GetTransformedDocumentForMethodDeclaration(
-            Document document,
-            SyntaxNode root,
-            SemanticModel semanticModel,
-            FieldDeclarationSyntax declaration,
-            CancellationToken cancellationToken)
-        {
+            var declaration = (ClassDeclarationSyntax)identifierToken.Parent;
             var leadingTrivia = declaration.GetLeadingTrivia();
             var insertionIndex = leadingTrivia.Count;
             while (insertionIndex > 0 && !leadingTrivia[insertionIndex - 1].HasBuiltinEndLine())
@@ -140,9 +116,9 @@ namespace XmlDocAnalyzer.Fields
         /// <summary>
         /// Get summary.
         /// </summary>
-        /// <param name="theSyntax">The field to add to the summary.</param>
+        /// <param name="theClass">The class to add to the summary.</param>
         /// <returns>The syntax list.</returns>
-        private static DocumentationCommentTriviaSyntax GetSummary(FieldDeclarationSyntax theSyntax)
+        private static DocumentationCommentTriviaSyntax GetSummary(ClassDeclarationSyntax theClass)
         {
             const string summary = "summary";
 
@@ -154,17 +130,7 @@ namespace XmlDocAnalyzer.Fields
                 .WithLessThanSlashToken(Token(SyntaxKind.LessThanSlashToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
-            var summaryComment = string.Empty;
-            var field = theSyntax.DescendantNodes().OfType<VariableDeclaratorSyntax>().FirstOrDefault();
-            if (field != null)
-            {
-                var hasConst = theSyntax.Modifiers.Any(SyntaxKind.ConstKeyword);
-                var hasReadOnly = theSyntax.Modifiers.Any(SyntaxKind.ReadOnlyKeyword);
-
-                var equals = field.DescendantNodes().OfType<EqualsValueClauseSyntax>().FirstOrDefault();
-
-                summaryComment = " " + Convert.Field(field.Identifier.ValueText, hasConst, hasReadOnly, equals);
-            }
+            var summaryComment = " " + Convert.Class(theClass.Identifier.ValueText);
 
             var summaryText = SingletonList<XmlNodeSyntax>(
                 XmlText().NormalizeWhitespace()
@@ -197,6 +163,46 @@ namespace XmlDocAnalyzer.Fields
             var summaryElement = XmlElement(summaryStart, summaryEnd).WithContent(summaryText);
 
             var list = List(new XmlNodeSyntax[] { xmlComment, summaryElement, newLine });
+
+            // Add typeparams comments
+            if (theClass.TypeParameterList != null)
+            {
+                if (theClass.TypeParameterList.Parameters.Any())
+                {
+                    foreach (var parameter in theClass.TypeParameterList.Parameters)
+                    {
+                        list = list.AddRange(
+                            List(
+                                new XmlNodeSyntax[]
+                                {
+                                xmlComment,
+
+                                XmlElement(
+                                    XmlElementStartTag(XmlName(Identifier("typeparam")))
+                                    .WithAttributes(
+                                        SingletonList<XmlAttributeSyntax>(
+                                            XmlNameAttribute(
+                                                XmlName(Identifier(TriviaList(Space), "name", TriviaList())),
+                                                Token(SyntaxKind.DoubleQuoteToken),
+                                                IdentifierName(parameter.Identifier.ValueText),
+                                                Token(SyntaxKind.DoubleQuoteToken)))),
+                                    XmlElementEndTag(XmlName(Identifier("param"))))
+                                    .WithContent(
+                                        SingletonList<XmlNodeSyntax>(
+                                            XmlText()
+                                    .WithTextTokens(
+                                        TokenList(
+                                            XmlTextLiteral(
+                                                TriviaList(),
+                                                string.Empty,
+                                                "comment",
+                                                TriviaList()))))),
+
+                                newLine
+                                }));
+                    }
+                }
+            }
 
             return DocumentationCommentTrivia(SyntaxKind.SingleLineDocumentationCommentTrivia, list);
         }

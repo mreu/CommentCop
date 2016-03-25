@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR110nCodeFixProvider.cs" company="Michael Reukauff">
+// <copyright file="MR1101-1106CodeFixProvider.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -23,9 +23,9 @@ namespace XmlDocAnalyzer.Constructors
     /// <summary>
     /// The xml doc code fix provider.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR110nCodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR1101_1106CodeFixProvider))]
     [Shared]
-    public class MR110nCodeFixProvider : CodeFixProvider
+    public class MR1101_1106CodeFixProvider : CodeFixProvider
     {
         /// <summary>
         /// The title.

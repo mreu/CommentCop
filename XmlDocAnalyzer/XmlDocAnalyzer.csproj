@@ -33,19 +33,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Classes\MR0001-MR0005CodeFixProvider.cs" />
     <Compile Include="Classes\MR0001PublicClassesMustHaveXMLComment.cs" />
     <Compile Include="Classes\MR0002InternalClassesMustHaveXMLComment.cs" />
     <Compile Include="Classes\MR0003InternalProtectedClassesMustHaveXMLComment.cs" />
     <Compile Include="Classes\MR0004ProtectedClassesMustHaveXMLComment.cs" />
     <Compile Include="Classes\MR0005PrivateClassesMustHaveXMLComment.cs" />
-    <Compile Include="Classes\MR000nCodeFixProvider.cs" />
+    <Compile Include="Constructors\MR1101-1106CodeFixProvider.cs" />
     <Compile Include="Constructors\MR1101PublicConstructorsMustHaveXMLComment.cs" />
     <Compile Include="Constructors\MR1102InternalConstructorsMustHaveXMLComment.cs" />
     <Compile Include="Constructors\MR1103InternalProtectedConstructorsMustHaveXMLComment.cs" />
     <Compile Include="Constructors\MR1104ProtectedConstructorsMustHaveXMLComment.cs" />
     <Compile Include="Constructors\MR1105PrivateConstructorsMustHaveXMLComment.cs" />
     <Compile Include="Constructors\MR1106StaticConstructorsMustHaveXMLComment.cs" />
-    <Compile Include="Constructors\MR110nCodeFixProvider.cs" />
     <Compile Include="Convert.cs" />
     <Compile Include="Delegates\MR7001-7005CodeFixProvider.cs" />
     <Compile Include="Delegates\MR7001PublicDelegatesMustHaveXMLComment.cs" />
@@ -55,19 +55,20 @@
     <Compile Include="Delegates\MR7005PrivateDelegatesMustHaveXMLComment.cs" />
     <Compile Include="Destructors\MR1201DestructorsMustHaveXMLComment.cs" />
     <Compile Include="Destructors\MR1201CodeFixProvider.cs" />
+    <Compile Include="Events\MR5001-5005CodeFixProvider.cs" />
     <Compile Include="Events\MR5001PublicEventsMustHaveXMLComment.cs" />
     <Compile Include="Events\MR5002InternalEventsMustHaveXMLComment.cs" />
     <Compile Include="Events\MR5003InternalProtectedEventsMustHaveXMLComment.cs" />
     <Compile Include="Events\MR5004ProtectedEventsMustHaveXMLComment.cs" />
     <Compile Include="Events\MR5005PrivateEventsMustHaveXMLComment.cs" />
-    <Compile Include="Events\MR500nCodeFixProvider.cs" />
+    <Compile Include="Fields\MR4001-4005CodeFixProvider.cs" />
     <Compile Include="Fields\MR4001PublicFieldsMustHaveXMLComment.cs" />
     <Compile Include="Fields\MR4002InternalFieldsMustHaveXMLComment.cs" />
     <Compile Include="Fields\MR4003InternalProtectedFieldsMustHaveXMLComment.cs" />
     <Compile Include="Fields\MR4004ProtectedFieldsMustHaveXMLComment.cs" />
     <Compile Include="Fields\MR4005PrivateFieldsMustHaveXMLComment.cs" />
-    <Compile Include="Fields\MR400nCodeFixProvider.cs" />
     <Compile Include="Helper\Extensions.cs" />
+    <Compile Include="Interfaces\MR2001-2002CodeFixProvider.cs" />
     <Compile Include="Interfaces\MR2001PublicInterfacesMustHaveXMLComment.cs" />
     <Compile Include="Interfaces\MR2002InternalInterfacesMustHaveXMLComment.cs" />
     <Compile Include="Interfaces\MR2003CodeFixProvider.cs" />
@@ -78,7 +79,6 @@
     <Compile Include="Interfaces\MR2005EventDefinitionsInInterfacesMustHaveXMLComment.cs" />
     <Compile Include="Interfaces\MR2006CodeFixProvider.cs" />
     <Compile Include="Interfaces\MR2006IndexerDefinitionsInInterfacesMustHaveXMLComment.cs" />
-    <Compile Include="Interfaces\MR200nCodeFixProvider.cs" />
     <Compile Include="Methods\MR1001-1005CodeFixProvider.cs" />
     <Compile Include="Methods\MR1001PublicMethodsMustHaveXMLComment.cs" />
     <Compile Include="Methods\MR1002InternalMethodsMustHaveXMLComment.cs" />
