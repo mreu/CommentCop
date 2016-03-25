@@ -7,7 +7,6 @@
 namespace XmlDocAnalyzer
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -25,23 +24,35 @@ namespace XmlDocAnalyzer
         {
             "build",
             "check",
+            "copy",
+            "commit",
             "create",
             "delete",
+            "discard",
             "display",
+            "fetch",
             "fill",
+            "find",
             "get",
             "initialize",
             "insert",
+            "move",
+            "pull",
+            "push",
             "put",
+            "read",
             "register",
             "remove",
+            "rollback",
+            "search",
             "select",
             "set",
             "show",
             "start",
             "stop",
             "test",
-            "update"
+            "update",
+            "write"
         };
 
         /// <summary>
@@ -134,41 +145,10 @@ namespace XmlDocAnalyzer
         /// Try to convert the return type of a method to useful comment.
         /// </summary>
         /// <param name="name">The name of the return type.</param>
-        /// <param name="typeArgumentList">The type argument list or null</param>
         /// <returns>The comment.</returns>
-        public static string Returns(string name, TypeArgumentListSyntax typeArgumentList)
+        public static string Returns(string name)
         {
-            // if this list is not null the return value is generic.
-            var generics = new List<string>();
-
-            if (typeArgumentList != null)
-            {
-                foreach (var argument in typeArgumentList.Arguments)
-                {
-                    if (argument is IdentifierNameSyntax)
-                    {
-                        generics.Add(((IdentifierNameSyntax)argument).Identifier.ValueText);
-                    }
-                    else
-                    {
-                        if (argument is PredefinedTypeSyntax)
-                        {
-                            generics.Add(((PredefinedTypeSyntax)argument).Keyword.ValueText);
-                        }
-                        else
-                        {
-                            generics.Add($"Unknown type: {argument.GetType()}");
-                        }
-                    }
-                }
-            }
-
-            if (generics.Any())
-            {
-                return $"The <see cref=\"{name}{{{string.Join(", ", generics)}}}\"/>.";
-            }
-
-            return $"The <see cref=\"{name}\"/>.";
+            return $"The <see cref=\"{name.Replace('<', '{').Replace('>', '}')}\"/>.";
         }
 
         /// <summary>
@@ -242,20 +222,62 @@ namespace XmlDocAnalyzer
             {
                 MakeLowerCase(parts, true);
 
-                string newName;
                 if (parts[parts.Length - 1].Contains("struct"))
                 {
-                    newName = "The " + string.Join(" ", parts) + '.';
-                }
-                else
-                {
-                    newName = "The " + string.Join(" ", parts) + " struct.";
+                    return "The " + string.Join(" ", parts) + '.';
                 }
 
-                return newName;
+                return "The " + string.Join(" ", parts) + " struct.";
             }
 
             return "The " + name.ToLower() + " struct.";
+        }
+
+        /// <summary>
+        /// Try to convert the name of a delegate to useful comment.
+        /// </summary>
+        /// <param name="name">The name of the delegate.</param>
+        /// <returns>The comment.</returns>
+        public static string Delegate(string name)
+        {
+            var special = CheckForSpecialMethodNames(name);
+            if (special != null)
+            {
+                return special;
+            }
+
+            var parts = SplitName(name);
+
+            if (parts.Length > 0)
+            {
+                if (WorkItems.Any(x => x.Equals(parts[0], StringComparison.OrdinalIgnoreCase)))
+                {
+                    MakeLowerCase(parts, false);
+
+                    if (parts.Length > 1)
+                    {
+                        return parts[0] + ' ' + string.Join(" ", parts.Skip(1)) + '.';
+                    }
+
+                    return parts[0] + '.';
+                }
+
+                MakeLowerCase(parts, true);
+
+                if (parts.Length > 1)
+                {
+                    if (parts[parts.Length - 1].Contains("delegate"))
+                    {
+                        return "The " + string.Join(" ", parts) + '.';
+                    }
+
+                    return "The " + string.Join(" ", parts) + " delegate.";
+                }
+
+                return "The " + parts[0] + '.';
+            }
+
+            return "The " + name.ToLower() + '.';
         }
 
         /// <summary>

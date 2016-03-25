@@ -47,6 +47,12 @@
     <Compile Include="Constructors\MR1106StaticConstructorsMustHaveXMLComment.cs" />
     <Compile Include="Constructors\MR110nCodeFixProvider.cs" />
     <Compile Include="Convert.cs" />
+    <Compile Include="Delegates\MR7001-7005CodeFixProvider.cs" />
+    <Compile Include="Delegates\MR7001PublicDelegatesMustHaveXMLComment.cs" />
+    <Compile Include="Delegates\MR7002InternalDelegatesMustHaveXMLComment.cs" />
+    <Compile Include="Delegates\MR7003InternalProtectedDelegatesMustHaveXMLComment.cs" />
+    <Compile Include="Delegates\MR7004ProtectedDelegatesMustHaveXMLComment.cs" />
+    <Compile Include="Delegates\MR7005PrivateDelegatesMustHaveXMLComment.cs" />
     <Compile Include="Destructors\MR1201DestructorsMustHaveXMLComment.cs" />
     <Compile Include="Destructors\MR1201CodeFixProvider.cs" />
     <Compile Include="Events\MR5001PublicEventsMustHaveXMLComment.cs" />

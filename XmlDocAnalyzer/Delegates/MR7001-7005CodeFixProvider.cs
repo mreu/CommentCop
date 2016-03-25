@@ -1,10 +1,10 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR2003CodeFixProvider.cs" company="Michael Reukauff">
+// <copyright file="MR100nCodeFixProvider.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Interfaces
+namespace XmlDocAnalyzer.Delegates
 {
     using System.Collections.Immutable;
     using System.Composition;
@@ -23,19 +23,26 @@ namespace XmlDocAnalyzer.Interfaces
     /// <summary>
     /// The xml doc code fix provider.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR2003CodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR100nCodeFixProvider))]
     [Shared]
-    public class MR2003CodeFixProvider : CodeFixProvider
+    public class MR100nCodeFixProvider : CodeFixProvider
     {
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Insert XML documentation header (MR2003)";
+        private const string Title = "Insert XML documentation header (MR7001 - MR7005)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.
         /// </summary>
-        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MR2003MethodDefinitionsInInterfacesMustHaveXMLComment.DiagnosticId);
+        public sealed override ImmutableArray<string> FixableDiagnosticIds
+            =>
+                ImmutableArray.Create(
+                    MR7001PublicDelegatesMustHaveXMLComment.DiagnosticId,
+                    MR7002InternalDelegatesMustHaveXMLComment.DiagnosticId,
+                    MR7003InternalProtectedDelegatesMustHaveXMLComment.DiagnosticId,
+                    MR7004ProtectedDelegatesMustHaveXMLComment.DiagnosticId,
+                    MR7005PrivateDelegatesMustHaveXMLComment.DiagnosticId);
 
         /// <summary>
         /// Get fix all provider.
@@ -92,7 +99,7 @@ namespace XmlDocAnalyzer.Interfaces
                 document,
                 root,
                 semanticModel,
-                (MethodDeclarationSyntax)identifierToken.Parent,
+                (DelegateDeclarationSyntax)identifierToken.Parent,
                 cancellationToken);
         }
 
@@ -109,18 +116,9 @@ namespace XmlDocAnalyzer.Interfaces
             Document document,
             SyntaxNode root,
             SemanticModel semanticModel,
-            MethodDeclarationSyntax declaration,
+            DelegateDeclarationSyntax declaration,
             CancellationToken cancellationToken)
         {
-            if (declaration.ExplicitInterfaceSpecifier == null && !declaration.Modifiers.Any(SyntaxKind.OverrideKeyword))
-            {
-                ISymbol declaredSymbol = semanticModel.GetDeclaredSymbol(declaration, cancellationToken);
-                if (declaredSymbol == null)
-                {
-                    return document;
-                }
-            }
-
             var leadingTrivia = declaration.GetLeadingTrivia();
             var insertionIndex = leadingTrivia.Count;
             while (insertionIndex > 0 && !leadingTrivia[insertionIndex - 1].HasBuiltinEndLine())
@@ -142,7 +140,7 @@ namespace XmlDocAnalyzer.Interfaces
         /// </summary>
         /// <param name="theMethod">The method to add to the summary.</param>
         /// <returns>The syntax list.</returns>
-        private static DocumentationCommentTriviaSyntax GetSummary(MethodDeclarationSyntax theMethod)
+        private static DocumentationCommentTriviaSyntax GetSummary(DelegateDeclarationSyntax theMethod)
         {
             const string summary = "summary";
 
@@ -226,9 +224,12 @@ namespace XmlDocAnalyzer.Interfaces
             }
 
             // Add returns comments
-            var returnType = theMethod.ReturnType.ToString();
-            if (returnType != "void")
+            var returntype = theMethod.ReturnType.ToString();
+
+            if (returntype != "void")
             {
+                var typeArgumentList = theMethod.ReturnType.ChildNodes().OfType<TypeArgumentListSyntax>().FirstOrDefault();
+
                 list = list.AddRange(
                     List(
                         new XmlNodeSyntax[]
@@ -238,7 +239,7 @@ namespace XmlDocAnalyzer.Interfaces
                             XmlElement(XmlElementStartTag(XmlName(Identifier("returns"))), XmlElementEndTag(XmlName(Identifier("returns"))))
                                 .WithContent(
                                     SingletonList<XmlNodeSyntax>(
-                                        XmlText().WithTextTokens(TokenList(XmlTextLiteral(TriviaList(), Convert.Returns(returnType), "comment", TriviaList()))))),
+                                        XmlText().WithTextTokens(TokenList(XmlTextLiteral(TriviaList(), Convert.Returns(returntype), "comment", TriviaList()))))),
 
                             newLine
                         }));

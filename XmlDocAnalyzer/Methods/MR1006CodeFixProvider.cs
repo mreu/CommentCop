@@ -218,11 +218,8 @@ namespace XmlDocAnalyzer.Methods
 
             // Add returns comments
             var returntype = theSyntax.ReturnType.ToString();
-
             if (returntype != "void")
             {
-                var typeArgumentList = theSyntax.ReturnType.ChildNodes().OfType<TypeArgumentListSyntax>().FirstOrDefault();
-
                 list = list.AddRange(
                     List(
                         new XmlNodeSyntax[]
@@ -232,7 +229,7 @@ namespace XmlDocAnalyzer.Methods
                             XmlElement(XmlElementStartTag(XmlName(Identifier("returns"))), XmlElementEndTag(XmlName(Identifier("returns"))))
                                 .WithContent(
                                     SingletonList<XmlNodeSyntax>(
-                                        XmlText().WithTextTokens(TokenList(XmlTextLiteral(TriviaList(), Convert.Returns(returntype, typeArgumentList), "comment", TriviaList()))))),
+                                        XmlText().WithTextTokens(TokenList(XmlTextLiteral(TriviaList(), Convert.Returns(returntype), "comment", TriviaList()))))),
 
                             newLine
                         }));

@@ -233,34 +233,9 @@ namespace XmlDocAnalyzer.Methods
             }
 
             // Add returns comments
-            string returntype;
-            if (theMethod.ReturnType is PredefinedTypeSyntax)
-            {
-                returntype = ((PredefinedTypeSyntax)theMethod.ReturnType).Keyword.ValueText;
-            }
-            else
-            {
-                if (theMethod.ReturnType is IdentifierNameSyntax)
-                {
-                    returntype = ((IdentifierNameSyntax)theMethod.ReturnType).Identifier.ValueText;
-                }
-                else
-                {
-                    if (theMethod.ReturnType is GenericNameSyntax)
-                    {
-                        returntype = ((GenericNameSyntax)theMethod.ReturnType).Identifier.ValueText;
-                    }
-                    else
-                    {
-                        returntype = "Unknown return type: " + theMethod.ReturnType.GetType();
-                    }
-                }
-            }
-
+            var returntype = theMethod.ReturnType.ToString();
             if (returntype != "void")
             {
-                var typeArgumentList = theMethod.ReturnType.ChildNodes().OfType<TypeArgumentListSyntax>().First();
-
                 list = list.AddRange(
                     List(
                         new XmlNodeSyntax[]
@@ -270,7 +245,7 @@ namespace XmlDocAnalyzer.Methods
                             XmlElement(XmlElementStartTag(XmlName(Identifier("returns"))), XmlElementEndTag(XmlName(Identifier("returns"))))
                                 .WithContent(
                                     SingletonList<XmlNodeSyntax>(
-                                        XmlText().WithTextTokens(TokenList(XmlTextLiteral(TriviaList(), Convert.Returns(returntype, typeArgumentList), "comment", TriviaList()))))),
+                                        XmlText().WithTextTokens(TokenList(XmlTextLiteral(TriviaList(), Convert.Returns(returntype), "comment", TriviaList()))))),
 
                             newLine
                         }));
