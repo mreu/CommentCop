@@ -95,30 +95,7 @@ namespace XmlDocAnalyzer.Property
         {
             var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
-            return GetTransformedDocumentForMethodDeclaration(
-                document,
-                root,
-                semanticModel,
-                (PropertyDeclarationSyntax)identifierToken.Parent,
-                cancellationToken);
-        }
-
-        /// <summary>
-        /// Get transformed document for method declaration.
-        /// </summary>
-        /// <param name="document">The document.</param>
-        /// <param name="root">The syntax root.</param>
-        /// <param name="semanticModel">The semantic model.</param>
-        /// <param name="declaration">The method declaration syntax.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The modified or unmodified document.</returns>
-        private static Document GetTransformedDocumentForMethodDeclaration(
-            Document document,
-            SyntaxNode root,
-            SemanticModel semanticModel,
-            PropertyDeclarationSyntax declaration,
-            CancellationToken cancellationToken)
-        {
+            var declaration = (PropertyDeclarationSyntax)identifierToken.Parent;
             if (declaration.ExplicitInterfaceSpecifier == null && !declaration.Modifiers.Any(SyntaxKind.OverrideKeyword))
             {
                 ISymbol declaredSymbol = semanticModel.GetDeclaredSymbol(declaration, cancellationToken);
@@ -135,10 +112,9 @@ namespace XmlDocAnalyzer.Property
                 insertionIndex--;
             }
 
-            var xmldoc = GetSummary(declaration);
-            var xmldoc1 = Trivia(xmldoc);
+            var xmldoc = await Task.Run(() => GetSummary(declaration), cancellationToken);
 
-            var newLeadingTrivia = leadingTrivia.Insert(insertionIndex, xmldoc1);
+            var newLeadingTrivia = leadingTrivia.Insert(insertionIndex, Trivia(xmldoc));
             var newElement = declaration.WithLeadingTrivia(newLeadingTrivia);
 
             return document.WithSyntaxRoot(root.ReplaceNode(declaration, newElement));

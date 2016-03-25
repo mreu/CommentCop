@@ -104,10 +104,9 @@ namespace XmlDocAnalyzer.Classes
                 insertionIndex--;
             }
 
-            var xmldoc = GetSummary(declaration);
-            var xmldoc1 = Trivia(xmldoc);
+            var xmldoc = await Task.Run(() => GetSummary(declaration), cancellationToken);
 
-            var newLeadingTrivia = leadingTrivia.Insert(insertionIndex, xmldoc1);
+            var newLeadingTrivia = leadingTrivia.Insert(insertionIndex, Trivia(xmldoc));
             var newElement = declaration.WithLeadingTrivia(newLeadingTrivia);
 
             return document.WithSyntaxRoot(root.ReplaceNode(declaration, newElement));

@@ -87,31 +87,14 @@ namespace XmlDocAnalyzer.Interface
             Document document,
             SyntaxNode root,
             SyntaxToken identifierToken,
-            //// ReSharper disable once UnusedParameter.Local
             CancellationToken cancellationToken)
         {
-            //// var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+            // ReSharper disable once UnusedVariable
+            var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
             var field = identifierToken.Parent.Parent.Parent;
 
-            return await GetTransformedDocumentForMethodDeclaration(
-                document,
-                root,
-                (EventFieldDeclarationSyntax)field);
-        }
-
-        /// <summary>
-        /// Get transformed document for method declaration.
-        /// </summary>
-        /// <param name="document">The document.</param>
-        /// <param name="root">The syntax root.</param>
-        /// <param name="declaration">The method declaration syntax.</param>
-        /// <returns>The modified or unmodified document.</returns>
-        private static async Task<Document> GetTransformedDocumentForMethodDeclaration(
-            Document document,
-            SyntaxNode root,
-            EventFieldDeclarationSyntax declaration)
-        {
+            var declaration = (EventFieldDeclarationSyntax)field;
             var leadingTrivia = declaration.GetLeadingTrivia();
             var insertionIndex = leadingTrivia.Count;
             while (insertionIndex > 0 && !leadingTrivia[insertionIndex - 1].HasBuiltinEndLine())
@@ -119,10 +102,9 @@ namespace XmlDocAnalyzer.Interface
                 insertionIndex--;
             }
 
-            var xmldoc = await Task.Run(() => GetSummary(declaration));
-            var xmldoc1 = Trivia(xmldoc);
+            var xmldoc = await Task.Run(() => GetSummary(declaration), cancellationToken);
 
-            var newLeadingTrivia = leadingTrivia.Insert(insertionIndex, xmldoc1);
+            var newLeadingTrivia = leadingTrivia.Insert(insertionIndex, Trivia(xmldoc));
             var newElement = declaration.WithLeadingTrivia(newLeadingTrivia);
 
             return document.WithSyntaxRoot(root.ReplaceNode(declaration, newElement));
