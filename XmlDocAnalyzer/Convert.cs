@@ -10,6 +10,7 @@ namespace XmlDocAnalyzer
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
+
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -20,10 +21,12 @@ namespace XmlDocAnalyzer
         /// <summary>
         /// The work items.
         /// </summary>
-        private static readonly string[] WorkItems =
+        private static readonly string[] Verbs =
         {
             "build",
             "check",
+            "clean",
+            "clone",
             "copy",
             "commit",
             "create",
@@ -50,7 +53,9 @@ namespace XmlDocAnalyzer
             "show",
             "start",
             "stop",
+            "switch",
             "test",
+            "try",
             "update",
             "write"
         };
@@ -116,7 +121,7 @@ namespace XmlDocAnalyzer
 
             if (parts.Length > 0)
             {
-                if (WorkItems.Any(x => x.Equals(parts[0], StringComparison.OrdinalIgnoreCase)))
+                if (Verbs.Any(x => x.Equals(parts[0], StringComparison.OrdinalIgnoreCase)))
                 {
                     MakeLowerCase(parts, false);
 
@@ -155,9 +160,24 @@ namespace XmlDocAnalyzer
         /// Try to convert the parameter to a useful comment.
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
+        /// <param name="paramType">The type of the parameter.</param>
         /// <returns>The comment.</returns>
-        public static string Parameter(string name)
+        public static string Parameter(string name, string paramType)
         {
+            if (paramType.EndsWith("eventargs", StringComparison.OrdinalIgnoreCase))
+            {
+                // if full qualified, get the last qualifier
+                var parts = paramType.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+
+                parts = SplitName(parts.Last());
+
+                MakeLowerCase(parts, true);
+
+                parts[parts.Length - 1] = "arguments.";
+
+                return "The " + string.Join(" ", parts);
+            }
+
             return "The " + name + '.';
         }
 
@@ -250,7 +270,7 @@ namespace XmlDocAnalyzer
 
             if (parts.Length > 0)
             {
-                if (WorkItems.Any(x => x.Equals(parts[0], StringComparison.OrdinalIgnoreCase)))
+                if (Verbs.Any(x => x.Equals(parts[0], StringComparison.OrdinalIgnoreCase)))
                 {
                     MakeLowerCase(parts, false);
 

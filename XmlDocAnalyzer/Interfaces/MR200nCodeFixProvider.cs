@@ -187,7 +187,7 @@ namespace XmlDocAnalyzer.Interfaces
                                         TokenList(
                                             XmlTextLiteral(
                                                 TriviaList(),
-                                                Convert.Parameter(parameter.Identifier.ValueText),
+                                                Convert.Parameter(parameter.Identifier.ValueText, string.Empty),
                                                 "comment",
                                                 TriviaList()))))),
 

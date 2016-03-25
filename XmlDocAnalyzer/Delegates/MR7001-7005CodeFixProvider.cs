@@ -214,7 +214,7 @@ namespace XmlDocAnalyzer.Delegates
                                         TokenList(
                                             XmlTextLiteral(
                                                 TriviaList(),
-                                                Convert.Parameter(parameter.Identifier.ValueText),
+                                                Convert.Parameter(parameter.Identifier.ValueText, parameter.Type.ToString()),
                                                 "comment",
                                                 TriviaList()))))),
 
@@ -225,11 +225,8 @@ namespace XmlDocAnalyzer.Delegates
 
             // Add returns comments
             var returntype = theMethod.ReturnType.ToString();
-
             if (returntype != "void")
             {
-                var typeArgumentList = theMethod.ReturnType.ChildNodes().OfType<TypeArgumentListSyntax>().FirstOrDefault();
-
                 list = list.AddRange(
                     List(
                         new XmlNodeSyntax[]
