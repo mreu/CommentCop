@@ -38,11 +38,11 @@ namespace XmlDocAnalyzer.Delegates
         public sealed override ImmutableArray<string> FixableDiagnosticIds
             =>
                 ImmutableArray.Create(
-                    MR7001PublicDelegatesMustHaveXMLComment.DiagnosticId,
-                    MR7002InternalDelegatesMustHaveXMLComment.DiagnosticId,
-                    MR7003InternalProtectedDelegatesMustHaveXMLComment.DiagnosticId,
-                    MR7004ProtectedDelegatesMustHaveXMLComment.DiagnosticId,
-                    MR7005PrivateDelegatesMustHaveXMLComment.DiagnosticId);
+                    MR7001_7005DelegatesMustHaveXMLComment.DiagnosticId7001,
+                    MR7001_7005DelegatesMustHaveXMLComment.DiagnosticId7002,
+                    MR7001_7005DelegatesMustHaveXMLComment.DiagnosticId7003,
+                    MR7001_7005DelegatesMustHaveXMLComment.DiagnosticId7004,
+                    MR7001_7005DelegatesMustHaveXMLComment.DiagnosticId7005);
 
         /// <summary>
         /// Get fix all provider.

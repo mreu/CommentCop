@@ -304,20 +304,20 @@ namespace XmlDocAnalyzer
         /// Generate the comment for a field.
         /// </summary>
         /// <param name="name">Name of the field.</param>
-        /// <param name="hasConst">True if const otherwise false.</param>
-        /// <param name="hasReadOnly">True if readonyl otherwise false.</param>
+        /// <param name="isConst">True if const otherwise false.</param>
+        /// <param name="isReadOnly">True if readonyl otherwise false.</param>
         /// <param name="equals">The equal synatx clause or null if not present in code.</param>
         /// <returns>The comment.</returns>
-        public static string Field(string name, bool hasConst, bool hasReadOnly, EqualsValueClauseSyntax equals)
+        public static string Field(string name, bool isConst, bool isReadOnly, EqualsValueClauseSyntax equals)
         {
             var sb = new StringBuilder("The ");
 
-            if (hasConst)
+            if (isConst)
             {
                 sb.Append("const ");
             }
 
-            if (hasReadOnly)
+            if (isReadOnly)
             {
                 sb.Append("readonly ");
             }
@@ -326,7 +326,7 @@ namespace XmlDocAnalyzer
 
             sb.Append('.');
 
-            if (hasConst || hasReadOnly)
+            if (isConst || isReadOnly)
             {
                 sb.Append(" Value: ");
                 sb.Append(@equals.Value);
@@ -348,7 +348,15 @@ namespace XmlDocAnalyzer
 
             sb.Append(name);
 
-            sb.Append(" event of the <see cref=\"");
+            if (name.ToLower().Contains("event"))
+            {
+                sb.Append(" of the <see cref=\"");
+            }
+            else
+            {
+                sb.Append(" event of the <see cref=\"");
+            }
+
             sb.Append(delegatenName.Replace('<', '{').Replace('>', '}'));
             sb.Append("\"/>.");
 

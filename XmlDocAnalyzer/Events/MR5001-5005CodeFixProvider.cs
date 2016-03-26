@@ -38,11 +38,11 @@ namespace XmlDocAnalyzer.Events
         public sealed override ImmutableArray<string> FixableDiagnosticIds
             =>
                 ImmutableArray.Create(
-                    MR5001PublicEventsMustHaveXMLComment.DiagnosticId,
-                    MR5002InternalEventsMustHaveXMLComment.DiagnosticId,
-                    MR5003InternalProtectedEventsMustHaveXMLComment.DiagnosticId,
-                    MR5004ProtectedEventsMustHaveXMLComment.DiagnosticId,
-                    MR5005PrivateEventsMustHaveXMLComment.DiagnosticId);
+                    MR5001_5005EventsMustHaveXMLComment.DiagnosticId5001,
+                    MR5001_5005EventsMustHaveXMLComment.DiagnosticId5002,
+                    MR5001_5005EventsMustHaveXMLComment.DiagnosticId5003,
+                    MR5001_5005EventsMustHaveXMLComment.DiagnosticId5004,
+                    MR5001_5005EventsMustHaveXMLComment.DiagnosticId5005);
 
         /// <summary>
         /// Get fix all provider.
