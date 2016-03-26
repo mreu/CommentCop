@@ -6,6 +6,7 @@
 
 namespace XmlDocAnalyzer.Destructors
 {
+    using System;
     using System.Collections.Immutable;
     using System.Composition;
     using System.Linq;
@@ -128,13 +129,13 @@ namespace XmlDocAnalyzer.Destructors
                 XmlText().NormalizeWhitespace()
                     .WithTextTokens(
                         TokenList(
-                            XmlTextNewLine(TriviaList(), "\n", "\n", TriviaList()).NormalizeWhitespace(),
+                            XmlTextNewLine(TriviaList(), Environment.NewLine, Environment.NewLine, TriviaList()).NormalizeWhitespace(),
                             XmlTextLiteral(
                                 TriviaList(DocumentationCommentExterior("///")),
                                 summaryComment,
                                 summaryComment,
                                 TriviaList()).NormalizeWhitespace(),
-                            XmlTextNewLine(TriviaList(), "\n", "\n", TriviaList()).NormalizeWhitespace(),
+                            XmlTextNewLine(TriviaList(), Environment.NewLine, Environment.NewLine, TriviaList()).NormalizeWhitespace(),
                             XmlTextLiteral(
                                 TriviaList(DocumentationCommentExterior("///")),
                                 " ",
@@ -150,7 +151,7 @@ namespace XmlDocAnalyzer.Destructors
                             " ",
                             TriviaList()))).NormalizeWhitespace();
 
-            var newLine = XmlText().WithTextTokens(TokenList(XmlTextNewLine(TriviaList(), "\n", "\n", TriviaList()))).NormalizeWhitespace();
+            var newLine = XmlText().WithTextTokens(TokenList(XmlTextNewLine(TriviaList(), Environment.NewLine, Environment.NewLine, TriviaList()))).NormalizeWhitespace();
 
             var summaryElement = XmlElement(summaryStart, summaryEnd).WithContent(summaryText);
 

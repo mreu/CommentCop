@@ -45,7 +45,7 @@ namespace XmlDocAnalyzer.Fields
         /// <summary>
         /// The message.
         /// </summary>
-        private const string Message = "{0}" + Title + " ({1}).";
+        private const string Message = "{0}" + Title + " ({1})";
 
         /// <summary>
         /// The rule.

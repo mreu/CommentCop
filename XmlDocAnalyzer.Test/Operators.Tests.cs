@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Methods.cs" company="Michael Reukauff">
+// <copyright file="Operators.Tests.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -15,16 +15,17 @@ namespace XmlDocAnalyzer.Test
     using XmlDocAnalyzer.Methods;
 
     /// <summary>
-    /// Test all methods analyzers and code fixes.
+    /// Test all operands analyzers and code fixes.
     /// </summary>
     [TestClass]
-    public class MethodsTests : CodeFixVerifier
+
+    public class OperatorsTests : CodeFixVerifier
     {
         /// <summary>
         /// No diagnostics expected to show up
         /// </summary>
         [TestMethod]
-        public void TestMethod1()
+        public void TestNoDiagnostics()
         {
             var test = string.Empty;
 
@@ -32,37 +33,32 @@ namespace XmlDocAnalyzer.Test
         }
 
         /// <summary>
-        /// Diagnostic and CodeFix both triggered and checked for
+        /// Diagnostic and CodeFix both triggered and checked for rule 1006
         /// </summary>
         [TestMethod]
-        public void TestMethod2()
+        public void TestRule1006()
         {
             const string test = @"
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Diagnostics;
 
     namespace ConsoleApplication1
     {
         class TypeName
-        {   
-            private void Method1()
+        {
+            public static TypeName operator +(TypeName x)
             {
             }
         }
     }";
             var expected = new DiagnosticResult
             {
-                Id = "MR0001",
-                Message = "Methods must have a xml documentation header (MR0001).",
+                Id = "MR1006",
+                Message = "Operators must have a xml documentation header. (MR1006)",
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[]
                     {
-                        new DiagnosticResultLocation("Test0.cs", 13, 26)
+                        new DiagnosticResultLocation("Test0.cs", 8, 36)
                     }
             };
 
@@ -70,20 +66,17 @@ namespace XmlDocAnalyzer.Test
 
             const string fixtest = @"
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Diagnostics;
 
     namespace ConsoleApplication1
     {
         class TypeName
-        {   
-            /// <summary>
-            /// The method1.
-            /// </summary>
-            private void Method1()
+        {
+        /// <summary>
+        /// The operator +.
+        /// </summary>
+        /// <param name=""x"">The x.</param>
+        /// <returns>The <see cref=""TypeName""/>.</returns>
+        public static TypeName operator +(TypeName x)
             {
             }
         }
@@ -98,7 +91,7 @@ namespace XmlDocAnalyzer.Test
         /// <returns>The code fix provider.</returns>
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
-            return new MR100nCodeFixProvider();
+            return new MR1006CodeFixProvider();
         }
 
         /// <summary>
@@ -107,7 +100,7 @@ namespace XmlDocAnalyzer.Test
         /// <returns>The diagnostic analyer.</returns>
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new MR1001PublicMethodsMustHaveXMLComment();
+            return new MR1006OperatorsMustHaveXMLComment();
         }
         #endregion overrides
     }

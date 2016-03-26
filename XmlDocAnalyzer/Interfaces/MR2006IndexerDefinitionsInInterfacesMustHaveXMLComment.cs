@@ -41,7 +41,7 @@ namespace XmlDocAnalyzer.Interface
         /// <summary>
         /// The message.
         /// </summary>
-        private static readonly string Message = $"{Title} ({DiagnosticId}).";
+        private static readonly string Message = $"{Title} ({DiagnosticId})";
 
         /// <summary>
         /// The description.

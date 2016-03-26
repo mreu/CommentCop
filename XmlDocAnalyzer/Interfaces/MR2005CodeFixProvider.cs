@@ -6,6 +6,7 @@
 
 namespace XmlDocAnalyzer.Interface
 {
+    using System;
     using System.Collections.Immutable;
     using System.Composition;
     using System.Linq;
@@ -19,6 +20,8 @@ namespace XmlDocAnalyzer.Interface
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+
+    using Convert = XmlDocAnalyzer.Convert;
 
     /// <summary>
     /// The xml doc code fix provider.
@@ -140,13 +143,13 @@ namespace XmlDocAnalyzer.Interface
                 XmlText().NormalizeWhitespace()
                     .WithTextTokens(
                         TokenList(
-                            XmlTextNewLine(TriviaList(), "\n", "\n", TriviaList()).NormalizeWhitespace(),
+                            XmlTextNewLine(TriviaList(), Environment.NewLine, Environment.NewLine, TriviaList()).NormalizeWhitespace(),
                             XmlTextLiteral(
                                 TriviaList(DocumentationCommentExterior("///")),
                                 summaryComment,
                                 summaryComment,
                                 TriviaList()).NormalizeWhitespace(),
-                            XmlTextNewLine(TriviaList(), "\n", "\n", TriviaList()).NormalizeWhitespace(),
+                            XmlTextNewLine(TriviaList(), Environment.NewLine, Environment.NewLine, TriviaList()).NormalizeWhitespace(),
                             XmlTextLiteral(
                                 TriviaList(DocumentationCommentExterior("///")),
                                 " ",
@@ -162,7 +165,7 @@ namespace XmlDocAnalyzer.Interface
                             " ",
                             TriviaList()))).NormalizeWhitespace();
 
-            var newLine = XmlText().WithTextTokens(TokenList(XmlTextNewLine(TriviaList(), "\n", "\n", TriviaList()))).NormalizeWhitespace();
+            var newLine = XmlText().WithTextTokens(TokenList(XmlTextNewLine(TriviaList(), Environment.NewLine, Environment.NewLine, TriviaList()))).NormalizeWhitespace();
 
             var summaryElement = XmlElement(summaryStart, summaryEnd).WithContent(summaryText);
 

@@ -45,7 +45,7 @@ namespace XmlDocAnalyzer.Experimental
         /// <summary>
         /// The message.
         /// </summary>
-        private static readonly string Message = "{0} method names must be longer then 3 charachters. ({1}).";
+        private static readonly string Message = "{0} method names must be longer then 3 charachters. ({1})";
 
         /// <summary>
         /// The rule 9001.
