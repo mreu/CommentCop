@@ -27,33 +27,61 @@ namespace XmlDocAnalyzer.Events
         /// The diagnostic id.
         /// </summary>
         public const string DiagnosticId5001 = Constants.DiagnosticPrefix + "5001";
+
+        /// <summary>
+        /// The const diagnostic id5002. Value: Constants.DiagnosticPrefix + "5002".
+        /// </summary>
         public const string DiagnosticId5002 = Constants.DiagnosticPrefix + "5002";
+
+        /// <summary>
+        /// The const diagnostic id5003. Value: Constants.DiagnosticPrefix + "5003".
+        /// </summary>
         public const string DiagnosticId5003 = Constants.DiagnosticPrefix + "5003";
+
+        /// <summary>
+        /// The const diagnostic id5004. Value: Constants.DiagnosticPrefix + "5004".
+        /// </summary>
         public const string DiagnosticId5004 = Constants.DiagnosticPrefix + "5004";
+
+        /// <summary>
+        /// The const diagnostic id5005. Value: Constants.DiagnosticPrefix + "5005".
+        /// </summary>
         public const string DiagnosticId5005 = Constants.DiagnosticPrefix + "5005";
 
         /// <summary>
-        /// The category.
+        /// The category (const). Value: Constants.DiagnosticCategory.
         /// </summary>
         private const string Category = Constants.DiagnosticCategory;
 
         /// <summary>
-        /// The title.
+        /// The title (const). Value: " events" + Constants.MustHaveXmlHeader.
         /// </summary>
         private const string Title = " events" + Constants.MustHaveXmlHeader;
 
         /// <summary>
-        /// The message.
+        /// The message (const). Value: "{0}" + Title + " ({1})".
         /// </summary>
         private const string Message = "{0}" + Title + " ({1})";
 
         /// <summary>
-        /// The rule.
+        /// The rule5001 (readonly). Value: new DiagnosticDescriptor(DiagnosticId5001, Constants.Public + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
         private static readonly DiagnosticDescriptor Rule5001 = new DiagnosticDescriptor(DiagnosticId5001, Constants.Public + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        /// <summary>
+        /// The rule5002 (readonly). Value: new DiagnosticDescriptor(DiagnosticId5002, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true).
+        /// </summary>
         private static readonly DiagnosticDescriptor Rule5002 = new DiagnosticDescriptor(DiagnosticId5002, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        /// <summary>
+        /// The rule5003 (readonly). Value: new DiagnosticDescriptor(DiagnosticId5003, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true).
+        /// </summary>
         private static readonly DiagnosticDescriptor Rule5003 = new DiagnosticDescriptor(DiagnosticId5003, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        /// <summary>
+        /// The rule5004 (readonly). Value: new DiagnosticDescriptor(DiagnosticId5004, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true).
+        /// </summary>
         private static readonly DiagnosticDescriptor Rule5004 = new DiagnosticDescriptor(DiagnosticId5004, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        /// <summary>
+        /// The rule5005 (readonly). Value: new DiagnosticDescriptor(DiagnosticId5005, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true).
+        /// </summary>
         private static readonly DiagnosticDescriptor Rule5005 = new DiagnosticDescriptor(DiagnosticId5005, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true);
 
         /// <summary>
@@ -77,6 +105,11 @@ namespace XmlDocAnalyzer.Events
         /// <param name="syntaxNodeAnalysisContext">The systax node analysis context.</param>
         private void CheckField(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
+            if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
+            {
+                return;
+            }
+
             var node = syntaxNodeAnalysisContext.Node as EventFieldDeclarationSyntax;
 
             if (node == null)

@@ -24,40 +24,79 @@ namespace XmlDocAnalyzer.Constructors
     public class MR1101_1106ConstructorsMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
-        /// The diagnostic id.
+        /// The const diagnostic id1101. Value: Constants.DiagnosticPrefix + "1101".
         /// </summary>
         public const string DiagnosticId1101 = Constants.DiagnosticPrefix + "1101";
+
+        /// <summary>
+        /// The const diagnostic id1102. Value: Constants.DiagnosticPrefix + "1102".
+        /// </summary>
         public const string DiagnosticId1102 = Constants.DiagnosticPrefix + "1102";
+
+        /// <summary>
+        /// The const diagnostic id1103. Value: Constants.DiagnosticPrefix + "1103".
+        /// </summary>
         public const string DiagnosticId1103 = Constants.DiagnosticPrefix + "1103";
+
+        /// <summary>
+        /// The const diagnostic id1104. Value: Constants.DiagnosticPrefix + "1104".
+        /// </summary>
         public const string DiagnosticId1104 = Constants.DiagnosticPrefix + "1104";
+
+        /// <summary>
+        /// The const diagnostic id1105. Value: Constants.DiagnosticPrefix + "1105".
+        /// </summary>
         public const string DiagnosticId1105 = Constants.DiagnosticPrefix + "1105";
+
+        /// <summary>
+        /// The const diagnostic id1106. Value: Constants.DiagnosticPrefix + "1106".
+        /// </summary>
         public const string DiagnosticId1106 = Constants.DiagnosticPrefix + "1106";
 
         /// <summary>
-        /// The category.
+        /// The const category. Value: Constants.DiagnosticCategory.
         /// </summary>
         private const string Category = Constants.DiagnosticCategory;
 
         /// <summary>
-        /// The title.
+        /// The const title. Value: " constructors" + Constants.MustHaveXmlHeader.
         /// </summary>
         private const string Title = " constructors" + Constants.MustHaveXmlHeader;
 
         /// <summary>
-        /// The message.
+        /// The const message. Value: "{0}" + Title + " ({1})".
         /// </summary>
         private const string Message = "{0}" + Title + " ({1})";
 
         /// <summary>
-        /// The rule.
+        /// The readonly rule1101. Value: new DiagnosticDescriptor(DiagnosticId1101, Constants.Public + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
         private static readonly DiagnosticDescriptor Rule1101 = new DiagnosticDescriptor(DiagnosticId1101, Constants.Public + Title, Message, Category, DiagnosticSeverity.Warning, true);
-        private static readonly DiagnosticDescriptor Rule1102 = new DiagnosticDescriptor(DiagnosticId1102, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true);
-        private static readonly DiagnosticDescriptor Rule1103 = new DiagnosticDescriptor(DiagnosticId1103, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true);
-        private static readonly DiagnosticDescriptor Rule1104 = new DiagnosticDescriptor(DiagnosticId1104, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true);
-        private static readonly DiagnosticDescriptor Rule1105 = new DiagnosticDescriptor(DiagnosticId1105, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true);
-        private static readonly DiagnosticDescriptor Rule1106 = new DiagnosticDescriptor(DiagnosticId1106, Constants.Static + Title, Message, Category, DiagnosticSeverity.Warning, true);
 
+        /// <summary>
+        /// The readonly rule1102. Value: new DiagnosticDescriptor(DiagnosticId1102, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true).
+        /// </summary>
+        private static readonly DiagnosticDescriptor Rule1102 = new DiagnosticDescriptor(DiagnosticId1102, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true);
+
+        /// <summary>
+        /// The readonly rule1103. Value: new DiagnosticDescriptor(DiagnosticId1103, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true).
+        /// </summary>
+        private static readonly DiagnosticDescriptor Rule1103 = new DiagnosticDescriptor(DiagnosticId1103, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true);
+
+        /// <summary>
+        /// The readonly rule1104. Value: new DiagnosticDescriptor(DiagnosticId1104, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true).
+        /// </summary>
+        private static readonly DiagnosticDescriptor Rule1104 = new DiagnosticDescriptor(DiagnosticId1104, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true);
+
+        /// <summary>
+        /// The readonly rule1105. Value: new DiagnosticDescriptor(DiagnosticId1105, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true).
+        /// </summary>
+        private static readonly DiagnosticDescriptor Rule1105 = new DiagnosticDescriptor(DiagnosticId1105, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true);
+
+        /// <summary>
+        /// The readonly rule1106. Value: new DiagnosticDescriptor(DiagnosticId1106, Constants.Static + Title, Message, Category, DiagnosticSeverity.Warning, true).
+        /// </summary>
+        private static readonly DiagnosticDescriptor Rule1106 = new DiagnosticDescriptor(DiagnosticId1106, Constants.Static + Title, Message, Category, DiagnosticSeverity.Warning, true);
 
         /// <summary>
         /// Gets the supported diagnostics.
@@ -79,6 +118,11 @@ namespace XmlDocAnalyzer.Constructors
         /// <param name="syntaxNodeAnalysisContext">The systax node analysis context.</param>
         private void Check(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
+            if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
+            {
+                return;
+            }
+
             var node = syntaxNodeAnalysisContext.Node as ConstructorDeclarationSyntax;
 
             if (node == null)

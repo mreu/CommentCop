@@ -24,35 +24,29 @@ namespace XmlDocAnalyzer.Enums
     public class MR8006EnumMembersMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
-        /// The diagnostic id.
+        /// The diagnostic id (const). Value: Constants.DiagnosticPrefix + "8006".
         /// </summary>
         public const string DiagnosticId = Constants.DiagnosticPrefix + "8006";
 
         /// <summary>
-        /// The category.
+        /// The category (const). Value: Constants.DiagnosticCategory.
         /// </summary>
         private const string Category = Constants.DiagnosticCategory;
 
         /// <summary>
-        /// The title.
+        /// The title (const). Value: "Enum members" + Constants.MustHaveXmlHeader.
         /// </summary>
         private const string Title = "Enum members" + Constants.MustHaveXmlHeader;
 
         /// <summary>
-        /// The message.
+        /// The message (readonly). Value: $"{Title} ({DiagnosticId})".
         /// </summary>
         private static readonly string Message = $"{Title} ({DiagnosticId})";
 
         /// <summary>
         /// The rule.
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
-            DiagnosticId,
-            Title,
-            Message,
-            Category,
-            DiagnosticSeverity.Warning,
-            true);
+        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, Message, Category, DiagnosticSeverity.Warning, true);
 
         /// <summary>
         /// Gets the supported diagnostics.
@@ -74,6 +68,11 @@ namespace XmlDocAnalyzer.Enums
         /// <param name="syntaxNodeAnalysisContext">The systax node analysis context.</param>
         private void Check(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
+            if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
+            {
+                return;
+            }
+
             var node = syntaxNodeAnalysisContext.Node as EnumMemberDeclarationSyntax;
 
             if (node == null)

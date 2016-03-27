@@ -64,6 +64,7 @@
     <Compile Include="Interfaces\MR2005EventDefinitionsInInterfacesMustHaveXMLComment.cs" />
     <Compile Include="Interfaces\MR2006CodeFixProvider.cs" />
     <Compile Include="Interfaces\MR2006IndexerDefinitionsInInterfacesMustHaveXMLComment.cs" />
+    <Compile Include="IsGenerated.cs" />
     <Compile Include="Methods\MR1001-1005CodeFixProvider.cs" />
     <Compile Include="Methods\MR1001-1005MethodsMustHaveXMLComment.cs" />
     <Compile Include="Methods\MR1006CodeFixProvider.cs" />

@@ -24,36 +24,65 @@ namespace XmlDocAnalyzer.Fields
     public class MR4001_4005FieldsMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
-        /// The diagnostic id.
+        /// The const diagnostic id4001. Value: Constants.DiagnosticPrefix + "4001".
         /// </summary>
         public const string DiagnosticId4001 = Constants.DiagnosticPrefix + "4001";
+        /// <summary>
+        /// The const diagnostic id4002. Value: Constants.DiagnosticPrefix + "4002".
+        /// </summary>
         public const string DiagnosticId4002 = Constants.DiagnosticPrefix + "4002";
+        /// <summary>
+        /// The const diagnostic id4003. Value: Constants.DiagnosticPrefix + "4003".
+        /// </summary>
         public const string DiagnosticId4003 = Constants.DiagnosticPrefix + "4003";
+        /// <summary>
+        /// The const diagnostic id4004. Value: Constants.DiagnosticPrefix + "4004".
+        /// </summary>
         public const string DiagnosticId4004 = Constants.DiagnosticPrefix + "4004";
+
+        /// <summary>
+        /// The const diagnostic id4005. Value: Constants.DiagnosticPrefix + "4005".
+        /// </summary>
         public const string DiagnosticId4005 = Constants.DiagnosticPrefix + "4005";
 
         /// <summary>
-        /// The category.
+        /// The const category. Value: Constants.DiagnosticCategory.
         /// </summary>
         private const string Category = Constants.DiagnosticCategory;
 
         /// <summary>
-        /// The title.
+        /// The const title. Value: " fields" + Constants.MustHaveXmlHeader.
         /// </summary>
         private const string Title = " fields" + Constants.MustHaveXmlHeader;
 
         /// <summary>
-        /// The message.
+        /// The const message. Value: "{0}" + Title + " ({1})".
         /// </summary>
         private const string Message = "{0}" + Title + " ({1})";
 
         /// <summary>
-        /// The rule.
+        /// The readonly rule4001. Value: new DiagnosticDescriptor(DiagnosticId4001, Constants.Public + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
         private static readonly DiagnosticDescriptor Rule4001 = new DiagnosticDescriptor(DiagnosticId4001, Constants.Public + Title, Message, Category, DiagnosticSeverity.Warning, true);
+
+        /// <summary>
+        /// The readonly rule4002. Value: new DiagnosticDescriptor(DiagnosticId4002, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true).
+        /// </summary>
         private static readonly DiagnosticDescriptor Rule4002 = new DiagnosticDescriptor(DiagnosticId4002, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true);
+
+        /// <summary>
+        /// The readonly rule4003. Value: new DiagnosticDescriptor(DiagnosticId4003, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true).
+        /// </summary>
         private static readonly DiagnosticDescriptor Rule4003 = new DiagnosticDescriptor(DiagnosticId4003, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true);
+
+        /// <summary>
+        /// The readonly rule4004. Value: new DiagnosticDescriptor(DiagnosticId4004, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true).
+        /// </summary>
         private static readonly DiagnosticDescriptor Rule4004 = new DiagnosticDescriptor(DiagnosticId4004, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true);
+
+        /// <summary>
+        /// The readonly rule4005. Value: new DiagnosticDescriptor(DiagnosticId4005, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true).
+        /// </summary>
         private static readonly DiagnosticDescriptor Rule4005 = new DiagnosticDescriptor(DiagnosticId4005, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true);
 
         /// <summary>
@@ -76,6 +105,11 @@ namespace XmlDocAnalyzer.Fields
         /// <param name="syntaxNodeAnalysisContext">The systax node analysis context.</param>
         private void Check(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
+            if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
+            {
+                return;
+            }
+
             var node = syntaxNodeAnalysisContext.Node as FieldDeclarationSyntax;
 
             if (node == null)

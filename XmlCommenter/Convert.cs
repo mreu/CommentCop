@@ -12,7 +12,6 @@ namespace XmlDocAnalyzer
     using System.Text.RegularExpressions;
 
     using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using Microsoft.CodeAnalysis.Host;
 
     /// <summary>
     /// The convert class.
@@ -25,6 +24,7 @@ namespace XmlDocAnalyzer
         private static readonly string[] Verbs =
         {
             "build",
+            "call",
             "check",
             "clean",
             "clone",
@@ -336,20 +336,20 @@ namespace XmlDocAnalyzer
         {
             var sb = new StringBuilder("The ");
 
-            if (isConst)
-            {
-                sb.Append("const ");
-            }
-
-            if (isReadOnly)
-            {
-                sb.Append("readonly ");
-            }
-
             var parts = SplitName(name);
             MakeLowerCase(parts, true);
 
             sb.Append(string.Join(" ", parts));
+
+            if (isConst)
+            {
+                sb.Append(" (const)");
+            }
+
+            if (isReadOnly)
+            {
+                sb.Append(" (readonly)");
+            }
 
             sb.Append('.');
 

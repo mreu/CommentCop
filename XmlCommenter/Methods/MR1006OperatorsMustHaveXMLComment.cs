@@ -24,36 +24,34 @@ namespace XmlDocAnalyzer.Methods
     public class MR1006OperatorsMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
-        /// The diagnostic id.
+        /// The diagnostic id (const). Value: "MR1006".
         /// </summary>
         public const string DiagnosticId = "MR1006";
 
         /// <summary>
-        /// The category.
+        /// The category (const). Value: "Documentation".
         /// </summary>
         private const string Category = "Documentation";
 
         /// <summary>
-        /// The title.
+        /// The title (const). Value: "Operators must have a xml documentation header.".
         /// </summary>
         private const string Title = "Operators must have a xml documentation header.";
 
         /// <summary>
-        /// The message.
+        /// The message (readonly). Value: $"{Title} ({DiagnosticId})".
         /// </summary>
         private static readonly string Message = $"{Title} ({DiagnosticId})";
 
         /// <summary>
-        /// The description.
+        /// The description (const). Value: Title.
         /// </summary>
         private const string Description = Title;
 
         /// <summary>
         /// The rule.
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
-            DiagnosticId,
-            Title,
+        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title,
             Message,
             Category,
             DiagnosticSeverity.Warning,
@@ -80,6 +78,11 @@ namespace XmlDocAnalyzer.Methods
         /// <param name="syntaxNodeAnalysisContext">The systax node analysis context.</param>
         private void Check(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
+            if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
+            {
+                return;
+            }
+
             var node = syntaxNodeAnalysisContext.Node as OperatorDeclarationSyntax;
 
             if (node == null)
@@ -112,7 +115,8 @@ namespace XmlDocAnalyzer.Methods
             var loc = node.OperatorKeyword.GetLocation();
             var key = node.OperatorToken.GetLocation();
 
-            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, node.OperatorKeyword.GetLocation(), Message));
+            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, loc, Message));
+            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule, key, Message));
         }
     }
 }
