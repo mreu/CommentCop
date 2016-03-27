@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Classes.Tests.cs" company="Michael Reukauff">
+// <copyright file="Struct.Tests.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -12,14 +12,13 @@ namespace XmlDocAnalyzer.Test
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using TestHelper;
 
-    using XmlDocAnalyzer.Classes;
-    using XmlDocAnalyzer.Methods;
+    using XmlDocAnalyzer.Structs;
 
     /// <summary>
-    /// Test all class analyzers and code fixes.
+    /// Test all struct analyzers and code fixes.
     /// </summary>
     [TestClass]
-    public class ClassesTests : CodeFixVerifier
+    public class StructsTests : CodeFixVerifier
     {
         /// <summary>
         /// No diagnostics expected to show up
@@ -33,200 +32,24 @@ namespace XmlDocAnalyzer.Test
         }
 
         /// <summary>
-        /// Diagnostic and CodeFix both triggered and checked for rule 0001
+        /// Diagnostic and CodeFix both triggered and checked for rule 0006
         /// </summary>
         [TestMethod]
-        public void TestRule0001()
+        public void TestRule0006()
         {
             const string test = @"
     using System;
 
     namespace ConsoleApplication1
     {
-        public class TypeName
+        public struct TypeName
         {
         }
     }";
             var expected = new DiagnosticResult
             {
-                Id = "MR0001",
-                Message = "Public classes must have a xml documentation header. (MR0001)",
-                Severity = DiagnosticSeverity.Warning,
-                Locations =
-                    new[]
-                    {
-                        new DiagnosticResultLocation("Test0.cs", 6, 22)
-                    }
-            };
-
-            VerifyCSharpDiagnostic(test, expected);
-
-            const string fixtest = @"
-    using System;
-
-    namespace ConsoleApplication1
-    {
-    /// <summary>
-    /// The type name class.
-    /// </summary>
-    public class TypeName
-        {
-        }
-    }";
-            VerifyCSharpFix(test, fixtest);
-        }
-
-        /// <summary>
-        /// Diagnostic and CodeFix both triggered and checked for rule 0002
-        /// </summary>
-        [TestMethod]
-        public void TestRule0002()
-        {
-            const string test = @"
-    using System;
-
-    namespace ConsoleApplication1
-    {
-        internal class TypeName
-        {
-        }
-    }";
-            var expected = new DiagnosticResult
-            {
-                Id = "MR0002",
-                Message = "Internal classes must have a xml documentation header. (MR0002)",
-                Severity = DiagnosticSeverity.Warning,
-                Locations =
-                    new[]
-                    {
-                        new DiagnosticResultLocation("Test0.cs", 6, 24)
-                    }
-            };
-
-            VerifyCSharpDiagnostic(test, expected);
-
-            const string fixtest = @"
-    using System;
-
-    namespace ConsoleApplication1
-    {
-    /// <summary>
-    /// The type name class.
-    /// </summary>
-    internal class TypeName
-        {
-        }
-    }";
-            VerifyCSharpFix(test, fixtest);
-        }
-
-        /// <summary>
-        /// Diagnostic and CodeFix both triggered and checked for rule 0003
-        /// </summary>
-        [TestMethod]
-        public void TestRule0003()
-        {
-            const string test = @"
-    using System;
-
-    namespace ConsoleApplication1
-    {
-        protected internal class TypeName
-        {
-        }
-    }";
-            var expected = new DiagnosticResult
-            {
-                Id = "MR0003",
-                Message = "Internal protected classes must have a xml documentation header. (MR0003)",
-                Severity = DiagnosticSeverity.Warning,
-                Locations =
-                    new[]
-                    {
-                        new DiagnosticResultLocation("Test0.cs", 6, 34)
-                    }
-            };
-
-            VerifyCSharpDiagnostic(test, expected);
-
-            const string fixtest = @"
-    using System;
-
-    namespace ConsoleApplication1
-    {
-    /// <summary>
-    /// The type name class.
-    /// </summary>
-    protected internal class TypeName
-        {
-        }
-    }";
-            VerifyCSharpFix(test, fixtest);
-        }
-
-        /// <summary>
-        /// Diagnostic and CodeFix both triggered and checked for rule 0004
-        /// </summary>
-        [TestMethod]
-        public void TestRule0004()
-        {
-            const string test = @"
-    using System;
-
-    namespace ConsoleApplication1
-    {
-        protected class TypeName
-        {
-        }
-    }";
-            var expected = new DiagnosticResult
-            {
-                Id = "MR0004",
-                Message = "Protected classes must have a xml documentation header. (MR0004)",
-                Severity = DiagnosticSeverity.Warning,
-                Locations =
-                    new[]
-                    {
-                        new DiagnosticResultLocation("Test0.cs", 6, 25)
-                    }
-            };
-
-            VerifyCSharpDiagnostic(test, expected);
-
-            const string fixtest = @"
-    using System;
-
-    namespace ConsoleApplication1
-    {
-    /// <summary>
-    /// The type name class.
-    /// </summary>
-    protected class TypeName
-        {
-        }
-    }";
-            VerifyCSharpFix(test, fixtest);
-        }
-
-        /// <summary>
-        /// Diagnostic and CodeFix both triggered and checked for rule 0005
-        /// </summary>
-        [TestMethod]
-        public void TestRule0005()
-        {
-            const string test = @"
-    using System;
-
-    namespace ConsoleApplication1
-    {
-        private class TypeName
-        {
-        }
-    }";
-            var expected = new DiagnosticResult
-            {
-                Id = "MR0005",
-                Message = "Private classes must have a xml documentation header. (MR0005)",
+                Id = "MR0006",
+                Message = "Public structs must have a xml documentation header. (MR0006)",
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[]
@@ -243,9 +66,229 @@ namespace XmlDocAnalyzer.Test
     namespace ConsoleApplication1
     {
     /// <summary>
-    /// The type name class.
+    /// The type name struct.
     /// </summary>
-    private class TypeName
+    public struct TypeName
+        {
+        }
+    }";
+            VerifyCSharpFix(test, fixtest);
+        }
+
+        /// <summary>
+        /// Diagnostic and CodeFix both triggered and checked for rule 0007
+        /// </summary>
+        [TestMethod]
+        public void TestRule0007_1()
+        {
+            const string test = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        internal struct TypeName
+        {
+        }
+    }";
+            var expected = new DiagnosticResult
+            {
+                Id = "MR0007",
+                Message = "Internal structs must have a xml documentation header. (MR0007)",
+                Severity = DiagnosticSeverity.Warning,
+                Locations =
+                    new[]
+                    {
+                        new DiagnosticResultLocation("Test0.cs", 6, 25)
+                    }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+
+            const string fixtest = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+    /// <summary>
+    /// The type name struct.
+    /// </summary>
+    internal struct TypeName
+        {
+        }
+    }";
+            VerifyCSharpFix(test, fixtest);
+        }
+
+        /// <summary>
+        /// Diagnostic and CodeFix both triggered and checked for rule 0007
+        /// </summary>
+        [TestMethod]
+        public void TestRule0007_2()
+        {
+            const string test = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        struct TypeName
+        {
+        }
+    }";
+            var expected = new DiagnosticResult
+            {
+                Id = "MR0007",
+                Message = "Internal structs must have a xml documentation header. (MR0007)",
+                Severity = DiagnosticSeverity.Warning,
+                Locations =
+                    new[]
+                    {
+                        new DiagnosticResultLocation("Test0.cs", 6, 16)
+                    }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+
+            const string fixtest = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+    /// <summary>
+    /// The type name struct.
+    /// </summary>
+    struct TypeName
+        {
+        }
+    }";
+            VerifyCSharpFix(test, fixtest);
+        }
+
+        /// <summary>
+        /// Diagnostic and CodeFix both triggered and checked for rule 0008
+        /// </summary>
+        [TestMethod]
+        public void TestRule0008()
+        {
+            const string test = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        protected internal struct TypeName
+        {
+        }
+    }";
+            var expected = new DiagnosticResult
+            {
+                Id = "MR0008",
+                Message = "Internal protected structs must have a xml documentation header. (MR0008)",
+                Severity = DiagnosticSeverity.Warning,
+                Locations =
+                    new[]
+                    {
+                        new DiagnosticResultLocation("Test0.cs", 6, 35)
+                    }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+
+            const string fixtest = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+    /// <summary>
+    /// The type name struct.
+    /// </summary>
+    protected internal struct TypeName
+        {
+        }
+    }";
+            VerifyCSharpFix(test, fixtest);
+        }
+
+        /// <summary>
+        /// Diagnostic and CodeFix both triggered and checked for rule 0009
+        /// </summary>
+        [TestMethod]
+        public void TestRule0009()
+        {
+            const string test = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        protected struct TypeName
+        {
+        }
+    }";
+            var expected = new DiagnosticResult
+            {
+                Id = "MR0009",
+                Message = "Protected structs must have a xml documentation header. (MR0009)",
+                Severity = DiagnosticSeverity.Warning,
+                Locations =
+                    new[]
+                    {
+                        new DiagnosticResultLocation("Test0.cs", 6, 26)
+                    }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+
+            const string fixtest = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+    /// <summary>
+    /// The type name struct.
+    /// </summary>
+    protected struct TypeName
+        {
+        }
+    }";
+            VerifyCSharpFix(test, fixtest);
+        }
+
+        /// <summary>
+        /// Diagnostic and CodeFix both triggered and checked for rule 0010
+        /// </summary>
+        [TestMethod]
+        public void TestRule0010()
+        {
+            const string test = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        private struct TypeName
+        {
+        }
+    }";
+            var expected = new DiagnosticResult
+            {
+                Id = "MR0010",
+                Message = "Private structs must have a xml documentation header. (MR0010)",
+                Severity = DiagnosticSeverity.Warning,
+                Locations =
+                    new[]
+                    {
+                        new DiagnosticResultLocation("Test0.cs", 6, 24)
+                    }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+
+            const string fixtest = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+    /// <summary>
+    /// The type name struct.
+    /// </summary>
+    private struct TypeName
         {
         }
     }";
@@ -259,7 +302,7 @@ namespace XmlDocAnalyzer.Test
         /// <returns>The code fix provider.</returns>
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
-            return new MR0001_MR0005CodeFixProvider();
+            return new MR0006_MR0010CodeFixProvider();
         }
 
         /// <summary>
@@ -268,7 +311,7 @@ namespace XmlDocAnalyzer.Test
         /// <returns>The diagnostic analyer.</returns>
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new MR0001_MR0005ClassesMustHaveXMLComment();
+            return new MR0006_MR0010StructsMustHaveXMLComment();
         }
         #endregion overrides
     }

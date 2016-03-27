@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlDocAnalyzer", "XmlDocAnalyzer\XmlDocAnalyzer.csproj", "{826C049E-A7F7-4157-9582-2D2F855CEC7E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlCommenter", "XmlCommenter\XmlCommenter.csproj", "{826C049E-A7F7-4157-9582-2D2F855CEC7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlDocAnalyzer.Test", "XmlDocAnalyzer.Test\XmlDocAnalyzer.Test.csproj", "{27D6B08A-E508-46F8-9AB1-876DACDE0DC2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlCommenter.Test", "XmlCommenter.Test\XmlCommenter.Test.csproj", "{27D6B08A-E508-46F8-9AB1-876DACDE0DC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlDocAnalyzer.Vsix", "XmlDocAnalyzer.Vsix\XmlDocAnalyzer.Vsix.csproj", "{2F4A8CF9-EF64-46A7-B863-9FD7FB35E3EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlCommenter.Vsix", "XmlCommenter.Vsix\XmlCommenter.Vsix.csproj", "{2F4A8CF9-EF64-46A7-B863-9FD7FB35E3EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

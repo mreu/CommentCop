@@ -15,7 +15,7 @@ namespace XmlDocAnalyzer.Test
     using XmlDocAnalyzer.Methods;
 
     /// <summary>
-    /// Test all operands analyzers and code fixes.
+    /// Test all operators analyzers and code fixes.
     /// </summary>
     [TestClass]
 

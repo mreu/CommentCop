@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Classes.Tests.cs" company="Michael Reukauff">
+// <copyright file="Fields.Tests.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -12,13 +12,13 @@ namespace XmlDocAnalyzer.Test
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using TestHelper;
 
-    using XmlDocAnalyzer.Structs;
+    using XmlDocAnalyzer.Fields;
 
     /// <summary>
-    /// Test all struct analyzers and code fixes.
+    /// Test all fields analyzers and code fixes.
     /// </summary>
     [TestClass]
-    public class StructsTests : CodeFixVerifier
+    public class FieldsTests : CodeFixVerifier
     {
         /// <summary>
         /// No diagnostics expected to show up
@@ -32,29 +32,30 @@ namespace XmlDocAnalyzer.Test
         }
 
         /// <summary>
-        /// Diagnostic and CodeFix both triggered and checked for rule 0006
+        /// Diagnostic and CodeFix both triggered and checked for rule 4001
         /// </summary>
         [TestMethod]
-        public void TestRule0006()
+        public void TestRule4001()
         {
             const string test = @"
     using System;
 
     namespace ConsoleApplication1
     {
-        public struct TypeName
+        class TypeName
         {
+            public readonly string field41 = Guid.NewGuid().ToString;
         }
     }";
             var expected = new DiagnosticResult
             {
-                Id = "MR0006",
-                Message = "Public structs must have a xml documentation header. (MR0006)",
+                Id = "MR4001",
+                Message = "Public fields must have a xml documentation header. (MR4001)",
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[]
                     {
-                        new DiagnosticResultLocation("Test0.cs", 6, 23)
+                        new DiagnosticResultLocation("Test0.cs", 8, 36)
                     }
             };
 
@@ -65,40 +66,42 @@ namespace XmlDocAnalyzer.Test
 
     namespace ConsoleApplication1
     {
-    /// <summary>
-    /// The type name struct.
-    /// </summary>
-    public struct TypeName
+        class TypeName
         {
+        /// <summary>
+        /// The readonly field41. Value: Guid.NewGuid().ToString.
+        /// </summary>
+        public readonly string field41 = Guid.NewGuid().ToString;
         }
     }";
             VerifyCSharpFix(test, fixtest);
         }
 
         /// <summary>
-        /// Diagnostic and CodeFix both triggered and checked for rule 0007
+        /// Diagnostic and CodeFix both triggered and checked for rule 4002
         /// </summary>
         [TestMethod]
-        public void TestRule0007()
+        public void TestRule4002()
         {
             const string test = @"
     using System;
 
     namespace ConsoleApplication1
     {
-        internal struct TypeName
+        class TypeName
         {
+            internal readonly string field41 = Guid.NewGuid().ToString;
         }
     }";
             var expected = new DiagnosticResult
             {
-                Id = "MR0007",
-                Message = "Internal structs must have a xml documentation header. (MR0007)",
+                Id = "MR4002",
+                Message = "Internal fields must have a xml documentation header. (MR4002)",
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[]
                     {
-                        new DiagnosticResultLocation("Test0.cs", 6, 25)
+                        new DiagnosticResultLocation("Test0.cs", 8, 38)
                     }
             };
 
@@ -109,40 +112,42 @@ namespace XmlDocAnalyzer.Test
 
     namespace ConsoleApplication1
     {
-    /// <summary>
-    /// The type name struct.
-    /// </summary>
-    internal struct TypeName
+        class TypeName
         {
+        /// <summary>
+        /// The readonly field41. Value: Guid.NewGuid().ToString.
+        /// </summary>
+        internal readonly string field41 = Guid.NewGuid().ToString;
         }
     }";
             VerifyCSharpFix(test, fixtest);
         }
 
         /// <summary>
-        /// Diagnostic and CodeFix both triggered and checked for rule 0008
+        /// Diagnostic and CodeFix both triggered and checked for rule 4003
         /// </summary>
         [TestMethod]
-        public void TestRule0008()
+        public void TestRule4003()
         {
             const string test = @"
     using System;
 
     namespace ConsoleApplication1
     {
-        protected internal struct TypeName
+        class TypeName
         {
+            protected internal readonly string field41 = Guid.NewGuid().ToString;
         }
     }";
             var expected = new DiagnosticResult
             {
-                Id = "MR0008",
-                Message = "Internal protected structs must have a xml documentation header. (MR0008)",
+                Id = "MR4003",
+                Message = "Internal protected fields must have a xml documentation header. (MR4003)",
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[]
                     {
-                        new DiagnosticResultLocation("Test0.cs", 6, 35)
+                        new DiagnosticResultLocation("Test0.cs", 8, 48)
                     }
             };
 
@@ -153,40 +158,42 @@ namespace XmlDocAnalyzer.Test
 
     namespace ConsoleApplication1
     {
-    /// <summary>
-    /// The type name struct.
-    /// </summary>
-    protected internal struct TypeName
+        class TypeName
         {
+        /// <summary>
+        /// The readonly field41. Value: Guid.NewGuid().ToString.
+        /// </summary>
+        protected internal readonly string field41 = Guid.NewGuid().ToString;
         }
     }";
             VerifyCSharpFix(test, fixtest);
         }
 
         /// <summary>
-        /// Diagnostic and CodeFix both triggered and checked for rule 0009
+        /// Diagnostic and CodeFix both triggered and checked for rule 4004
         /// </summary>
         [TestMethod]
-        public void TestRule0009()
+        public void TestRule4004()
         {
             const string test = @"
     using System;
 
     namespace ConsoleApplication1
     {
-        protected struct TypeName
+        class TypeName
         {
+            protected readonly string field41 = Guid.NewGuid().ToString;
         }
     }";
             var expected = new DiagnosticResult
             {
-                Id = "MR0009",
-                Message = "Protected structs must have a xml documentation header. (MR0009)",
+                Id = "MR4004",
+                Message = "Protected fields must have a xml documentation header. (MR4004)",
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[]
                     {
-                        new DiagnosticResultLocation("Test0.cs", 6, 26)
+                        new DiagnosticResultLocation("Test0.cs", 8, 39)
                     }
             };
 
@@ -197,40 +204,42 @@ namespace XmlDocAnalyzer.Test
 
     namespace ConsoleApplication1
     {
-    /// <summary>
-    /// The type name struct.
-    /// </summary>
-    protected struct TypeName
+        class TypeName
         {
+        /// <summary>
+        /// The readonly field41. Value: Guid.NewGuid().ToString.
+        /// </summary>
+        protected readonly string field41 = Guid.NewGuid().ToString;
         }
     }";
             VerifyCSharpFix(test, fixtest);
         }
 
         /// <summary>
-        /// Diagnostic and CodeFix both triggered and checked for rule 0010
+        /// Diagnostic and CodeFix both triggered and checked for rule 4005
         /// </summary>
         [TestMethod]
-        public void TestRule0010()
+        public void TestRule4005()
         {
             const string test = @"
     using System;
 
     namespace ConsoleApplication1
     {
-        private struct TypeName
+        class TypeName
         {
+            private readonly string field41 = Guid.NewGuid().ToString;
         }
     }";
             var expected = new DiagnosticResult
             {
-                Id = "MR0010",
-                Message = "Private structs must have a xml documentation header. (MR0010)",
+                Id = "MR4005",
+                Message = "Private fields must have a xml documentation header. (MR4005)",
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[]
                     {
-                        new DiagnosticResultLocation("Test0.cs", 6, 24)
+                        new DiagnosticResultLocation("Test0.cs", 8, 37)
                     }
             };
 
@@ -241,11 +250,12 @@ namespace XmlDocAnalyzer.Test
 
     namespace ConsoleApplication1
     {
-    /// <summary>
-    /// The type name struct.
-    /// </summary>
-    private struct TypeName
+        class TypeName
         {
+        /// <summary>
+        /// The readonly field41. Value: Guid.NewGuid().ToString.
+        /// </summary>
+        private readonly string field41 = Guid.NewGuid().ToString;
         }
     }";
             VerifyCSharpFix(test, fixtest);
@@ -258,7 +268,7 @@ namespace XmlDocAnalyzer.Test
         /// <returns>The code fix provider.</returns>
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
-            return new MR0006_MR0010CodeFixProvider();
+            return new MR4001_4005CodeFixProvider();
         }
 
         /// <summary>
@@ -267,7 +277,7 @@ namespace XmlDocAnalyzer.Test
         /// <returns>The diagnostic analyer.</returns>
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new MR0006_MR0010StructsMustHaveXMLComment();
+            return new MR4001_MR4005ieldsMustHaveXMLComment();
         }
         #endregion overrides
     }
