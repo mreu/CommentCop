@@ -302,7 +302,7 @@ namespace XmlDocAnalyzer.Test
         /// <returns>The code fix provider.</returns>
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
-            return new MR0006_MR0010CodeFixProvider();
+            return new MR0006_0010CodeFixProvider();
         }
 
         /// <summary>
@@ -311,7 +311,7 @@ namespace XmlDocAnalyzer.Test
         /// <returns>The diagnostic analyer.</returns>
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new MR0006_MR0010StructsMustHaveXMLComment();
+            return new MR0006_0010StructsMustHaveXMLComment();
         }
         #endregion overrides
     }

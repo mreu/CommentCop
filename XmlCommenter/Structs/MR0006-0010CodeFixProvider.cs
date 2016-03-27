@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR0006-MR0010CodeFixProvider.cs" company="Michael Reukauff">
+// <copyright file="MR0006-0010CodeFixProvider.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -9,6 +9,7 @@ namespace XmlDocAnalyzer.Structs
     using System;
     using System.Collections.Immutable;
     using System.Composition;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -26,9 +27,9 @@ namespace XmlDocAnalyzer.Structs
     /// <summary>
     /// The xml doc code fix provider.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR0006_MR0010CodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR0006_0010CodeFixProvider))]
     [Shared]
-    public class MR0006_MR0010CodeFixProvider : CodeFixProvider
+    public class MR0006_0010CodeFixProvider : CodeFixProvider
     {
         /// <summary>
         /// The title.
@@ -41,11 +42,11 @@ namespace XmlDocAnalyzer.Structs
         public sealed override ImmutableArray<string> FixableDiagnosticIds
             =>
                 ImmutableArray.Create(
-                    MR0006_MR0010StructsMustHaveXMLComment.DiagnosticId0006,
-                    MR0006_MR0010StructsMustHaveXMLComment.DiagnosticId0007,
-                    MR0006_MR0010StructsMustHaveXMLComment.DiagnosticId0008,
-                    MR0006_MR0010StructsMustHaveXMLComment.DiagnosticId0009,
-                    MR0006_MR0010StructsMustHaveXMLComment.DiagnosticId0010);
+                    MR0006_0010StructsMustHaveXMLComment.DiagnosticId0006,
+                    MR0006_0010StructsMustHaveXMLComment.DiagnosticId0007,
+                    MR0006_0010StructsMustHaveXMLComment.DiagnosticId0008,
+                    MR0006_0010StructsMustHaveXMLComment.DiagnosticId0009,
+                    MR0006_0010StructsMustHaveXMLComment.DiagnosticId0010);
 
         /// <summary>
         /// Get fix all provider.
@@ -96,6 +97,8 @@ namespace XmlDocAnalyzer.Structs
             SyntaxToken identifierToken,
             CancellationToken cancellationToken)
         {
+            try
+            {
             // ReSharper disable once UnusedVariable
             var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
@@ -113,26 +116,31 @@ namespace XmlDocAnalyzer.Structs
             var newElement = declaration.WithLeadingTrivia(newLeadingTrivia);
 
             return document.WithSyntaxRoot(root.ReplaceNode(declaration, newElement));
+            }
+            catch (Exception exp)
+            {
+                Debug.WriteLine($"{nameof(MR0006_0010CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
+
+                return document;
+            }
         }
 
         /// <summary>
         /// Get summary.
         /// </summary>
-        /// <param name="theSyntax">The class to add to the summary.</param>
+        /// <param name="theSyntaxNode">The syntax node to add the summary.</param>
         /// <returns>The syntax list.</returns>
-        private static DocumentationCommentTriviaSyntax GetSummary(StructDeclarationSyntax theSyntax)
+        private static DocumentationCommentTriviaSyntax GetSummary(StructDeclarationSyntax theSyntaxNode)
         {
-            const string summary = "summary";
-
-            var summaryStart = XmlElementStartTag(XmlName(Identifier(summary)))
+            var summaryStart = XmlElementStartTag(XmlName(Identifier(Constants.Summary)))
                 .WithLessThanToken(Token(SyntaxKind.LessThanToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken)).NormalizeWhitespace();
 
-            var summaryEnd = XmlElementEndTag(XmlName(Identifier(summary))).NormalizeWhitespace()
+            var summaryEnd = XmlElementEndTag(XmlName(Identifier(Constants.Summary))).NormalizeWhitespace()
                 .WithLessThanSlashToken(Token(SyntaxKind.LessThanSlashToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
-            var summaryComment = " " + Convert.Struct(theSyntax.Identifier.ValueText);
+            var summaryComment = " " + Convert.Struct(theSyntaxNode.Identifier.ValueText);
 
             var summaryText = SingletonList<XmlNodeSyntax>(
                 XmlText().NormalizeWhitespace()
@@ -167,11 +175,11 @@ namespace XmlDocAnalyzer.Structs
             var list = List(new XmlNodeSyntax[] { xmlComment, summaryElement, newLine });
 
             // Add typeparams comments
-            if (theSyntax.TypeParameterList != null)
+            if (theSyntaxNode.TypeParameterList != null)
             {
-                if (theSyntax.TypeParameterList.Parameters.Any())
+                if (theSyntaxNode.TypeParameterList.Parameters.Any())
                 {
-                    foreach (var parameter in theSyntax.TypeParameterList.Parameters)
+                    foreach (var parameter in theSyntaxNode.TypeParameterList.Parameters)
                     {
                         list = list.AddRange(
                             List(
@@ -188,7 +196,7 @@ namespace XmlDocAnalyzer.Structs
                                                 Token(SyntaxKind.DoubleQuoteToken),
                                                 IdentifierName(parameter.Identifier.ValueText),
                                                 Token(SyntaxKind.DoubleQuoteToken)))),
-                                    XmlElementEndTag(XmlName(Identifier("param"))))
+                                    XmlElementEndTag(XmlName(Identifier("typeparam"))))
                                     .WithContent(
                                         SingletonList<XmlNodeSyntax>(
                                             XmlText()

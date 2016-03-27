@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Interface
+namespace XmlDocAnalyzer.Interfaces
 {
     using System.Collections.Immutable;
     using System.Linq;
@@ -18,7 +18,7 @@ namespace XmlDocAnalyzer.Interface
     using XmlElementSyntax = Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax;
 
     /// <summary>
-    /// MR2005 events must have XML comment.
+    /// MR2005 event definitions in interfaces must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class MR2005EventDefinitionsInInterfacesMustHaveXMLComment : DiagnosticAnalyzer
@@ -26,27 +26,22 @@ namespace XmlDocAnalyzer.Interface
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId = "MR2005";
+        public const string DiagnosticId = Constants.DiagnosticPrefix + "2005";
 
         /// <summary>
         /// The category.
         /// </summary>
-        private const string Category = "Documentation";
+        private const string Category = Constants.DiagnosticCategory;
 
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Event definitions in interfaces must have a xml documentation header.";
+        private const string Title = "Event definitions in interfaces" + Constants.MustHaveXmlHeader;
 
         /// <summary>
         /// The message.
         /// </summary>
         private static readonly string Message = $"{Title} ({DiagnosticId})";
-
-        /// <summary>
-        /// The description.
-        /// </summary>
-        private const string Description = Title;
 
         /// <summary>
         /// The rule.
@@ -57,8 +52,7 @@ namespace XmlDocAnalyzer.Interface
             Message,
             Category,
             DiagnosticSeverity.Warning,
-            true,
-            Description);
+            true);
 
         /// <summary>
         /// Gets the supported diagnostics.
@@ -103,7 +97,7 @@ namespace XmlDocAnalyzer.Interface
             {
                 var hasSummary = xmlTrivia.ChildNodes()
                     .OfType<XmlElementSyntax>()
-                    .Any(i => i.StartTag.Name.ToString().Equals("summary"));
+                    .Any(i => i.StartTag.Name.ToString().Equals(Constants.Summary));
 
                 if (hasSummary)
                 {

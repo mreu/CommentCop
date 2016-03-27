@@ -12,6 +12,7 @@ namespace XmlDocAnalyzer
     using System.Text.RegularExpressions;
 
     using Microsoft.CodeAnalysis.CSharp.Syntax;
+    using Microsoft.CodeAnalysis.Host;
 
     /// <summary>
     /// The convert class.
@@ -29,6 +30,7 @@ namespace XmlDocAnalyzer
             "clone",
             "copy",
             "commit",
+            "convert",
             "create",
             "delete",
             "discard",
@@ -44,8 +46,10 @@ namespace XmlDocAnalyzer
             "push",
             "put",
             "read",
+            "reconvert",
             "register",
             "remove",
+            "reset",
             "rollback",
             "search",
             "select",
@@ -121,6 +125,14 @@ namespace XmlDocAnalyzer
 
             if (parts.Length > 0)
             {
+                // if name of method starts with "on", assuming it is a raise event method
+                if (parts[0].Equals("on", StringComparison.OrdinalIgnoreCase))
+                {
+                    MakeLowerCase(parts, false);
+
+                    return "Raises the " + string.Join(" ", parts.Skip(1)) + " event.";
+                }
+
                 if (Verbs.Any(x => x.Equals(parts[0], StringComparison.OrdinalIgnoreCase)))
                 {
                     MakeLowerCase(parts, false);
@@ -153,6 +165,16 @@ namespace XmlDocAnalyzer
         /// <returns>The comment.</returns>
         public static string Returns(string name)
         {
+            if (name.EndsWith("?"))
+            {
+                name = name.Replace("?", string.Empty);
+            }
+
+            if (name.EndsWith("[]") || name.EndsWith(">"))
+            {
+                name = "T:" + name;
+            }
+
             return $"The <see cref=\"{name.Replace('<', '{').Replace('>', '}')}\"/>.";
         }
 
@@ -213,7 +235,9 @@ namespace XmlDocAnalyzer
             }
             else
             {
-                comment += " the " + name + '.';
+                var parts = SplitName(name);
+                MakeLowerCase(parts, true);
+                comment += " the " + string.Join(" ", parts) + '.';
             }
 
             return comment;
@@ -308,7 +332,7 @@ namespace XmlDocAnalyzer
         /// <param name="isReadOnly">True if readonyl otherwise false.</param>
         /// <param name="equals">The equal synatx clause or null if not present in code.</param>
         /// <returns>The comment.</returns>
-        public static string Field(string name, bool isConst, bool isReadOnly, EqualsValueClauseSyntax equals)
+        public static string Field(string name, bool isConst, bool isReadOnly, EqualsValueClauseSyntax @equals)
         {
             var sb = new StringBuilder("The ");
 
@@ -322,15 +346,21 @@ namespace XmlDocAnalyzer
                 sb.Append("readonly ");
             }
 
-            sb.Append(name);
+            var parts = SplitName(name);
+            MakeLowerCase(parts, true);
+
+            sb.Append(string.Join(" ", parts));
 
             sb.Append('.');
 
             if (isConst || isReadOnly)
             {
-                sb.Append(" Value: ");
-                sb.Append(@equals.Value);
-                sb.Append('.');
+                if (@equals != null)
+                {
+                    sb.Append(" Value: ");
+                    sb.Append(MultiLineToSingleLine(@equals.Value.ToString()));
+                    sb.Append('.');
+                }
             }
 
             return sb.ToString();
@@ -364,6 +394,24 @@ namespace XmlDocAnalyzer
         }
 
         /// <summary>
+        /// Generate the comment for an enum.
+        /// </summary>
+        /// <param name="name">Name of the event.</param>
+        /// <returns>The comment.</returns>
+        public static string Enum(string name)
+        {
+            var parts = SplitName(name);
+            MakeLowerCase(parts, true);
+
+            if (parts[parts.Length - 1].ToLower().Contains("enum"))
+            {
+                return "The " + string.Join(" ", parts) + '.';
+            }
+
+            return "The " + string.Join(" ", parts) + " enum.";
+        }
+
+        /// <summary>
         /// Split the name at the uppercase letter.
         /// </summary>
         /// <param name="name">The name to split.</param>
@@ -372,6 +420,7 @@ namespace XmlDocAnalyzer
         {
             // split the name at the uppercase letterss
             var str = SplitAtUppercase.Replace(name, " $1");
+            str = str.Replace('_', ' ');
             var parts = str.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             return parts;
         }
@@ -415,6 +464,28 @@ namespace XmlDocAnalyzer
                     parts[ix] = parts[ix].ToLower();
                 }
             }
+        }
+
+        /// <summary>
+        /// Convert a multi line text to a single line text.
+        /// </summary>
+        /// <param name="text">The text to convert.</param>
+        /// <returns>One single line of text.</returns>
+        private static string MultiLineToSingleLine(string text)
+        {
+            var temp = text.Replace(Environment.NewLine, "\n").Replace("\r", "\n");
+
+            var parts = temp.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            for (var index = 0; index < parts.Length; index++)
+            {
+                parts[index] = parts[index].Trim();
+            }
+
+            temp = string.Join(" ", parts);
+            temp = temp.Replace("( ", "(").Replace("<", "&lt;").Replace(">", "&gt;");
+
+            return temp;
         }
     }
 }

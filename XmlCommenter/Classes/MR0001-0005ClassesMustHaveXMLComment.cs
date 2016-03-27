@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR0001-MR0005ClassesMustHaveXMLComment.cs" company="Michael Reukauff">
+// <copyright file="MR0001-0005ClassesMustHaveXMLComment.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -18,10 +18,10 @@ namespace XmlDocAnalyzer.Classes
     using XmlElementSyntax = Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax;
 
     /// <summary>
-    /// MR0001 public methods must have XML comment.
+    /// MR0001 - MR0005 classes must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR0001_MR0005ClassesMustHaveXMLComment : DiagnosticAnalyzer
+    public class MR0001_0005ClassesMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
         /// The diagnostic id.

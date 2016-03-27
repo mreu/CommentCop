@@ -9,6 +9,7 @@ namespace XmlDocAnalyzer.Destructors
     using System;
     using System.Collections.Immutable;
     using System.Composition;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -87,6 +88,8 @@ namespace XmlDocAnalyzer.Destructors
             SyntaxToken identifierToken,
             CancellationToken cancellationToken)
         {
+            try
+            {
             // ReSharper disable once UnusedVariable
             var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
@@ -104,24 +107,29 @@ namespace XmlDocAnalyzer.Destructors
             var newElement = declaration.WithLeadingTrivia(newLeadingTrivia);
 
             return document.WithSyntaxRoot(root.ReplaceNode(declaration, newElement));
+            }
+            catch (Exception exp)
+            {
+                Debug.WriteLine($"{nameof(MR1201CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
+
+                return document;
+            }
         }
 
         /// <summary>
         /// Get summary.
         /// </summary>
-        /// <param name="theMethod">The method to add to the summary.</param>
+        /// <param name="theSyntaxNode">The syntax node to add the summary.</param>
         /// <returns>The syntax list.</returns>
-        private static DocumentationCommentTriviaSyntax GetSummary(DestructorDeclarationSyntax theMethod)
+        private static DocumentationCommentTriviaSyntax GetSummary(DestructorDeclarationSyntax theSyntaxNode)
         {
-            const string summary = "summary";
+            var summaryComment = $" Finalizes an instance of the <see cref=\"{theSyntaxNode.Identifier.ValueText}\"/> class.";
 
-            var summaryComment = $" Finalizes an instance of the <see cref=\"{theMethod.Identifier.ValueText}\"/> class.";
-
-            var summaryStart = XmlElementStartTag(XmlName(Identifier(summary)))
+            var summaryStart = XmlElementStartTag(XmlName(Identifier(Constants.Summary)))
                 .WithLessThanToken(Token(SyntaxKind.LessThanToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken)).NormalizeWhitespace();
 
-            var summaryEnd = XmlElementEndTag(XmlName(Identifier(summary))).NormalizeWhitespace()
+            var summaryEnd = XmlElementEndTag(XmlName(Identifier(Constants.Summary))).NormalizeWhitespace()
                 .WithLessThanSlashToken(Token(SyntaxKind.LessThanSlashToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
@@ -158,7 +166,7 @@ namespace XmlDocAnalyzer.Destructors
             var list = List(new XmlNodeSyntax[] { xmlComment, summaryElement, newLine });
 
             // Add exceptions comments
-            var throws = theMethod.DescendantNodes().OfType<ThrowStatementSyntax>();
+            var throws = theSyntaxNode.DescendantNodes().OfType<ThrowStatementSyntax>();
             foreach (var syntax in throws)
             {
                 if (syntax.ChildNodes().OfType<ObjectCreationExpressionSyntax>().Any())
@@ -188,7 +196,7 @@ namespace XmlDocAnalyzer.Destructors
                                                 Token(SyntaxKind.DoubleQuoteToken),
                                                 IdentifierName(identifier.Identifier.ValueText),
                                                 Token(SyntaxKind.DoubleQuoteToken)))),
-                                    XmlElementEndTag(XmlName(Identifier("param"))))
+                                    XmlElementEndTag(XmlName(Identifier("exception"))))
                                     .WithContent(
                                         SingletonList<XmlNodeSyntax>(
                                             XmlText()

@@ -26,27 +26,22 @@ namespace XmlDocAnalyzer.Interfaces
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId = "MR2002";
+        public const string DiagnosticId = Constants.DiagnosticPrefix + "2002";
 
         /// <summary>
         /// The category.
         /// </summary>
-        private const string Category = "Documentation";
+        private const string Category = Constants.DiagnosticCategory;
 
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Internal interfaces must have a xml documentation header.";
+        private const string Title = Constants.Internal + " interfaces " + Constants.MustHaveXmlHeader;
 
         /// <summary>
         /// The message.
         /// </summary>
         private static readonly string Message = $"{Title} ({DiagnosticId})";
-
-        /// <summary>
-        /// The description.
-        /// </summary>
-        private const string Description = Title;
 
         /// <summary>
         /// The rule.
@@ -57,8 +52,7 @@ namespace XmlDocAnalyzer.Interfaces
             Message,
             Category,
             DiagnosticSeverity.Warning,
-            true,
-            Description);
+            true);
 
         /// <summary>
         /// Gets the supported diagnostics.
@@ -101,7 +95,7 @@ namespace XmlDocAnalyzer.Interfaces
             {
                 var hasSummary = xmlTrivia.ChildNodes()
                     .OfType<XmlElementSyntax>()
-                    .Any(i => i.StartTag.Name.ToString().Equals("summary"));
+                    .Any(i => i.StartTag.Name.ToString().Equals(Constants.Summary));
 
                 if (hasSummary)
                 {

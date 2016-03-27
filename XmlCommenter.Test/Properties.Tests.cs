@@ -219,7 +219,7 @@ namespace XmlDocAnalyzer.Test
         /// Diagnostic and CodeFix both triggered and checked for rule 3005
         /// </summary>
         [TestMethod]
-        public void TestRule3005()
+        public void TestRule3005_1()
         {
             const string test = @"
     using System;
@@ -256,6 +256,52 @@ namespace XmlDocAnalyzer.Test
         /// Gets a value indicating whether 
         /// </summary>
         private bool Prop1 { get;  private set; }
+        }
+    }";
+            VerifyCSharpFix(test, fixtest);
+        }
+
+        /// <summary>
+        /// Diagnostic and CodeFix both triggered and checked for rule 3005
+        /// </summary>
+        [TestMethod]
+        public void TestRule3005_2()
+        {
+            const string test = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            private string ParameterName { get;  private set; }
+        }
+    }";
+            var expected = new DiagnosticResult
+            {
+                Id = "MR3005",
+                Message = "Private properties must have a xml documentation header. (MR3005)",
+                Severity = DiagnosticSeverity.Warning,
+                Locations =
+                    new[]
+                    {
+                        new DiagnosticResultLocation("Test0.cs", 8, 28)
+                    }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+
+            const string fixtest = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+        /// <summary>
+        /// Gets the parameter name.
+        /// </summary>
+        private string ParameterName { get;  private set; }
         }
     }";
             VerifyCSharpFix(test, fixtest);

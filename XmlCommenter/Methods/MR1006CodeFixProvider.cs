@@ -9,6 +9,7 @@ namespace XmlDocAnalyzer.Methods
     using System;
     using System.Collections.Immutable;
     using System.Composition;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -89,6 +90,8 @@ namespace XmlDocAnalyzer.Methods
             SyntaxToken identifierToken,
             CancellationToken cancellationToken)
         {
+            try
+            {
             // ReSharper disable once UnusedVariable
             var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
@@ -106,26 +109,31 @@ namespace XmlDocAnalyzer.Methods
             var newElement = declaration.WithLeadingTrivia(newLeadingTrivia);
 
             return document.WithSyntaxRoot(root.ReplaceNode(declaration, newElement));
+            }
+            catch (Exception exp)
+            {
+                Debug.WriteLine($"{nameof(MR1006CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
+
+                return document;
+            }
         }
 
         /// <summary>
         /// Get summary.
         /// </summary>
-        /// <param name="theSyntax">The method to add to the summary.</param>
+        /// <param name="theSyntaxNode">The syntax node to add the summary.</param>
         /// <returns>The syntax list.</returns>
-        private static DocumentationCommentTriviaSyntax GetSummary(OperatorDeclarationSyntax theSyntax)
+        private static DocumentationCommentTriviaSyntax GetSummary(OperatorDeclarationSyntax theSyntaxNode)
         {
-            const string summary = "summary";
-
-            var summaryStart = XmlElementStartTag(XmlName(Identifier(summary)))
+            var summaryStart = XmlElementStartTag(XmlName(Identifier(Constants.Summary)))
                 .WithLessThanToken(Token(SyntaxKind.LessThanToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken)).NormalizeWhitespace();
 
-            var summaryEnd = XmlElementEndTag(XmlName(Identifier(summary))).NormalizeWhitespace()
+            var summaryEnd = XmlElementEndTag(XmlName(Identifier(Constants.Summary))).NormalizeWhitespace()
                 .WithLessThanSlashToken(Token(SyntaxKind.LessThanSlashToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
-            var summaryComment = " The operator " + theSyntax.OperatorToken + '.';
+            var summaryComment = " The operator " + theSyntaxNode.OperatorToken + '.';
 
             var summaryText = SingletonList<XmlNodeSyntax>(
                 XmlText().NormalizeWhitespace()
@@ -160,9 +168,9 @@ namespace XmlDocAnalyzer.Methods
             var list = List(new XmlNodeSyntax[] { xmlComment, summaryElement, newLine });
 
             // Add parameter comments
-            if (theSyntax.ParameterList.Parameters.Any())
+            if (theSyntaxNode.ParameterList.Parameters.Any())
             {
-                foreach (var parameter in theSyntax.ParameterList.Parameters)
+                foreach (var parameter in theSyntaxNode.ParameterList.Parameters)
                 {
                     list = list.AddRange(
                         List(
@@ -197,7 +205,7 @@ namespace XmlDocAnalyzer.Methods
             }
 
             // Add returns comments
-            var returntype = theSyntax.ReturnType.ToString();
+            var returntype = theSyntaxNode.ReturnType.ToString();
             if (returntype != "void")
             {
                 list = list.AddRange(
@@ -216,7 +224,7 @@ namespace XmlDocAnalyzer.Methods
             }
 
             // Add exceptions comments
-            var throws = theSyntax.DescendantNodes().OfType<ThrowStatementSyntax>();
+            var throws = theSyntaxNode.DescendantNodes().OfType<ThrowStatementSyntax>();
             foreach (var syntax in throws)
             {
                 if (syntax.ChildNodes().OfType<ObjectCreationExpressionSyntax>().Any())
@@ -246,7 +254,7 @@ namespace XmlDocAnalyzer.Methods
                                                 Token(SyntaxKind.DoubleQuoteToken),
                                                 IdentifierName(identifier.Identifier.ValueText),
                                                 Token(SyntaxKind.DoubleQuoteToken)))),
-                                    XmlElementEndTag(XmlName(Identifier("param"))))
+                                    XmlElementEndTag(XmlName(Identifier("exception"))))
                                     .WithContent(
                                         SingletonList<XmlNodeSyntax>(
                                             XmlText()

@@ -33,8 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Classes\MR0001-MR0005ClassesMustHaveXMLComment.cs" />
-    <Compile Include="Classes\MR0001-MR0005CodeFixProvider.cs" />
+    <Compile Include="Classes\MR0001-0005ClassesMustHaveXMLComment.cs" />
+    <Compile Include="Classes\MR0001-0005CodeFixProvider.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Constructors\MR1101-1106CodeFixProvider.cs" />
     <Compile Include="Constructors\MR1101-1106ConstructorsMustHaveXMLComment.cs" />
@@ -43,11 +43,15 @@
     <Compile Include="Delegates\MR7001-7005DelegatesMustHaveXMLComment.cs" />
     <Compile Include="Destructors\MR1201DestructorsMustHaveXMLComment.cs" />
     <Compile Include="Destructors\MR1201CodeFixProvider.cs" />
+    <Compile Include="Enums\MR8001-8005CodeFixProvider.cs" />
+    <Compile Include="Enums\MR8001-8005EnumsMustHaveXMLComment.cs" />
+    <Compile Include="Enums\MR8006CodeFixProvider.cs" />
+    <Compile Include="Enums\MR8006EnumMembersMustHaveXMLComment.cs" />
     <Compile Include="Events\MR5001-5005CodeFixProvider.cs" />
     <Compile Include="Events\MR5001-5005EventsMustHaveXMLComment.cs" />
     <Compile Include="Experimental\MR9001-9005MethodNamesMustBeLongerThen3Chars.cs" />
     <Compile Include="Fields\MR4001-4005CodeFixProvider.cs" />
-    <Compile Include="Fields\MR4001-MR4005ieldsMustHaveXMLComment.cs" />
+    <Compile Include="Fields\MR4001-4005FieldsMustHaveXMLComment.cs" />
     <Compile Include="Helper\Extensions.cs" />
     <Compile Include="Interfaces\MR2001-2002CodeFixProvider.cs" />
     <Compile Include="Interfaces\MR2001PublicInterfacesMustHaveXMLComment.cs" />
@@ -74,8 +78,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Structs\MR0006-MR0010CodeFixProvider.cs" />
-    <Compile Include="Structs\MR0006-MR0010StructsMustHaveXMLComment.cs" />
+    <Compile Include="Structs\MR0006-0010CodeFixProvider.cs" />
+    <Compile Include="Structs\MR0006-0010StructsMustHaveXMLComment.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">

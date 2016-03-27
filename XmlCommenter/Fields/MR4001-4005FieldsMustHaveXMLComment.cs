@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR4001-MR4005ieldsMustHaveXMLComment.cs" company="Michael Reukauff">
+// <copyright file="MR4001-4005FieldsMustHaveXMLComment.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -18,10 +18,10 @@ namespace XmlDocAnalyzer.Fields
     using XmlElementSyntax = Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax;
 
     /// <summary>
-    /// MR4001 public fields must have XML comment.
+    /// MR4001 - 0005 fields must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR4001_MR4005ieldsMustHaveXMLComment : DiagnosticAnalyzer
+    public class MR4001_4005FieldsMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
         /// The diagnostic id.

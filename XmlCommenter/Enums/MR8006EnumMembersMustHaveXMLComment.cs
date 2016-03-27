@@ -1,10 +1,10 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR2004PropertyDefinitionsInInterfacesMustHaveXMLComment.cs" company="Michael Reukauff">
-//   Copyright © 2016 Michael Reukauff. All rights reserved.
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="MR8006EnumMembersMustHaveXMLComment.cs" company="Michael Reukauff">
+//   Copyright � 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Interfaces
+namespace XmlDocAnalyzer.Enums
 {
     using System.Collections.Immutable;
     using System.Linq;
@@ -18,15 +18,15 @@ namespace XmlDocAnalyzer.Interfaces
     using XmlElementSyntax = Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax;
 
     /// <summary>
-    /// MR2004 property definitions in interfaces must have XML comment.
+    /// MR8006 enum members must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR2004PropertyDefinitionsInInterfacesMustHaveXMLComment : DiagnosticAnalyzer
+    public class MR8006EnumMembersMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId = Constants.DiagnosticPrefix + "2004";
+        public const string DiagnosticId = Constants.DiagnosticPrefix + "8006";
 
         /// <summary>
         /// The category.
@@ -36,7 +36,7 @@ namespace XmlDocAnalyzer.Interfaces
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Property definitions in interfaces" + Constants.MustHaveXmlHeader;
+        private const string Title = "Enum members" + Constants.MustHaveXmlHeader;
 
         /// <summary>
         /// The message.
@@ -65,7 +65,7 @@ namespace XmlDocAnalyzer.Interfaces
         /// <param name="context">The analysis context.</param>
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(Check, SyntaxKind.PropertyDeclaration);
+            context.RegisterSyntaxNodeAction(Check, SyntaxKind.EnumMemberDeclaration);
         }
 
         /// <summary>
@@ -74,16 +74,9 @@ namespace XmlDocAnalyzer.Interfaces
         /// <param name="syntaxNodeAnalysisContext">The systax node analysis context.</param>
         private void Check(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            var node = syntaxNodeAnalysisContext.Node as PropertyDeclarationSyntax;
+            var node = syntaxNodeAnalysisContext.Node as EnumMemberDeclarationSyntax;
 
-            // ReSharper disable once UseNullPropagation
             if (node == null)
-            {
-                return;
-            }
-
-            // if not inside of an interface declaration do nothing
-            if (!(node.Parent is InterfaceDeclarationSyntax))
             {
                 return;
             }

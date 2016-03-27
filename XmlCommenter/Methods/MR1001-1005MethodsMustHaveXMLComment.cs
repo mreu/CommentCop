@@ -18,7 +18,7 @@ namespace XmlDocAnalyzer.Methods
     using XmlElementSyntax = Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax;
 
     /// <summary>
-    /// MR1001 public methods must have XML comment.
+    /// MR1001 - 1005 methods must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class MR1001_1005MethodsMustHaveXMLComment : DiagnosticAnalyzer
@@ -98,7 +98,7 @@ namespace XmlDocAnalyzer.Methods
             {
                 var hasSummary = xmlTrivia.ChildNodes()
                     .OfType<XmlElementSyntax>()
-                    .Any(i => i.StartTag.Name.ToString().Equals("summary"));
+                    .Any(i => i.StartTag.Name.ToString().Equals(Constants.Summary));
 
                 if (hasSummary)
                 {

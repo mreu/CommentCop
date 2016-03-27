@@ -9,6 +9,7 @@ namespace XmlDocAnalyzer.Delegates
     using System;
     using System.Collections.Immutable;
     using System.Composition;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -96,6 +97,8 @@ namespace XmlDocAnalyzer.Delegates
             SyntaxToken identifierToken,
             CancellationToken cancellationToken)
         {
+            try
+            {
             // ReSharper disable once UnusedVariable
             var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
@@ -113,26 +116,31 @@ namespace XmlDocAnalyzer.Delegates
             var newElement = declaration.WithLeadingTrivia(newLeadingTrivia);
 
             return document.WithSyntaxRoot(root.ReplaceNode(declaration, newElement));
+            }
+            catch (Exception exp)
+            {
+                Debug.WriteLine($"{nameof(MR7001_7005CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
+
+                return document;
+            }
         }
 
         /// <summary>
         /// Get summary.
         /// </summary>
-        /// <param name="theMethod">The method to add to the summary.</param>
+        /// <param name="theSyntaxNode">The syntax node to add the summary.</param>
         /// <returns>The syntax list.</returns>
-        private static DocumentationCommentTriviaSyntax GetSummary(DelegateDeclarationSyntax theMethod)
+        private static DocumentationCommentTriviaSyntax GetSummary(DelegateDeclarationSyntax theSyntaxNode)
         {
-            const string summary = "summary";
-
-            var summaryStart = XmlElementStartTag(XmlName(Identifier(summary)))
+            var summaryStart = XmlElementStartTag(XmlName(Identifier(Constants.Summary)))
                 .WithLessThanToken(Token(SyntaxKind.LessThanToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken)).NormalizeWhitespace();
 
-            var summaryEnd = XmlElementEndTag(XmlName(Identifier(summary))).NormalizeWhitespace()
+            var summaryEnd = XmlElementEndTag(XmlName(Identifier(Constants.Summary))).NormalizeWhitespace()
                 .WithLessThanSlashToken(Token(SyntaxKind.LessThanSlashToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
-            var summaryComment = " " + Convert.Method(theMethod.Identifier.ValueText);
+            var summaryComment = " " + Convert.Method(theSyntaxNode.Identifier.ValueText);
 
             var summaryText = SingletonList<XmlNodeSyntax>(
                 XmlText().NormalizeWhitespace()
@@ -167,9 +175,9 @@ namespace XmlDocAnalyzer.Delegates
             var list = List(new XmlNodeSyntax[] { xmlComment, summaryElement, newLine });
 
             // Add parameter comments
-            if (theMethod.ParameterList.Parameters.Any())
+            if (theSyntaxNode.ParameterList.Parameters.Any())
             {
-                foreach (var parameter in theMethod.ParameterList.Parameters)
+                foreach (var parameter in theSyntaxNode.ParameterList.Parameters)
                 {
                     list = list.AddRange(
                         List(
@@ -204,7 +212,7 @@ namespace XmlDocAnalyzer.Delegates
             }
 
             // Add returns comments
-            var returntype = theMethod.ReturnType.ToString();
+            var returntype = theSyntaxNode.ReturnType.ToString();
             if (returntype != "void")
             {
                 list = list.AddRange(
@@ -223,11 +231,11 @@ namespace XmlDocAnalyzer.Delegates
             }
 
             // Add typeparams comments
-            if (theMethod.TypeParameterList != null)
+            if (theSyntaxNode.TypeParameterList != null)
             {
-                if (theMethod.TypeParameterList.Parameters.Any())
+                if (theSyntaxNode.TypeParameterList.Parameters.Any())
                 {
-                    foreach (var parameter in theMethod.TypeParameterList.Parameters)
+                    foreach (var parameter in theSyntaxNode.TypeParameterList.Parameters)
                     {
                         list = list.AddRange(
                             List(
@@ -244,7 +252,7 @@ namespace XmlDocAnalyzer.Delegates
                                                 Token(SyntaxKind.DoubleQuoteToken),
                                                 IdentifierName(parameter.Identifier.ValueText),
                                                 Token(SyntaxKind.DoubleQuoteToken)))),
-                                    XmlElementEndTag(XmlName(Identifier("param"))))
+                                    XmlElementEndTag(XmlName(Identifier("typeparam"))))
                                     .WithContent(
                                         SingletonList<XmlNodeSyntax>(
                                             XmlText()

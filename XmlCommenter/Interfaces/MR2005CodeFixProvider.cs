@@ -4,11 +4,12 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Interface
+namespace XmlDocAnalyzer.Interfaces
 {
     using System;
     using System.Collections.Immutable;
     using System.Composition;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -92,6 +93,8 @@ namespace XmlDocAnalyzer.Interface
             SyntaxToken identifierToken,
             CancellationToken cancellationToken)
         {
+            try
+            {
             // ReSharper disable once UnusedVariable
             var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
@@ -111,27 +114,32 @@ namespace XmlDocAnalyzer.Interface
             var newElement = declaration.WithLeadingTrivia(newLeadingTrivia);
 
             return document.WithSyntaxRoot(root.ReplaceNode(declaration, newElement));
+            }
+            catch (Exception exp)
+            {
+                Debug.WriteLine($"{nameof(MR2005CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
+
+                return document;
+            }
         }
 
         /// <summary>
         /// Get summary.
         /// </summary>
-        /// <param name="theSyntax">The field to add to the summary.</param>
+        /// <param name="theSyntaxNode">The syntax node to add the summary.</param>
         /// <returns>The syntax list.</returns>
-        private static DocumentationCommentTriviaSyntax GetSummary(EventFieldDeclarationSyntax theSyntax)
+        private static DocumentationCommentTriviaSyntax GetSummary(EventFieldDeclarationSyntax theSyntaxNode)
         {
-            const string summary = "summary";
-
-            var summaryStart = XmlElementStartTag(XmlName(Identifier(summary)))
+            var summaryStart = XmlElementStartTag(XmlName(Identifier(Constants.Summary)))
                 .WithLessThanToken(Token(SyntaxKind.LessThanToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken)).NormalizeWhitespace();
 
-            var summaryEnd = XmlElementEndTag(XmlName(Identifier(summary))).NormalizeWhitespace()
+            var summaryEnd = XmlElementEndTag(XmlName(Identifier(Constants.Summary))).NormalizeWhitespace()
                 .WithLessThanSlashToken(Token(SyntaxKind.LessThanSlashToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
             var summaryComment = string.Empty;
-            var variable = theSyntax.ChildNodes().OfType<VariableDeclarationSyntax>().FirstOrDefault();
+            var variable = theSyntaxNode.ChildNodes().OfType<VariableDeclarationSyntax>().FirstOrDefault();
             var field = variable?.ChildNodes().OfType<VariableDeclaratorSyntax>().FirstOrDefault();
 
             if (field != null)

@@ -182,7 +182,7 @@ namespace XmlDocAnalyzer.Test
     {
         class TypeName
         {
-            protected readonly string field41 = Guid.NewGuid().ToString;
+            protected readonly string test_41 = Guid.NewGuid().ToString;
         }
     }";
             var expected = new DiagnosticResult
@@ -207,9 +207,9 @@ namespace XmlDocAnalyzer.Test
         class TypeName
         {
         /// <summary>
-        /// The readonly field41. Value: Guid.NewGuid().ToString.
+        /// The readonly test 41. Value: Guid.NewGuid().ToString.
         /// </summary>
-        protected readonly string field41 = Guid.NewGuid().ToString;
+        protected readonly string test_41 = Guid.NewGuid().ToString;
         }
     }";
             VerifyCSharpFix(test, fixtest);
@@ -228,7 +228,7 @@ namespace XmlDocAnalyzer.Test
     {
         class TypeName
         {
-            private readonly string field41 = Guid.NewGuid().ToString;
+            private readonly string parameterName = Guid.NewGuid().ToString;
         }
     }";
             var expected = new DiagnosticResult
@@ -253,20 +253,82 @@ namespace XmlDocAnalyzer.Test
         class TypeName
         {
         /// <summary>
-        /// The readonly field41. Value: Guid.NewGuid().ToString.
+        /// The readonly parameter name. Value: Guid.NewGuid().ToString.
         /// </summary>
-        private readonly string field41 = Guid.NewGuid().ToString;
+        private readonly string parameterName = Guid.NewGuid().ToString;
         }
     }";
             VerifyCSharpFix(test, fixtest);
         }
 
-        #region overrides
         /// <summary>
-        /// Get CSharp code fix provider.
+        /// Diagnostic and CodeFix both triggered and checked for rule 4001
         /// </summary>
-        /// <returns>The code fix provider.</returns>
-        protected override CodeFixProvider GetCSharpCodeFixProvider()
+        [TestMethod]
+        public void TestRule4001_WithLongValueWithMoreThenOneLine()
+        {
+            const string test = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+            public static readonly DependencyProperty FontFamilyProperty =
+            DependencyProperty.Register(
+                ""FontFamily"",
+                typeof(FontFamily),
+                typeof(string),
+                new FrameworkPropertyMetadata(
+                    new FontFamily(FontFamilyValue),
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.AffectsMeasure));
+        }
+    }";
+            var expected = new DiagnosticResult
+            {
+                Id = "MR4001",
+                Message = "Public fields must have a xml documentation header. (MR4001)",
+                Severity = DiagnosticSeverity.Warning,
+                Locations =
+                    new[]
+                    {
+                        new DiagnosticResultLocation("Test0.cs", 8, 55)
+                    }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+
+    const string fixtest = @"
+    using System;
+
+    namespace ConsoleApplication1
+    {
+        class TypeName
+        {
+        /// <summary>
+        /// The readonly FontFamilyProperty. Value: DependencyProperty.Register(""FontFamily"", typeof(FontFamily), typeof(string), new FrameworkPropertyMetadata(new FontFamily(FontFamilyValue), FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure)).
+        /// </summary>
+        public static readonly DependencyProperty FontFamilyProperty =
+            DependencyProperty.Register(
+                ""FontFamily"",
+                typeof(FontFamily),
+                typeof(string),
+                new FrameworkPropertyMetadata(
+                    new FontFamily(FontFamilyValue),
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.AffectsMeasure));
+        }
+    }";
+            VerifyCSharpFix(test, fixtest);
+}
+
+#region overrides
+/// <summary>
+/// Get CSharp code fix provider.
+/// </summary>
+/// <returns>The code fix provider.</returns>
+protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
             return new MR4001_4005CodeFixProvider();
         }
@@ -277,7 +339,7 @@ namespace XmlDocAnalyzer.Test
         /// <returns>The diagnostic analyer.</returns>
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new MR4001_MR4005ieldsMustHaveXMLComment();
+            return new MR4001_4005FieldsMustHaveXMLComment();
         }
         #endregion overrides
     }

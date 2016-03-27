@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR0006-MR0010StructsMustHaveXMLComment.cs" company="Michael Reukauff">
+// <copyright file="MR0006-0010StructsMustHaveXMLComment.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -18,10 +18,10 @@ namespace XmlDocAnalyzer.Structs
     using XmlElementSyntax = Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax;
 
     /// <summary>
-    /// MR0006 public structs must have XML comment.
+    /// MR0006 - 0010 structs must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR0006_MR0010StructsMustHaveXMLComment : DiagnosticAnalyzer
+    public class MR0006_0010StructsMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
         /// The diagnostic id.
@@ -92,7 +92,7 @@ namespace XmlDocAnalyzer.Structs
             {
                 var hasSummary = xmlTrivia.ChildNodes()
                     .OfType<XmlElementSyntax>()
-                    .Any(i => i.StartTag.Name.ToString().Equals("summary"));
+                    .Any(i => i.StartTag.Name.ToString().Equals(Constants.Summary));
 
                 if (hasSummary)
                 {

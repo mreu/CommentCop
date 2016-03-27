@@ -26,27 +26,22 @@ namespace XmlDocAnalyzer.Destructors
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId = "MR1201";
+        public const string DiagnosticId = Constants.DiagnosticPrefix + "1201";
 
         /// <summary>
         /// The category.
         /// </summary>
-        private const string Category = "Documentation";
+        private const string Category = Constants.DiagnosticCategory;
 
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Destructors must have a xml documentation header.";
+        private const string Title = "Destructors" + Constants.MustHaveXmlHeader;
 
         /// <summary>
         /// The message.
         /// </summary>
         private static readonly string Message = $"{Title} ({DiagnosticId})";
-
-        /// <summary>
-        /// The description.
-        /// </summary>
-        private const string Description = Title;
 
         /// <summary>
         /// The rule.
@@ -57,8 +52,7 @@ namespace XmlDocAnalyzer.Destructors
             Message,
             Category,
             DiagnosticSeverity.Warning,
-            true,
-            Description);
+            true);
 
         /// <summary>
         /// Gets the supported diagnostics.
@@ -96,7 +90,7 @@ namespace XmlDocAnalyzer.Destructors
             {
                 var hasSummary = xmlTrivia.ChildNodes()
                     .OfType<XmlElementSyntax>()
-                    .Any(i => i.StartTag.Name.ToString().Equals("summary"));
+                    .Any(i => i.StartTag.Name.ToString().Equals(Constants.Summary));
 
                 if (hasSummary)
                 {

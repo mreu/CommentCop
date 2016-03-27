@@ -18,7 +18,7 @@ namespace XmlDocAnalyzer.Property
     using XmlElementSyntax = Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax;
 
     /// <summary>
-    /// MR3006 public indexers must have XML comment.
+    /// MR3006 - 3010 indexers must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class MR3006_3010IndexersMustHaveXMLComment : DiagnosticAnalyzer

@@ -1,14 +1,15 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR3006-3010CodeFixProvider.cs" company="Michael Reukauff">
+// <copyright file="MR2006CodeFixProvider.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Interface
+namespace XmlDocAnalyzer.Interfaces
 {
     using System;
     using System.Collections.Immutable;
     using System.Composition;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -24,9 +25,9 @@ namespace XmlDocAnalyzer.Interface
     /// <summary>
     /// The xml doc code fix provider.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR3006_3010CodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR2006CodeFixProvider))]
     [Shared]
-    public class MR3006_3010CodeFixProvider : CodeFixProvider
+    public class MR2006CodeFixProvider : CodeFixProvider
     {
         /// <summary>
         /// The title.
@@ -87,47 +88,54 @@ namespace XmlDocAnalyzer.Interface
             SyntaxToken identifierToken,
             CancellationToken cancellationToken)
         {
-            var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
-
-            var declaration = (IndexerDeclarationSyntax)identifierToken.Parent;
-            if (declaration.ExplicitInterfaceSpecifier == null && !declaration.Modifiers.Any(SyntaxKind.OverrideKeyword))
+            try
             {
-                ISymbol declaredSymbol = semanticModel.GetDeclaredSymbol(declaration, cancellationToken);
-                if (declaredSymbol == null)
+                var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+
+                var declaration = (IndexerDeclarationSyntax)identifierToken.Parent;
+                if (declaration.ExplicitInterfaceSpecifier == null && !declaration.Modifiers.Any(SyntaxKind.OverrideKeyword))
                 {
-                    return document;
+                    ISymbol declaredSymbol = semanticModel.GetDeclaredSymbol(declaration, cancellationToken);
+                    if (declaredSymbol == null)
+                    {
+                        return document;
+                    }
                 }
-            }
 
-            var leadingTrivia = declaration.GetLeadingTrivia();
-            var insertionIndex = leadingTrivia.Count;
-            while (insertionIndex > 0 && !leadingTrivia[insertionIndex - 1].HasBuiltinEndLine())
+                var leadingTrivia = declaration.GetLeadingTrivia();
+                var insertionIndex = leadingTrivia.Count;
+                while (insertionIndex > 0 && !leadingTrivia[insertionIndex - 1].HasBuiltinEndLine())
+                {
+                    insertionIndex--;
+                }
+
+                var xmldoc = await Task.Run(() => GetSummary(declaration), cancellationToken);
+
+                var newLeadingTrivia = leadingTrivia.Insert(insertionIndex, Trivia(xmldoc));
+                var newElement = declaration.WithLeadingTrivia(newLeadingTrivia);
+
+                return document.WithSyntaxRoot(root.ReplaceNode(declaration, newElement));
+            }
+            catch (Exception exp)
             {
-                insertionIndex--;
+                Debug.WriteLine($"{nameof(MR2006CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
+
+                return document;
             }
-
-            var xmldoc = await Task.Run(() => GetSummary(declaration), cancellationToken);
-
-            var newLeadingTrivia = leadingTrivia.Insert(insertionIndex, Trivia(xmldoc));
-            var newElement = declaration.WithLeadingTrivia(newLeadingTrivia);
-
-            return document.WithSyntaxRoot(root.ReplaceNode(declaration, newElement));
         }
 
         /// <summary>
         /// Get summary.
         /// </summary>
-        /// <param name="theSyntax">The property to add to the summary.</param>
+        /// <param name="theSyntaxNode">The syntax node to add the summary.</param>
         /// <returns>The syntax list.</returns>
-        private static DocumentationCommentTriviaSyntax GetSummary(IndexerDeclarationSyntax theSyntax)
+        private static DocumentationCommentTriviaSyntax GetSummary(IndexerDeclarationSyntax theSyntaxNode)
         {
-            const string summary = "summary";
-
-            var summaryStart = XmlElementStartTag(XmlName(Identifier(summary)))
+            var summaryStart = XmlElementStartTag(XmlName(Identifier(Constants.Summary)))
                 .WithLessThanToken(Token(SyntaxKind.LessThanToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken)).NormalizeWhitespace();
 
-            var summaryEnd = XmlElementEndTag(XmlName(Identifier(summary))).NormalizeWhitespace()
+            var summaryEnd = XmlElementEndTag(XmlName(Identifier(Constants.Summary))).NormalizeWhitespace()
                 .WithLessThanSlashToken(Token(SyntaxKind.LessThanSlashToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
@@ -166,7 +174,7 @@ namespace XmlDocAnalyzer.Interface
             var list = List(new XmlNodeSyntax[] { xmlComment, summaryElement, newLine });
 
             // Add exceptions comments
-            var throws = theSyntax.DescendantNodes().OfType<ThrowStatementSyntax>();
+            var throws = theSyntaxNode.DescendantNodes().OfType<ThrowStatementSyntax>();
             foreach (var syntax in throws)
             {
                 if (syntax.ChildNodes().OfType<ObjectCreationExpressionSyntax>().Any())
@@ -196,7 +204,7 @@ namespace XmlDocAnalyzer.Interface
                                                 Token(SyntaxKind.DoubleQuoteToken),
                                                 IdentifierName(identifier.Identifier.ValueText),
                                                 Token(SyntaxKind.DoubleQuoteToken)))),
-                                    XmlElementEndTag(XmlName(Identifier("param"))))
+                                    XmlElementEndTag(XmlName(Identifier("exception"))))
                                     .WithContent(
                                         SingletonList<XmlNodeSyntax>(
                                             XmlText()
@@ -214,7 +222,7 @@ namespace XmlDocAnalyzer.Interface
             }
 
             // Add parameter comments
-            foreach (var parameter in theSyntax.ParameterList.Parameters)
+            foreach (var parameter in theSyntaxNode.ParameterList.Parameters)
             {
                 list = list.AddRange(
                     List(
@@ -257,7 +265,7 @@ namespace XmlDocAnalyzer.Interface
                             XmlElement(XmlElementStartTag(XmlName(Identifier("returns"))), XmlElementEndTag(XmlName(Identifier("returns"))))
                                 .WithContent(
                                     SingletonList<XmlNodeSyntax>(
-                                        XmlText().WithTextTokens(TokenList(XmlTextLiteral(TriviaList(), $"One element of type {theSyntax.Type}.", "comment", TriviaList()))))),
+                                        XmlText().WithTextTokens(TokenList(XmlTextLiteral(TriviaList(), $"One element of type {theSyntaxNode.Type}.", "comment", TriviaList()))))),
 
                             newLine
                     }));

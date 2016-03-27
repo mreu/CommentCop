@@ -94,7 +94,7 @@ namespace XmlDocAnalyzer.Test
     {
         class TypeName
         {
-            internal void Method1()
+            internal void OnButtonClick()
             {
             }
         }
@@ -121,9 +121,9 @@ namespace XmlDocAnalyzer.Test
         class TypeName
         {
         /// <summary>
-        /// The method1.
+        /// Raises the button click event.
         /// </summary>
-        internal void Method1()
+        internal void OnButtonClick()
             {
             }
         }
@@ -288,7 +288,7 @@ namespace XmlDocAnalyzer.Test
         /// <returns>The code fix provider.</returns>
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
-            return new MR100nCodeFixProvider();
+            return new MR1001_1005CodeFixProvider();
         }
 
         /// <summary>

@@ -18,7 +18,7 @@ namespace XmlDocAnalyzer.Interfaces
     using XmlElementSyntax = Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax;
 
     /// <summary>
-    /// MR2003 Method Definitions In Interfaces Must Have XML Comment.
+    /// MR2003 Method definitions in interfaces must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class MR2003MethodDefinitionsInInterfacesMustHaveXMLComment : DiagnosticAnalyzer
@@ -26,27 +26,22 @@ namespace XmlDocAnalyzer.Interfaces
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId = "MR2003";
+        public const string DiagnosticId = Constants.DiagnosticPrefix + "2003";
 
         /// <summary>
         /// The category.
         /// </summary>
-        private const string Category = "Documentation";
+        private const string Category = Constants.DiagnosticCategory;
 
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Method definitions in interfaces must have a xml documentation header.";
+        private const string Title = "Method definitions in interfaces" + Constants.MustHaveXmlHeader;
 
         /// <summary>
         /// The message.
         /// </summary>
         private static readonly string Message = $"{Title} ({DiagnosticId})";
-
-        /// <summary>
-        /// The description.
-        /// </summary>
-        private const string Description = Title;
 
         /// <summary>
         /// The rule.
@@ -57,8 +52,7 @@ namespace XmlDocAnalyzer.Interfaces
             Message,
             Category,
             DiagnosticSeverity.Warning,
-            true,
-            Description);
+            true);
 
         /// <summary>
         /// Gets the supported diagnostics.
@@ -103,7 +97,7 @@ namespace XmlDocAnalyzer.Interfaces
             {
                 var hasSummary = xmlTrivia.ChildNodes()
                     .OfType<XmlElementSyntax>()
-                    .Any(i => i.StartTag.Name.ToString().Equals("summary"));
+                    .Any(i => i.StartTag.Name.ToString().Equals(Constants.Summary));
 
                 if (hasSummary)
                 {

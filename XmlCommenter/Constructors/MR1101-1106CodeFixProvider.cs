@@ -9,6 +9,7 @@ namespace XmlDocAnalyzer.Constructors
     using System;
     using System.Collections.Immutable;
     using System.Composition;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -97,6 +98,8 @@ namespace XmlDocAnalyzer.Constructors
             SyntaxToken identifierToken,
             CancellationToken cancellationToken)
         {
+            try
+            {
             // ReSharper disable once UnusedVariable
             var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
@@ -114,32 +117,37 @@ namespace XmlDocAnalyzer.Constructors
             var newElement = declaration.WithLeadingTrivia(newLeadingTrivia);
 
             return document.WithSyntaxRoot(root.ReplaceNode(declaration, newElement));
+            }
+            catch (Exception exp)
+            {
+                Debug.WriteLine($"{nameof(MR1101_1106CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
+
+                return document;
+            }
         }
 
         /// <summary>
         /// Get summary.
         /// </summary>
-        /// <param name="theMethod">The method to add to the summary.</param>
+        /// <param name="theSyntaxNode">The syntax node to add the summary.</param>
         /// <returns>The syntax list.</returns>
-        private static DocumentationCommentTriviaSyntax GetSummary(ConstructorDeclarationSyntax theMethod)
+        private static DocumentationCommentTriviaSyntax GetSummary(ConstructorDeclarationSyntax theSyntaxNode)
         {
-            const string summary = "summary";
-
             string summaryComment;
-            if (theMethod.Modifiers.Any(SyntaxKind.StaticKeyword))
+            if (theSyntaxNode.Modifiers.Any(SyntaxKind.StaticKeyword))
             {
-                summaryComment = $" Initializes static members of the <see cref=\"{theMethod.Identifier.ValueText}\"/> class.";
+                summaryComment = $" Initializes static members of the <see cref=\"{theSyntaxNode.Identifier.ValueText}\"/> class.";
             }
             else
             {
-                summaryComment = $" Initializes a new instance of the <see cref=\"{theMethod.Identifier.ValueText}\"/> class.";
+                summaryComment = $" Initializes a new instance of the <see cref=\"{theSyntaxNode.Identifier.ValueText}\"/> class.";
             }
 
-            var summaryStart = XmlElementStartTag(XmlName(Identifier(summary)))
+            var summaryStart = XmlElementStartTag(XmlName(Identifier(Constants.Summary)))
                 .WithLessThanToken(Token(SyntaxKind.LessThanToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken)).NormalizeWhitespace();
 
-            var summaryEnd = XmlElementEndTag(XmlName(Identifier(summary))).NormalizeWhitespace()
+            var summaryEnd = XmlElementEndTag(XmlName(Identifier(Constants.Summary))).NormalizeWhitespace()
                 .WithLessThanSlashToken(Token(SyntaxKind.LessThanSlashToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
@@ -176,9 +184,9 @@ namespace XmlDocAnalyzer.Constructors
             var list = List(new XmlNodeSyntax[] { xmlComment, summaryElement, newLine });
 
             // Add parameter comments
-            if (theMethod.ParameterList.Parameters.Any())
+            if (theSyntaxNode.ParameterList.Parameters.Any())
             {
-                foreach (var parameter in theMethod.ParameterList.Parameters)
+                foreach (var parameter in theSyntaxNode.ParameterList.Parameters)
                 {
                     list = list.AddRange(
                         List(
@@ -213,7 +221,7 @@ namespace XmlDocAnalyzer.Constructors
             }
 
             // Add exceptions comments
-            var throws = theMethod.DescendantNodes().OfType<ThrowStatementSyntax>();
+            var throws = theSyntaxNode.DescendantNodes().OfType<ThrowStatementSyntax>();
             foreach (var syntax in throws)
             {
                 if (syntax.ChildNodes().OfType<ObjectCreationExpressionSyntax>().Any())
@@ -243,7 +251,7 @@ namespace XmlDocAnalyzer.Constructors
                                                 Token(SyntaxKind.DoubleQuoteToken),
                                                 IdentifierName(identifier.Identifier.ValueText),
                                                 Token(SyntaxKind.DoubleQuoteToken)))),
-                                    XmlElementEndTag(XmlName(Identifier("param"))))
+                                    XmlElementEndTag(XmlName(Identifier("exception"))))
                                     .WithContent(
                                         SingletonList<XmlNodeSyntax>(
                                             XmlText()

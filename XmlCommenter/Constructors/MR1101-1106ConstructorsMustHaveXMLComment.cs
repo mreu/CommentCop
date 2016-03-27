@@ -18,7 +18,7 @@ namespace XmlDocAnalyzer.Constructors
     using XmlElementSyntax = Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax;
 
     /// <summary>
-    /// MR1101 public constructors must have XML comment.
+    /// MR1101 - 1106 constructors must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class MR1101_1106ConstructorsMustHaveXMLComment : DiagnosticAnalyzer

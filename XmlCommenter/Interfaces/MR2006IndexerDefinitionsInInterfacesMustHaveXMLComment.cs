@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Interface
+namespace XmlDocAnalyzer.Interfaces
 {
     using System.Collections.Immutable;
     using System.Linq;
@@ -26,17 +26,17 @@ namespace XmlDocAnalyzer.Interface
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId = "MR2006";
+        public const string DiagnosticId = Constants.DiagnosticPrefix + "2006";
 
         /// <summary>
         /// The category.
         /// </summary>
-        private const string Category = "Documentation";
+        private const string Category = Constants.DiagnosticCategory;
 
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Indexer definitions in interfaces must have a xml documentation header.";
+        private const string Title = "Indexer definitions in interfaces" + Constants.MustHaveXmlHeader;
 
         /// <summary>
         /// The message.
@@ -103,7 +103,7 @@ namespace XmlDocAnalyzer.Interface
             {
                 var hasSummary = xmlTrivia.ChildNodes()
                     .OfType<XmlElementSyntax>()
-                    .Any(i => i.StartTag.Name.ToString().Equals("summary"));
+                    .Any(i => i.StartTag.Name.ToString().Equals(Constants.Summary));
 
                 if (hasSummary)
                 {

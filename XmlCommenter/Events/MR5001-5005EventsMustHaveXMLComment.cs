@@ -18,7 +18,7 @@ namespace XmlDocAnalyzer.Events
     using XmlElementSyntax = Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax;
 
     /// <summary>
-    /// MR5001 public events must have XML comment.
+    /// MR5001 - 5005 events must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class MR5001_5005EventsMustHaveXMLComment : DiagnosticAnalyzer
@@ -67,14 +67,15 @@ namespace XmlDocAnalyzer.Events
         /// <param name="context">The analysis context.</param>
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(Check, SyntaxKind.EventFieldDeclaration);
+            context.RegisterSyntaxNodeAction(CheckField, SyntaxKind.EventFieldDeclaration);
+            context.RegisterSyntaxNodeAction(CheckEvent, SyntaxKind.EventDeclaration);
         }
 
         /// <summary>
         /// Check if xml comment exists.
         /// </summary>
         /// <param name="syntaxNodeAnalysisContext">The systax node analysis context.</param>
-        private void Check(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private void CheckField(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
             var node = syntaxNodeAnalysisContext.Node as EventFieldDeclarationSyntax;
 
@@ -147,6 +148,83 @@ namespace XmlDocAnalyzer.Events
             }
 
             syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule5005, field.GetLocation(), Constants.Private, DiagnosticId5005));
+        }
+
+        /// <summary>
+        /// Check if xml comment exists.
+        /// </summary>
+        /// <param name="syntaxNodeAnalysisContext">The systax node analysis context.</param>
+        private void CheckEvent(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        {
+            var node = syntaxNodeAnalysisContext.Node as EventDeclarationSyntax;
+
+            if (node == null)
+            {
+                return;
+            }
+
+            // if inside of an interface declaration do nothing
+            if (node.Parent is InterfaceDeclarationSyntax)
+            {
+                return;
+            }
+
+            var xmlTrivia = node.GetLeadingTrivia()
+                .Select(i => i.GetStructure())
+                .OfType<DocumentationCommentTriviaSyntax>()
+                .FirstOrDefault();
+
+            if (xmlTrivia != null)
+            {
+                var hasSummary = xmlTrivia.ChildNodes()
+                    .OfType<XmlElementSyntax>()
+                    .Any(i => i.StartTag.Name.ToString().Equals(Constants.Summary));
+
+                if (hasSummary)
+                {
+                    return;
+                }
+            }
+
+            if (node.Modifiers.Any(SyntaxKind.PublicKeyword))
+            {
+                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule5001, node.Identifier.GetLocation(), Constants.Public, DiagnosticId5001));
+                return;
+            }
+
+            if (node.Modifiers.Any(SyntaxKind.PrivateKeyword))
+            {
+                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule5005, node.Identifier.GetLocation(), Constants.Private, DiagnosticId5005));
+                return;
+            }
+
+            if (node.Modifiers.Any(SyntaxKind.InternalKeyword))
+            {
+                if (node.Modifiers.Any(SyntaxKind.ProtectedKeyword))
+                {
+                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule5003, node.Identifier.GetLocation(), Constants.InternalProtected, DiagnosticId5003));
+                }
+                else
+                {
+                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule5002, node.Identifier.GetLocation(), Constants.Internal, DiagnosticId5002));
+                }
+
+                return;
+            }
+
+            if (node.Modifiers.Any(SyntaxKind.ProtectedKeyword))
+            {
+                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule5004, node.Identifier.GetLocation(), Constants.Protected, DiagnosticId5004));
+                return;
+            }
+
+            if (node.Parent is NamespaceDeclarationSyntax)
+            {
+                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule5002, node.Identifier.GetLocation(), Constants.Internal, DiagnosticId5002));
+                return;
+            }
+
+            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule5005, node.Identifier.GetLocation(), Constants.Private, DiagnosticId5005));
         }
     }
 }

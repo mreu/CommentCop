@@ -9,6 +9,7 @@ namespace XmlDocAnalyzer.Fields
     using System;
     using System.Collections.Immutable;
     using System.Composition;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -41,11 +42,11 @@ namespace XmlDocAnalyzer.Fields
         public sealed override ImmutableArray<string> FixableDiagnosticIds
             =>
                 ImmutableArray.Create(
-                    MR4001_MR4005ieldsMustHaveXMLComment.DiagnosticId4001,
-                    MR4001_MR4005ieldsMustHaveXMLComment.DiagnosticId4002,
-                    MR4001_MR4005ieldsMustHaveXMLComment.DiagnosticId4003,
-                    MR4001_MR4005ieldsMustHaveXMLComment.DiagnosticId4004,
-                    MR4001_MR4005ieldsMustHaveXMLComment.DiagnosticId4005);
+                    MR4001_4005FieldsMustHaveXMLComment.DiagnosticId4001,
+                    MR4001_4005FieldsMustHaveXMLComment.DiagnosticId4002,
+                    MR4001_4005FieldsMustHaveXMLComment.DiagnosticId4003,
+                    MR4001_4005FieldsMustHaveXMLComment.DiagnosticId4004,
+                    MR4001_4005FieldsMustHaveXMLComment.DiagnosticId4005);
 
         /// <summary>
         /// Get fix all provider.
@@ -96,6 +97,8 @@ namespace XmlDocAnalyzer.Fields
             SyntaxToken identifierToken,
             CancellationToken cancellationToken)
         {
+            try
+            {
             // ReSharper disable once UnusedVariable
             var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
@@ -116,31 +119,36 @@ namespace XmlDocAnalyzer.Fields
             var newElement = declaration.WithLeadingTrivia(newLeadingTrivia);
 
             return document.WithSyntaxRoot(root.ReplaceNode(declaration, newElement));
+            }
+            catch (Exception exp)
+            {
+                Debug.WriteLine($"{nameof(MR4001_4005CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
+
+                return document;
+            }
         }
 
         /// <summary>
         /// Get summary.
         /// </summary>
-        /// <param name="theSyntax">The field to add to the summary.</param>
+        /// <param name="theSyntaxNode">The syntax node to add the summary.</param>
         /// <returns>The syntax list.</returns>
-        private static DocumentationCommentTriviaSyntax GetSummary(FieldDeclarationSyntax theSyntax)
+        private static DocumentationCommentTriviaSyntax GetSummary(FieldDeclarationSyntax theSyntaxNode)
         {
-            const string summary = "summary";
-
-            var summaryStart = XmlElementStartTag(XmlName(Identifier(summary)))
+            var summaryStart = XmlElementStartTag(XmlName(Identifier(Constants.Summary)))
                 .WithLessThanToken(Token(SyntaxKind.LessThanToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken)).NormalizeWhitespace();
 
-            var summaryEnd = XmlElementEndTag(XmlName(Identifier(summary))).NormalizeWhitespace()
+            var summaryEnd = XmlElementEndTag(XmlName(Identifier(Constants.Summary))).NormalizeWhitespace()
                 .WithLessThanSlashToken(Token(SyntaxKind.LessThanSlashToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
             var summaryComment = string.Empty;
-            var field = theSyntax.DescendantNodes().OfType<VariableDeclaratorSyntax>().FirstOrDefault();
+            var field = theSyntaxNode.DescendantNodes().OfType<VariableDeclaratorSyntax>().FirstOrDefault();
             if (field != null)
             {
-                var hasConst = theSyntax.Modifiers.Any(SyntaxKind.ConstKeyword);
-                var hasReadOnly = theSyntax.Modifiers.Any(SyntaxKind.ReadOnlyKeyword);
+                var hasConst = theSyntaxNode.Modifiers.Any(SyntaxKind.ConstKeyword);
+                var hasReadOnly = theSyntaxNode.Modifiers.Any(SyntaxKind.ReadOnlyKeyword);
 
                 var equals = field.DescendantNodes().OfType<EqualsValueClauseSyntax>().FirstOrDefault();
 

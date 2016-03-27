@@ -92,7 +92,7 @@ namespace XmlDocAnalyzer.Experimental
             ////{
             ////    var hasSummary = xmlTrivia.ChildNodes()
             ////        .OfType<XmlElementSyntax>()
-            ////        .Any(i => i.StartTag.Name.ToString().Equals("summary"));
+            ////        .Any(i => i.StartTag.Name.ToString().Equals(Constants.Summary));
 
             ////    if (hasSummary)
             ////    {

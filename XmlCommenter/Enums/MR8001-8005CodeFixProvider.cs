@@ -1,14 +1,15 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR0001-MR0005CodeFixProvider.cs" company="Michael Reukauff">
+// <copyright file="MR8001-8005CodeFixProvider.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Classes
+namespace XmlDocAnalyzer.Enums
 {
     using System;
     using System.Collections.Immutable;
     using System.Composition;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -26,14 +27,14 @@ namespace XmlDocAnalyzer.Classes
     /// <summary>
     /// The xml doc code fix provider.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR0001_MR0005CodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR8001_8005CodeFixProvider))]
     [Shared]
-    public class MR0001_MR0005CodeFixProvider : CodeFixProvider
+    public class MR8001_8005CodeFixProvider : CodeFixProvider
     {
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Insert XML documentation header (MR0001 - MR0005)";
+        private const string Title = "Insert XML documentation header (MR8001 - MR8005)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.
@@ -41,11 +42,11 @@ namespace XmlDocAnalyzer.Classes
         public sealed override ImmutableArray<string> FixableDiagnosticIds
             =>
                 ImmutableArray.Create(
-                    MR0001_MR0005ClassesMustHaveXMLComment.DiagnosticId0001,
-                    MR0001_MR0005ClassesMustHaveXMLComment.DiagnosticId0002,
-                    MR0001_MR0005ClassesMustHaveXMLComment.DiagnosticId0003,
-                    MR0001_MR0005ClassesMustHaveXMLComment.DiagnosticId0004,
-                    MR0001_MR0005ClassesMustHaveXMLComment.DiagnosticId0005);
+                    MR8001_MR8005EnumsMustHaveXMLComment.DiagnosticId8001,
+                    MR8001_MR8005EnumsMustHaveXMLComment.DiagnosticId8002,
+                    MR8001_MR8005EnumsMustHaveXMLComment.DiagnosticId8003,
+                    MR8001_MR8005EnumsMustHaveXMLComment.DiagnosticId8004,
+                    MR8001_MR8005EnumsMustHaveXMLComment.DiagnosticId8005);
 
         /// <summary>
         /// Get fix all provider.
@@ -96,10 +97,12 @@ namespace XmlDocAnalyzer.Classes
             SyntaxToken identifierToken,
             CancellationToken cancellationToken)
         {
+            try
+            {
             // ReSharper disable once UnusedVariable
             var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
-            var declaration = (ClassDeclarationSyntax)identifierToken.Parent;
+            var declaration = (EnumDeclarationSyntax)identifierToken.Parent;
             var leadingTrivia = declaration.GetLeadingTrivia();
             var insertionIndex = leadingTrivia.Count;
             while (insertionIndex > 0 && !leadingTrivia[insertionIndex - 1].HasBuiltinEndLine())
@@ -113,26 +116,31 @@ namespace XmlDocAnalyzer.Classes
             var newElement = declaration.WithLeadingTrivia(newLeadingTrivia);
 
             return document.WithSyntaxRoot(root.ReplaceNode(declaration, newElement));
+            }
+            catch (Exception exp)
+            {
+                Debug.WriteLine($"{nameof(MR8001_8005CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
+
+                return document;
+            }
         }
 
         /// <summary>
         /// Get summary.
         /// </summary>
-        /// <param name="theClass">The class to add to the summary.</param>
+        /// <param name="theSyntaxNode">The syntax node to add the summary.</param>
         /// <returns>The syntax list.</returns>
-        private static DocumentationCommentTriviaSyntax GetSummary(ClassDeclarationSyntax theClass)
+        private static DocumentationCommentTriviaSyntax GetSummary(EnumDeclarationSyntax theSyntaxNode)
         {
-            const string summary = "summary";
-
-            var summaryStart = XmlElementStartTag(XmlName(Identifier(summary)))
+            var summaryStart = XmlElementStartTag(XmlName(Identifier(Constants.Summary)))
                 .WithLessThanToken(Token(SyntaxKind.LessThanToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken)).NormalizeWhitespace();
 
-            var summaryEnd = XmlElementEndTag(XmlName(Identifier(summary))).NormalizeWhitespace()
+            var summaryEnd = XmlElementEndTag(XmlName(Identifier(Constants.Summary))).NormalizeWhitespace()
                 .WithLessThanSlashToken(Token(SyntaxKind.LessThanSlashToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
-            var summaryComment = " " + Convert.Class(theClass.Identifier.ValueText);
+            var summaryComment = " " + Convert.Enum(theSyntaxNode.Identifier.ValueText);
 
             var summaryText = SingletonList<XmlNodeSyntax>(
                 XmlText().NormalizeWhitespace()
@@ -165,46 +173,6 @@ namespace XmlDocAnalyzer.Classes
             var summaryElement = XmlElement(summaryStart, summaryEnd).WithContent(summaryText);
 
             var list = List(new XmlNodeSyntax[] { xmlComment, summaryElement, newLine });
-
-            // Add typeparams comments
-            if (theClass.TypeParameterList != null)
-            {
-                if (theClass.TypeParameterList.Parameters.Any())
-                {
-                    foreach (var parameter in theClass.TypeParameterList.Parameters)
-                    {
-                        list = list.AddRange(
-                            List(
-                                new XmlNodeSyntax[]
-                                {
-                                xmlComment,
-
-                                XmlElement(
-                                    XmlElementStartTag(XmlName(Identifier("typeparam")))
-                                    .WithAttributes(
-                                        SingletonList<XmlAttributeSyntax>(
-                                            XmlNameAttribute(
-                                                XmlName(Identifier(TriviaList(Space), "name", TriviaList())),
-                                                Token(SyntaxKind.DoubleQuoteToken),
-                                                IdentifierName(parameter.Identifier.ValueText),
-                                                Token(SyntaxKind.DoubleQuoteToken)))),
-                                    XmlElementEndTag(XmlName(Identifier("param"))))
-                                    .WithContent(
-                                        SingletonList<XmlNodeSyntax>(
-                                            XmlText()
-                                    .WithTextTokens(
-                                        TokenList(
-                                            XmlTextLiteral(
-                                                TriviaList(),
-                                                string.Empty,
-                                                "comment",
-                                                TriviaList()))))),
-
-                                newLine
-                                }));
-                    }
-                }
-            }
 
             return DocumentationCommentTrivia(SyntaxKind.SingleLineDocumentationCommentTrivia, list);
         }
