@@ -148,27 +148,37 @@ namespace XmlDocAnalyzer.Property
                 .WithLessThanSlashToken(Token(SyntaxKind.LessThanSlashToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
-            var accessors = theSyntaxNode.AccessorList.ChildNodes().OfType<AccessorDeclarationSyntax>();
-
             var hasGetter = false;
             var hasSetter = false;
-            foreach (var accessor in accessors)
+            if (theSyntaxNode.AccessorList == null)
             {
-                if (accessor.Kind() == SyntaxKind.GetAccessorDeclaration)
+                if (theSyntaxNode.ChildNodes().OfType<ArrowExpressionClauseSyntax>().Any())
                 {
-                    if (!accessor.Modifiers.Any(SyntaxKind.PrivateKeyword))
+                    hasGetter = true;
+                }
+            }
+            else
+            {
+                var accessors = theSyntaxNode.AccessorList.ChildNodes().OfType<AccessorDeclarationSyntax>();
+
+                foreach (var accessor in accessors)
+                {
+                    if (accessor.Kind() == SyntaxKind.GetAccessorDeclaration)
                     {
-                        hasGetter = true;
+                        if (!accessor.Modifiers.Any(SyntaxKind.PrivateKeyword))
+                        {
+                            hasGetter = true;
+                        }
+
+                        continue;
                     }
 
-                    continue;
-                }
-
-                if (accessor.Kind() == SyntaxKind.SetAccessorDeclaration)
-                {
-                    if (!accessor.Modifiers.Any(SyntaxKind.PrivateKeyword))
+                    if (accessor.Kind() == SyntaxKind.SetAccessorDeclaration)
                     {
-                        hasSetter = true;
+                        if (!accessor.Modifiers.Any(SyntaxKind.PrivateKeyword))
+                        {
+                            hasSetter = true;
+                        }
                     }
                 }
             }

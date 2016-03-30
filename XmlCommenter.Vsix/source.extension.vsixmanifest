@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="XmlCommenter..27eb003e-25ac-4a01-b3ca-84e82fcb08e1" Version="0.8" Language="en-US" Publisher="Michael Reukauff"/>
+        <Identity Id="XmlCommenter..27eb003e-25ac-4a01-b3ca-84e82fcb08e1" Version="0.8.1" Language="en-US" Publisher="Michael Reukauff"/>
         <DisplayName>XmlCommenter</DisplayName>
         <Description xml:space="preserve">Inserts xml comments. Uses Roslyn C# code analyser.</Description>
         <License>License.txt</License>
