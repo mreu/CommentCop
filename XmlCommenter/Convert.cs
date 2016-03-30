@@ -23,10 +23,12 @@ namespace XmlDocAnalyzer
         /// </summary>
         private static readonly string[] Verbs =
         {
+            "add",
             "build",
             "call",
             "check",
             "clean",
+            "clear",
             "clone",
             "copy",
             "commit",
