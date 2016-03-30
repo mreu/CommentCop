@@ -378,7 +378,10 @@ namespace XmlDocAnalyzer
         {
             var sb = new StringBuilder("The ");
 
-            sb.Append(name);
+            var parts = SplitName(name);
+            MakeLowerCase(parts, true);
+
+            sb.Append(string.Join(" ", parts));
 
             if (name.ToLower().Contains("event"))
             {
@@ -451,10 +454,10 @@ namespace XmlDocAnalyzer
         /// <param name="includeFirst">True if first entry should be made lowercase otherwise false.</param>
         private static void MakeLowerCase(string[] parts, bool includeFirst)
         {
-            // skip the first word in the list.
+            // skip the first word in the list if includefirst is false
             for (var ix = includeFirst ? 0 : 1; ix < parts.Length; ix++)
             {
-                // if word is longer than 1 letter check if second letter is uppercase
+                // if word is longer than 1 character check if second character is uppercase
                 // if yes do not change the word
                 if (parts[ix].Length > 1)
                 {
@@ -464,6 +467,18 @@ namespace XmlDocAnalyzer
                     }
 
                     parts[ix] = parts[ix].ToLower();
+                }
+                else
+                {
+                    // only I is uppercase all others are lowercase
+                    if (parts[ix].Equals("i", StringComparison.OrdinalIgnoreCase))
+                    {
+                        parts[ix] = "I";
+                    }
+                    else
+                    {
+                        parts[ix] = parts[ix].ToLower();
+                    }
                 }
             }
         }

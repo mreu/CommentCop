@@ -144,7 +144,7 @@ namespace XmlDocAnalyzer.Test
     {
         class TypeName
         {
-            protected internal void Method1()
+            protected internal void MethodILove()
             {
             }
         }
@@ -171,9 +171,9 @@ namespace XmlDocAnalyzer.Test
         class TypeName
         {
         /// <summary>
-        /// The method1.
+        /// The method I love.
         /// </summary>
-        protected internal void Method1()
+        protected internal void MethodILove()
             {
             }
         }
@@ -194,7 +194,7 @@ namespace XmlDocAnalyzer.Test
     {
         class TypeName
         {
-            protected void Method1()
+            protected void MethodFromATest()
             {
             }
         }
@@ -221,9 +221,9 @@ namespace XmlDocAnalyzer.Test
         class TypeName
         {
         /// <summary>
-        /// The method1.
+        /// The method from a test.
         /// </summary>
-        protected void Method1()
+        protected void MethodFromATest()
             {
             }
         }
