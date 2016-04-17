@@ -32,7 +32,7 @@ namespace XmlDocAnalyzer.Interfaces
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Insert XML documentation header (MR3006 - MR3010)";
+        private const string Title = "Insert XML documentation header (MR2006)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.

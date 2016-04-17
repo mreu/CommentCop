@@ -7,12 +7,10 @@
 namespace XmlDocAnalyzer.Experimental
 {
     using System.Collections.Immutable;
-    using System.Diagnostics;
     using System.Linq;
 
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
 
     using DocumentationCommentTriviaSyntax = Microsoft.CodeAnalysis.CSharp.Syntax.DocumentationCommentTriviaSyntax;
@@ -27,37 +25,32 @@ namespace XmlDocAnalyzer.Experimental
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId9001 = "MR9001";
+        public const string DiagnosticId9001 = Constants.DiagnosticPrefix + "9001";
 
         /// <summary>
         /// The const diagnostic id9002. Value: "MR9002".
         /// </summary>
-        public const string DiagnosticId9002 = "MR9002";
+        public const string DiagnosticId9002 = Constants.DiagnosticPrefix + "9002";
 
         /// <summary>
         /// The const diagnostic id9003. Value: "MR9003".
         /// </summary>
-        public const string DiagnosticId9003 = "MR9003";
+        public const string DiagnosticId9003 = Constants.DiagnosticPrefix + "9003";
 
         /// <summary>
         /// The const diagnostic id9004. Value: "MR9004".
         /// </summary>
-        public const string DiagnosticId9004 = "MR9004";
+        public const string DiagnosticId9004 = Constants.DiagnosticPrefix + "9004";
 
         /// <summary>
         /// The const diagnostic id9005. Value: "MR9005".
         /// </summary>
-        public const string DiagnosticId9005 = "MR9005";
-
-        /// <summary>
-        /// The const diagnostic id9100. Value: "MR9100".
-        /// </summary>
-        public const string DiagnosticId9100 = "MR9100";
+        public const string DiagnosticId9005 = Constants.DiagnosticPrefix + "9005";
 
         /// <summary>
         /// The category.
         /// </summary>
-        private const string Category = "Documentation";
+        private const string Category = Constants.DiagnosticCategory;
 
         /// <summary>
         /// The title.
@@ -72,19 +65,32 @@ namespace XmlDocAnalyzer.Experimental
         /// <summary>
         /// The rule 9001.
         /// </summary>
-        ////private static readonly DiagnosticDescriptor Rule9001 = new DiagnosticDescriptor(DiagnosticId9001, Title, Message, Category, DiagnosticSeverity.Warning, true);
-        ////private static readonly DiagnosticDescriptor Rule9002 = new DiagnosticDescriptor(DiagnosticId9002, Title, Message, Category, DiagnosticSeverity.Warning, true);
-        ////private static readonly DiagnosticDescriptor Rule9003 = new DiagnosticDescriptor(DiagnosticId9003, Title, Message, Category, DiagnosticSeverity.Warning, true);
-        ////private static readonly DiagnosticDescriptor Rule9004 = new DiagnosticDescriptor(DiagnosticId9004, Title, Message, Category, DiagnosticSeverity.Warning, true);
-        ////private static readonly DiagnosticDescriptor Rule9005 = new DiagnosticDescriptor(DiagnosticId9005, Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule9001 = new DiagnosticDescriptor(DiagnosticId9001, Title, Message, Category, DiagnosticSeverity.Warning, true);
 
-        private static readonly DiagnosticDescriptor Rule9100 = new DiagnosticDescriptor(DiagnosticId9100, Title, Message, Category, DiagnosticSeverity.Warning, true);
+        /// <summary>
+        /// The rule 9002.
+        /// </summary>
+        private static readonly DiagnosticDescriptor Rule9002 = new DiagnosticDescriptor(DiagnosticId9002, Title, Message, Category, DiagnosticSeverity.Warning, true);
+
+        /// <summary>
+        /// The rule 9003.
+        /// </summary>
+        private static readonly DiagnosticDescriptor Rule9003 = new DiagnosticDescriptor(DiagnosticId9003, Title, Message, Category, DiagnosticSeverity.Warning, true);
+
+        /// <summary>
+        /// The rule 9004.
+        /// </summary>
+        private static readonly DiagnosticDescriptor Rule9004 = new DiagnosticDescriptor(DiagnosticId9004, Title, Message, Category, DiagnosticSeverity.Warning, true);
+
+        /// <summary>
+        /// The rule 9005.
+        /// </summary>
+        private static readonly DiagnosticDescriptor Rule9005 = new DiagnosticDescriptor(DiagnosticId9005, Title, Message, Category, DiagnosticSeverity.Warning, true);
 
         /// <summary>
         /// Gets the supported diagnostics.
         /// </summary>
-        ////public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule9001, Rule9002, Rule9003, Rule9004, Rule9005);
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule9100);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule9001, Rule9002, Rule9003, Rule9004, Rule9005);
 
         /// <summary>
         /// Initialize.
@@ -92,16 +98,7 @@ namespace XmlDocAnalyzer.Experimental
         /// <param name="context">The analysis context.</param>
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(CheckRegion, SyntaxKind.RegionDirectiveTrivia);
-        }
-
-        /// <summary>
-        /// Check region keyword is followed by a description.
-        /// </summary>
-        /// <param name="syntaxNodeAnalysisContext">The syntaxNodeAnalysisContext.</param>
-        private void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
-        {
-            RegionDirectiveTriviaSyntax regionSyntax = (RegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
+          ////context.RegisterSyntaxNodeAction(Check, SyntaxKind.MethodDeclaration);
         }
 
         /// <summary>

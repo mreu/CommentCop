@@ -23,12 +23,12 @@ namespace XmlDocAnalyzer.Experimental
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId7001 = "MR7001";
+        public const string DiagnosticId7001 = Constants.DiagnosticPrefix + "7001";
 
         /// <summary>
         /// The category.
         /// </summary>
-        private const string Category = "Documentation";
+        private const string Category = Constants.DiagnosticCategory;
 
         /// <summary>
         /// The title.

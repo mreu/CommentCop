@@ -78,6 +78,7 @@ namespace CodeCracker
 
                 trivia = firstToken.LeadingTrivia;
             }
+
             if (isCSharp)
             {
                 var commentLines = trivia.Where(t => t.IsKind(SyntaxKind.SingleLineCommentTrivia)).Take(2).ToList();
@@ -212,35 +213,60 @@ namespace CodeCracker
             var currentNode = node;
             while (true)
             {
-                if (currentNode == null) break;
-                if (currentNode.IsAnyKind(SyntaxKind.Block, SyntaxKind.BreakStatement,
-                    SyntaxKind.CheckedStatement, SyntaxKind.ContinueStatement,
-                    SyntaxKind.DoStatement, SyntaxKind.EmptyStatement,
-                    SyntaxKind.ExpressionStatement, SyntaxKind.FixedKeyword,
-                    SyntaxKind.ForEachKeyword, SyntaxKind.ForStatement,
-                    SyntaxKind.GotoStatement, SyntaxKind.IfStatement,
-                    SyntaxKind.LabeledStatement, SyntaxKind.LocalDeclarationStatement,
-                    SyntaxKind.LockStatement, SyntaxKind.ReturnStatement,
-                    SyntaxKind.SwitchStatement, SyntaxKind.ThrowStatement,
-                    SyntaxKind.TryStatement, SyntaxKind.UnsafeStatement,
-                    SyntaxKind.UsingStatement, SyntaxKind.WhileStatement,
-                    SyntaxKind.YieldBreakStatement, SyntaxKind.YieldReturnStatement))
+                if (currentNode == null)
+                {
+                    break;
+                }
+
+                if (currentNode.IsAnyKind(
+                    SyntaxKind.Block,
+                    SyntaxKind.BreakStatement,
+                    SyntaxKind.CheckedStatement,
+                    SyntaxKind.ContinueStatement,
+                    SyntaxKind.DoStatement,
+                    SyntaxKind.EmptyStatement,
+                    SyntaxKind.ExpressionStatement,
+                    SyntaxKind.FixedKeyword,
+                    SyntaxKind.ForEachKeyword,
+                    SyntaxKind.ForStatement,
+                    SyntaxKind.GotoStatement,
+                    SyntaxKind.IfStatement,
+                    SyntaxKind.LabeledStatement,
+                    SyntaxKind.LocalDeclarationStatement,
+                    SyntaxKind.LockStatement,
+                    SyntaxKind.ReturnStatement,
+                    SyntaxKind.SwitchStatement,
+                    SyntaxKind.ThrowStatement,
+                    SyntaxKind.TryStatement,
+                    SyntaxKind.UnsafeStatement,
+                    SyntaxKind.UsingStatement,
+                    SyntaxKind.WhileStatement,
+                    SyntaxKind.YieldBreakStatement,
+                    SyntaxKind.YieldReturnStatement))
+                {
                     return (StatementSyntax)currentNode;
+                }
+
                 currentNode = currentNode.Parent;
             }
 
             return null;
         }
 
-        public static T FirstAncestorOrSelfOfType<T>(this SyntaxNode node) where T : SyntaxNode =>
-            (T)node.FirstAncestorOrSelfOfType(typeof(T));
+        public static T FirstAncestorOrSelfOfType<T>(this SyntaxNode node)
+            where T : SyntaxNode
+            => (T)node.FirstAncestorOrSelfOfType(typeof(T));
 
         public static SyntaxNode FirstAncestorOrSelfOfType(this SyntaxNode node, params Type[] types)
         {
             var currentNode = node;
             while (true)
             {
-                if (currentNode == null) break;
+                if (currentNode == null)
+                {
+                    break;
+                }
+
                 foreach (var type in types)
                 {
                     if (currentNode.GetType() == type)
@@ -313,6 +339,7 @@ namespace CodeCracker
             {
                 methods.AddRange(innerType.GetAllMethodsIncludingFromInnerTypes());
             }
+
             return methods;
         }
 

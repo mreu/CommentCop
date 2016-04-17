@@ -30,6 +30,7 @@ namespace XmlDocAnalyzer
             "clean",
             "clear",
             "clone",
+            "close",
             "copy",
             "commit",
             "convert",
@@ -42,13 +43,17 @@ namespace XmlDocAnalyzer
             "fill",
             "find",
             "get",
+            "goto",
             "initialize",
             "insert",
             "move",
+            "open",
+            "parse",
             "pull",
             "push",
             "put",
             "read",
+            "rebuild",
             "reconvert",
             "register",
             "remove",
@@ -64,6 +69,7 @@ namespace XmlDocAnalyzer
             "test",
             "try",
             "update",
+            "validate",
             "write"
         };
 
