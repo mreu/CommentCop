@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR7001-7005CodeFixProvider.cs" company="Michael Reukauff">
+// <copyright file="MR5006-5010CodeFixProvider.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -27,14 +27,14 @@ namespace XmlDocAnalyzer.Delegates
     /// <summary>
     /// The xml doc code fix provider.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR7001_7005CodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR5006_5010CodeFixProvider))]
     [Shared]
-    public class MR7001_7005CodeFixProvider : CodeFixProvider
+    public class MR5006_5010CodeFixProvider : CodeFixProvider
     {
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Insert XML documentation header (MR7001 - MR7005)";
+        private const string Title = "Insert XML documentation header (MR5006 - MR5010)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.
@@ -42,11 +42,11 @@ namespace XmlDocAnalyzer.Delegates
         public sealed override ImmutableArray<string> FixableDiagnosticIds
             =>
                 ImmutableArray.Create(
-                    MR7001_7005DelegatesMustHaveXMLComment.DiagnosticId7001,
-                    MR7001_7005DelegatesMustHaveXMLComment.DiagnosticId7002,
-                    MR7001_7005DelegatesMustHaveXMLComment.DiagnosticId7003,
-                    MR7001_7005DelegatesMustHaveXMLComment.DiagnosticId7004,
-                    MR7001_7005DelegatesMustHaveXMLComment.DiagnosticId7005);
+                    MR5006_5010DelegatesMustHaveXMLComment.DiagnosticId5006,
+                    MR5006_5010DelegatesMustHaveXMLComment.DiagnosticId5007,
+                    MR5006_5010DelegatesMustHaveXMLComment.DiagnosticId5008,
+                    MR5006_5010DelegatesMustHaveXMLComment.DiagnosticId5009,
+                    MR5006_5010DelegatesMustHaveXMLComment.DiagnosticId5010);
 
         /// <summary>
         /// Get fix all provider.
@@ -119,7 +119,7 @@ namespace XmlDocAnalyzer.Delegates
             }
             catch (Exception exp)
             {
-                Debug.WriteLine($"{nameof(MR7001_7005CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
+                Debug.WriteLine($"{nameof(MR5006_5010CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
 
                 return document;
             }

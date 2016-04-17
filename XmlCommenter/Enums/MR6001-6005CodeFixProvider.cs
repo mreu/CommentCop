@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR8001-8005CodeFixProvider.cs" company="Michael Reukauff">
+// <copyright file="MR6001-6005CodeFixProvider.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -27,14 +27,14 @@ namespace XmlDocAnalyzer.Enums
     /// <summary>
     /// The xml doc code fix provider.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR8001_8005CodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR6001_6005CodeFixProvider))]
     [Shared]
-    public class MR8001_8005CodeFixProvider : CodeFixProvider
+    public class MR6001_6005CodeFixProvider : CodeFixProvider
     {
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Insert XML documentation header (MR8001 - MR8005)";
+        private const string Title = "Insert XML documentation header (MR6001 - MR6005)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.
@@ -42,11 +42,11 @@ namespace XmlDocAnalyzer.Enums
         public sealed override ImmutableArray<string> FixableDiagnosticIds
             =>
                 ImmutableArray.Create(
-                    MR8001_MR8005EnumsMustHaveXMLComment.DiagnosticId8001,
-                    MR8001_MR8005EnumsMustHaveXMLComment.DiagnosticId8002,
-                    MR8001_MR8005EnumsMustHaveXMLComment.DiagnosticId8003,
-                    MR8001_MR8005EnumsMustHaveXMLComment.DiagnosticId8004,
-                    MR8001_MR8005EnumsMustHaveXMLComment.DiagnosticId8005);
+                    MR6001_6005EnumsMustHaveXMLComment.DiagnosticId6001,
+                    MR6001_6005EnumsMustHaveXMLComment.DiagnosticId6002,
+                    MR6001_6005EnumsMustHaveXMLComment.DiagnosticId6003,
+                    MR6001_6005EnumsMustHaveXMLComment.DiagnosticId6004,
+                    MR6001_6005EnumsMustHaveXMLComment.DiagnosticId6005);
 
         /// <summary>
         /// Get fix all provider.
@@ -119,7 +119,7 @@ namespace XmlDocAnalyzer.Enums
             }
             catch (Exception exp)
             {
-                Debug.WriteLine($"{nameof(MR8001_8005CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
+                Debug.WriteLine($"{nameof(MR6001_6005CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
 
                 return document;
             }

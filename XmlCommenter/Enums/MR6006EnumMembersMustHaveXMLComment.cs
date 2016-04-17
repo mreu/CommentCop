@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR8006EnumMembersMustHaveXMLComment.cs" company="Michael Reukauff">
+// <copyright file="MR6006EnumMembersMustHaveXMLComment.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -18,15 +18,15 @@ namespace XmlDocAnalyzer.Enums
     using XmlElementSyntax = Microsoft.CodeAnalysis.CSharp.Syntax.XmlElementSyntax;
 
     /// <summary>
-    /// MR8006 enum members must have XML comment.
+    /// MR6006 enum members must have XML comment.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR8006EnumMembersMustHaveXMLComment : DiagnosticAnalyzer
+    public class MR6006EnumMembersMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
-        /// The diagnostic id (const). Value: Constants.DiagnosticPrefix + "8006".
+        /// The diagnostic id (const). Value: Constants.DiagnosticPrefix + "6006".
         /// </summary>
-        public const string DiagnosticId = Constants.DiagnosticPrefix + "8006";
+        public const string DiagnosticId = Constants.DiagnosticPrefix + "6006";
 
         /// <summary>
         /// The category (const). Value: Constants.DiagnosticCategory.

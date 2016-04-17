@@ -28,22 +28,31 @@ namespace XmlDocAnalyzer.Experimental
         /// The diagnostic id.
         /// </summary>
         public const string DiagnosticId9001 = "MR9001";
+
         /// <summary>
         /// The const diagnostic id9002. Value: "MR9002".
         /// </summary>
         public const string DiagnosticId9002 = "MR9002";
+
         /// <summary>
         /// The const diagnostic id9003. Value: "MR9003".
         /// </summary>
         public const string DiagnosticId9003 = "MR9003";
+
         /// <summary>
         /// The const diagnostic id9004. Value: "MR9004".
         /// </summary>
         public const string DiagnosticId9004 = "MR9004";
+
         /// <summary>
         /// The const diagnostic id9005. Value: "MR9005".
         /// </summary>
         public const string DiagnosticId9005 = "MR9005";
+
+        /// <summary>
+        /// The const diagnostic id9100. Value: "MR9100".
+        /// </summary>
+        public const string DiagnosticId9100 = "MR9100";
 
         /// <summary>
         /// The category.
@@ -63,17 +72,19 @@ namespace XmlDocAnalyzer.Experimental
         /// <summary>
         /// The rule 9001.
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule9001 = new DiagnosticDescriptor(DiagnosticId9001, Title, Message, Category, DiagnosticSeverity.Warning, true);
+        ////private static readonly DiagnosticDescriptor Rule9001 = new DiagnosticDescriptor(DiagnosticId9001, Title, Message, Category, DiagnosticSeverity.Warning, true);
         ////private static readonly DiagnosticDescriptor Rule9002 = new DiagnosticDescriptor(DiagnosticId9002, Title, Message, Category, DiagnosticSeverity.Warning, true);
         ////private static readonly DiagnosticDescriptor Rule9003 = new DiagnosticDescriptor(DiagnosticId9003, Title, Message, Category, DiagnosticSeverity.Warning, true);
         ////private static readonly DiagnosticDescriptor Rule9004 = new DiagnosticDescriptor(DiagnosticId9004, Title, Message, Category, DiagnosticSeverity.Warning, true);
         ////private static readonly DiagnosticDescriptor Rule9005 = new DiagnosticDescriptor(DiagnosticId9005, Title, Message, Category, DiagnosticSeverity.Warning, true);
 
+        private static readonly DiagnosticDescriptor Rule9100 = new DiagnosticDescriptor(DiagnosticId9100, Title, Message, Category, DiagnosticSeverity.Warning, true);
+
         /// <summary>
         /// Gets the supported diagnostics.
         /// </summary>
         ////public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule9001, Rule9002, Rule9003, Rule9004, Rule9005);
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule9001);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule9100);
 
         /// <summary>
         /// Initialize.
@@ -81,7 +92,16 @@ namespace XmlDocAnalyzer.Experimental
         /// <param name="context">The analysis context.</param>
         public override void Initialize(AnalysisContext context)
         {
-            // context.RegisterSyntaxNodeAction(Check, SyntaxKind.FieldDeclaration);
+            context.RegisterSyntaxNodeAction(CheckRegion, SyntaxKind.RegionDirectiveTrivia);
+        }
+
+        /// <summary>
+        /// Check region keyword is followed by a description.
+        /// </summary>
+        /// <param name="syntaxNodeAnalysisContext">The syntaxNodeAnalysisContext.</param>
+        private void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        {
+            RegionDirectiveTriviaSyntax regionSyntax = (RegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
         }
 
         /// <summary>
@@ -130,7 +150,7 @@ namespace XmlDocAnalyzer.Experimental
                 }
             }
 
-            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule9001, node.GetLocation(), DiagnosticId9001));
+            //// syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule9001, node.GetLocation(), DiagnosticId9001));
         }
     }
 }

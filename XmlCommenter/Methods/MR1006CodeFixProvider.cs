@@ -34,12 +34,12 @@ namespace XmlDocAnalyzer.Methods
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Insert XML documentation header (MR1001 - MR1005)";
+        private const string Title = "Insert XML documentation header (MR1006)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.
         /// </summary>
-        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MR1006OperatorsMustHaveXMLComment.DiagnosticId);
+        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MR1006OperatorsMustHaveXMLComment.DiagnosticId1006);
 
         /// <summary>
         /// Get fix all provider.

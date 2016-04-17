@@ -26,12 +26,12 @@ namespace XmlDocAnalyzer.Methods
         /// <summary>
         /// The diagnostic id (const). Value: "MR1006".
         /// </summary>
-        public const string DiagnosticId = "MR1006";
+        public const string DiagnosticId1006 = Constants.DiagnosticPrefix + "1006";
 
         /// <summary>
         /// The category (const). Value: "Documentation".
         /// </summary>
-        private const string Category = "Documentation";
+        private const string Category = Constants.DiagnosticCategory;
 
         /// <summary>
         /// The title (const). Value: "Operators must have a xml documentation header.".
@@ -41,7 +41,7 @@ namespace XmlDocAnalyzer.Methods
         /// <summary>
         /// The message (readonly). Value: $"{Title} ({DiagnosticId})".
         /// </summary>
-        private static readonly string Message = $"{Title} ({DiagnosticId})";
+        private static readonly string Message = $"{Title} ({DiagnosticId1006})";
 
         /// <summary>
         /// The description (const). Value: Title.
@@ -51,7 +51,9 @@ namespace XmlDocAnalyzer.Methods
         /// <summary>
         /// The rule.
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title,
+        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
+            DiagnosticId1006,
+            Title,
             Message,
             Category,
             DiagnosticSeverity.Warning,

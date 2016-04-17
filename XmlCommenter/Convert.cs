@@ -37,6 +37,7 @@ namespace XmlDocAnalyzer
             "delete",
             "discard",
             "display",
+            "dispose",
             "fetch",
             "fill",
             "find",

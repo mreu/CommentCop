@@ -39,16 +39,16 @@
     <Compile Include="Constructors\MR1101-1106CodeFixProvider.cs" />
     <Compile Include="Constructors\MR1101-1106ConstructorsMustHaveXMLComment.cs" />
     <Compile Include="Convert.cs" />
-    <Compile Include="Delegates\MR7001-7005CodeFixProvider.cs" />
-    <Compile Include="Delegates\MR7001-7005DelegatesMustHaveXMLComment.cs" />
+    <Compile Include="Events + Delegates\MR5006-5010CodeFixProvider.cs" />
+    <Compile Include="Events + Delegates\MR5006-5010DelegatesMustHaveXMLComment.cs" />
     <Compile Include="Destructors\MR1201DestructorsMustHaveXMLComment.cs" />
     <Compile Include="Destructors\MR1201CodeFixProvider.cs" />
-    <Compile Include="Enums\MR8001-8005CodeFixProvider.cs" />
-    <Compile Include="Enums\MR8001-8005EnumsMustHaveXMLComment.cs" />
-    <Compile Include="Enums\MR8006CodeFixProvider.cs" />
-    <Compile Include="Enums\MR8006EnumMembersMustHaveXMLComment.cs" />
-    <Compile Include="Events\MR5001-5005CodeFixProvider.cs" />
-    <Compile Include="Events\MR5001-5005EventsMustHaveXMLComment.cs" />
+    <Compile Include="Enums\MR6001-6005CodeFixProvider.cs" />
+    <Compile Include="Enums\MR6001-6005EnumsMustHaveXMLComment.cs" />
+    <Compile Include="Enums\MR6006CodeFixProvider.cs" />
+    <Compile Include="Enums\MR6006EnumMembersMustHaveXMLComment.cs" />
+    <Compile Include="Events + Delegates\MR5001-5005CodeFixProvider.cs" />
+    <Compile Include="Events + Delegates\MR5001-5005EventsMustHaveXMLComment.cs" />
     <Compile Include="Experimental\MR9001-9005MethodNamesMustBeLongerThen3Chars.cs" />
     <Compile Include="Fields\MR4001-4005CodeFixProvider.cs" />
     <Compile Include="Fields\MR4001-4005FieldsMustHaveXMLComment.cs" />
@@ -74,6 +74,9 @@
     <Compile Include="Property\MR3001-3005PropertiesMustHaveXMLComment.cs" />
     <Compile Include="Property\MR3006-3010CodeFixProvider.cs" />
     <Compile Include="Property\MR3006-3010IndexersMustHaveXMLComment.cs" />
+    <Compile Include="Regions\MR7001CodeFixProvider.cs" />
+    <Compile Include="Regions\MR7000RegionsMustHaveDescription.cs" />
+    <Compile Include="Regions\MR7001DescriptionInRegionsMustBeginWithUppercaseCharacter.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

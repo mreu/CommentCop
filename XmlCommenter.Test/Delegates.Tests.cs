@@ -32,10 +32,10 @@ namespace XmlDocAnalyzer.Test
         }
 
         /// <summary>
-        /// Diagnostic and CodeFix both triggered and checked for rule 7001
+        /// Diagnostic and CodeFix both triggered and checked for rule 5006
         /// </summary>
         [TestMethod]
-        public void TestRule7001()
+        public void TestRule5006()
         {
             const string test = @"
     using System;
@@ -49,8 +49,8 @@ namespace XmlDocAnalyzer.Test
     }";
             var expected = new DiagnosticResult
             {
-                Id = "MR7001",
-                Message = "Public delegates must have a xml documentation header. (MR7001)",
+                Id = "MR5006",
+                Message = "Public delegates must have a xml documentation header. (MR5006)",
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[]
@@ -83,10 +83,10 @@ namespace XmlDocAnalyzer.Test
         }
 
         /// <summary>
-        /// Diagnostic and CodeFix both triggered and checked for rule 7002
+        /// Diagnostic and CodeFix both triggered and checked for rule 5007
         /// </summary>
         [TestMethod]
-        public void TestRule7002()
+        public void TestRule5007()
         {
             const string test = @"
     using System;
@@ -100,8 +100,8 @@ namespace XmlDocAnalyzer.Test
     }";
             var expected = new DiagnosticResult
             {
-                Id = "MR7002",
-                Message = "Internal delegates must have a xml documentation header. (MR7002)",
+                Id = "MR5007",
+                Message = "Internal delegates must have a xml documentation header. (MR5007)",
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[]
@@ -134,10 +134,10 @@ namespace XmlDocAnalyzer.Test
         }
 
         /// <summary>
-        /// Diagnostic and CodeFix both triggered and checked for rule 7003
+        /// Diagnostic and CodeFix both triggered and checked for rule 5008
         /// </summary>
         [TestMethod]
-        public void TestRule7003()
+        public void TestRule5008()
         {
             const string test = @"
     using System;
@@ -151,8 +151,8 @@ namespace XmlDocAnalyzer.Test
     }";
             var expected = new DiagnosticResult
             {
-                Id = "MR7003",
-                Message = "Internal protected delegates must have a xml documentation header. (MR7003)",
+                Id = "MR5008",
+                Message = "Internal protected delegates must have a xml documentation header. (MR5008)",
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[]
@@ -185,10 +185,10 @@ namespace XmlDocAnalyzer.Test
         }
 
         /// <summary>
-        /// Diagnostic and CodeFix both triggered and checked for rule 7004
+        /// Diagnostic and CodeFix both triggered and checked for rule 5009
         /// </summary>
         [TestMethod]
-        public void TestRule7004()
+        public void TestRule5009()
         {
             const string test = @"
     using System;
@@ -202,8 +202,8 @@ namespace XmlDocAnalyzer.Test
     }";
             var expected = new DiagnosticResult
             {
-                Id = "MR7004",
-                Message = "Protected delegates must have a xml documentation header. (MR7004)",
+                Id = "MR5009",
+                Message = "Protected delegates must have a xml documentation header. (MR5009)",
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[]
@@ -236,10 +236,10 @@ namespace XmlDocAnalyzer.Test
         }
 
         /// <summary>
-        /// Diagnostic and CodeFix both triggered and checked for rule 7005
+        /// Diagnostic and CodeFix both triggered and checked for rule 5010
         /// </summary>
         [TestMethod]
-        public void TestRule7005()
+        public void TestRule5010()
         {
             const string test = @"
     using System;
@@ -253,8 +253,8 @@ namespace XmlDocAnalyzer.Test
     }";
             var expected = new DiagnosticResult
             {
-                Id = "MR7005",
-                Message = "Private delegates must have a xml documentation header. (MR7005)",
+                Id = "MR5010",
+                Message = "Private delegates must have a xml documentation header. (MR5010)",
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[]
@@ -293,7 +293,7 @@ namespace XmlDocAnalyzer.Test
         /// <returns>The code fix provider.</returns>
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
-            return new MR7001_7005CodeFixProvider();
+            return new MR5006_5010CodeFixProvider();
         }
 
         /// <summary>
@@ -302,7 +302,7 @@ namespace XmlDocAnalyzer.Test
         /// <returns>The diagnostic analyer.</returns>
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new MR7001_7005DelegatesMustHaveXMLComment();
+            return new MR5006_5010DelegatesMustHaveXMLComment();
         }
         #endregion overrides
     }

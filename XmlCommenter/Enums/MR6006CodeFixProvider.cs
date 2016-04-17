@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR8006CodeFixProvider.cs" company="Michael Reukauff">
+// <copyright file="MR6006CodeFixProvider.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -25,19 +25,19 @@ namespace XmlDocAnalyzer.Enums
     /// <summary>
     /// The xml doc code fix provider.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR8006CodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR6006CodeFixProvider))]
     [Shared]
-    public class MR8006CodeFixProvider : CodeFixProvider
+    public class MR6006CodeFixProvider : CodeFixProvider
     {
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Insert XML documentation header (MR8006)";
+        private const string Title = "Insert XML documentation header (MR6006)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.
         /// </summary>
-        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MR8006EnumMembersMustHaveXMLComment.DiagnosticId);
+        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MR6006EnumMembersMustHaveXMLComment.DiagnosticId);
 
         /// <summary>
         /// Get fix all provider.
@@ -110,7 +110,7 @@ namespace XmlDocAnalyzer.Enums
             }
             catch (Exception exp)
             {
-                Debug.WriteLine($"{nameof(MR8006CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
+                Debug.WriteLine($"{nameof(MR6006CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
 
                 return document;
             }
