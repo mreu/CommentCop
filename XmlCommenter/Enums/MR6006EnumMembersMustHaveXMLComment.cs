@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Enums
+namespace XmlCommenter.Enums
 {
     using System.Collections.Immutable;
     using System.Linq;

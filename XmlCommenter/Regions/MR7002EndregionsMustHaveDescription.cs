@@ -1,6 +1,6 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR7000RegionsMustHaveDescription.cs" company="Michael Reukauff">
-//   Copyright � 2016 Michael Reukauff. All rights reserved.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="MR7002EndregionsMustHaveDescription.cs" company="Michael Reukauff">
+//   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -15,15 +15,15 @@ namespace XmlCommenter.Regions
     using Microsoft.CodeAnalysis.Diagnostics;
 
     /// <summary>
-    /// MR1001 public methods must have XML comment.
+    /// The MR7002Endregions must have description class.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR7000RegionsMustHaveDescription : DiagnosticAnalyzer
+    public class MR7002EndregionsMustHaveDescription : DiagnosticAnalyzer
     {
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId7000 = Constants.DiagnosticPrefix + "7000";
+        public const string DiagnosticId7002 = Constants.DiagnosticPrefix + "7002";
 
         /// <summary>
         /// The category.
@@ -33,17 +33,17 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Regions must have a description.";
+        private const string Title = "Endregions must have a description.";
 
         /// <summary>
         /// The message.
         /// </summary>
-        private static readonly string Message = "Regions must have a description. ({0})";
+        private static readonly string Message = $"{Title} ({{0}})";
 
         /// <summary>
         /// The rule 9001.
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule7000 = new DiagnosticDescriptor(DiagnosticId7000, Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule7000 = new DiagnosticDescriptor(DiagnosticId7002, Title, Message, Category, DiagnosticSeverity.Warning, true);
 
         /// <summary>
         /// Gets the supported diagnostics.
@@ -56,7 +56,7 @@ namespace XmlCommenter.Regions
         /// <param name="context">The analysis context.</param>
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(CheckRegion, SyntaxKind.RegionDirectiveTrivia);
+            context.RegisterSyntaxNodeAction(CheckRegion, SyntaxKind.EndRegionDirectiveTrivia);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace XmlCommenter.Regions
         /// <param name="syntaxNodeAnalysisContext">The syntaxNodeAnalysisContext.</param>
         private void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            var node = (RegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
+            var node = (EndRegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
 
             var token = node.ChildTokens().LastOrDefault();
 
@@ -73,7 +73,7 @@ namespace XmlCommenter.Regions
             {
                 if (!token.HasLeadingTrivia)
                 {
-                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7000, node.GetLocation(), DiagnosticId7000));
+                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7000, node.GetLocation(), DiagnosticId7002));
                 }
             }
         }

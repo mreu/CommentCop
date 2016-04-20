@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Events
+namespace XmlCommenter.Events
 {
     using System.Collections.Immutable;
     using System.Linq;

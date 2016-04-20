@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer
+namespace XmlCommenter
 {
     using System;
     using System.Linq;

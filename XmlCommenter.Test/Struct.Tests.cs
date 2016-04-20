@@ -4,15 +4,16 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Test
+namespace XmlCommenter.Test
 {
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CodeFixes;
     using Microsoft.CodeAnalysis.Diagnostics;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     using TestHelper;
 
-    using XmlDocAnalyzer.Structs;
+    using XmlCommenter.Structs;
 
     /// <summary>
     /// Test all struct analyzers and code fixes.

@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Test
+namespace XmlCommenter.Test
 {
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CodeFixes;
@@ -12,7 +12,7 @@ namespace XmlDocAnalyzer.Test
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using TestHelper;
 
-    using XmlDocAnalyzer.Delegates;
+    using XmlCommenter.Delegates;
 
     /// <summary>
     /// Test all delegates analyzers and code fixes.

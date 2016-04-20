@@ -77,6 +77,9 @@
     <Compile Include="Regions\MR7001CodeFixProvider.cs" />
     <Compile Include="Regions\MR7000RegionsMustHaveDescription.cs" />
     <Compile Include="Regions\MR7001DescriptionInRegionsMustBeginWithUppercaseCharacter.cs" />
+    <Compile Include="Regions\MR7002EndregionsMustHaveDescription.cs" />
+    <Compile Include="Regions\MR7003CodeFixProvider.cs" />
+    <Compile Include="Regions\MR7003DescriptionInEndregionsMustBeginWithUppercaseCharacter.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

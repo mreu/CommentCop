@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer
+namespace XmlCommenter
 {
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;

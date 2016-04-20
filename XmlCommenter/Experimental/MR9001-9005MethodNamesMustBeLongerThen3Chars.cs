@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Experimental
+namespace XmlCommenter.Experimental
 {
     using System.Collections.Immutable;
     using System.Linq;

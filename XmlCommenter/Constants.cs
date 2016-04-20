@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer
+namespace XmlCommenter
 {
     /// <summary>
     /// The constants.

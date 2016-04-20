@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Property
+namespace XmlCommenter.Property
 {
     using System;
     using System.Collections.Immutable;
@@ -22,7 +22,7 @@ namespace XmlDocAnalyzer.Property
 
     using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-    using Convert = XmlDocAnalyzer.Convert;
+    using Convert = XmlCommenter.Convert;
 
     /// <summary>
     /// The xml doc code fix provider.

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR7001CodeFixProvider.cs" company="Michael Reukauff">
+// <copyright file="MR7003CodeFixProvider.cs" company="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -23,21 +23,21 @@ namespace XmlCommenter.Regions
     using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
     /// <summary>
-    /// The xml doc code fix provider.
+    /// The MR7003Code fix provider class.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR7001CodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR7003CodeFixProvider))]
     [Shared]
-    public class MR7001CodeFixProvider : CodeFixProvider
+    public class MR7003CodeFixProvider : CodeFixProvider
     {
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Make description of region beginning with uppercase character (MR7001)";
+        private const string Title = "Make description of endregion beginning with uppercase character (MR7003)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.
         /// </summary>
-        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MR7001DescriptionInRegionsMustBeginWithUppercaseCharacter.DiagnosticId7001);
+        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MR7003DescriptionInEndregionsMustBeginWithUppercaseCharacter.DiagnosticId7003);
 
         /// <summary>
         /// Get fix all provider.
@@ -93,9 +93,9 @@ namespace XmlCommenter.Regions
                 // ReSharper disable once UnusedVariable
                 var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
-                var region = identifierToken.LeadingTrivia.FirstOrDefault(x => x.IsKind(SyntaxKind.RegionDirectiveTrivia));
+                var region = identifierToken.LeadingTrivia.FirstOrDefault(x => x.IsKind(SyntaxKind.EndRegionDirectiveTrivia));
 
-                var token = region.GetStructure() as RegionDirectiveTriviaSyntax;
+                var token = region.GetStructure() as EndRegionDirectiveTriviaSyntax;
 
                 var trivias = token?.EndOfDirectiveToken.GetAllTrivia();
 
@@ -130,7 +130,7 @@ namespace XmlCommenter.Regions
             }
             catch (Exception exp)
             {
-                Debug.WriteLine($"{nameof(MR7001CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
+                Debug.WriteLine($"{nameof(MR7003CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
 
                 return document;
             }
