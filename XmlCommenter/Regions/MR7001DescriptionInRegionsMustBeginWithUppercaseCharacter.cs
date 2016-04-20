@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Experimental
+namespace XmlDocAnalyzer.Region
 {
     using System.Collections.Immutable;
     using System.Linq;

@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace XmlDocAnalyzer.Methods
+namespace XmlDocAnalyzer.Region
 {
     using System;
     using System.Collections.Immutable;
@@ -20,16 +20,12 @@ namespace XmlDocAnalyzer.Methods
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-    using XmlDocAnalyzer.Experimental;
-
     using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-
-    using Convert = XmlDocAnalyzer.Convert;
 
     /// <summary>
     /// The xml doc code fix provider.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR1006CodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR7001CodeFixProvider))]
     [Shared]
     public class MR7001CodeFixProvider : CodeFixProvider
     {
