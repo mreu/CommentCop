@@ -24,7 +24,9 @@ namespace XmlCommenter
         private static readonly string[] Verbs =
         {
             "add",
+            "alter",
             "build",
+            "calculate",
             "call",
             "check",
             "clean",
@@ -39,6 +41,7 @@ namespace XmlCommenter
             "discard",
             "display",
             "dispose",
+            "do",
             "fetch",
             "fill",
             "find",
@@ -46,6 +49,7 @@ namespace XmlCommenter
             "goto",
             "initialize",
             "insert",
+            "load",
             "move",
             "open",
             "parse",
@@ -59,6 +63,7 @@ namespace XmlCommenter
             "remove",
             "reset",
             "rollback",
+            "save",
             "search",
             "select",
             "set",
@@ -148,7 +153,7 @@ namespace XmlCommenter
 
                     if (parts.Length > 1)
                     {
-                        return parts[0] + ' ' + string.Join(" ", parts.Skip(1)) + '.';
+                        return parts[0] + " the " + string.Join(" ", parts.Skip(1)) + '.';
                     }
 
                     return parts[0] + '.';
