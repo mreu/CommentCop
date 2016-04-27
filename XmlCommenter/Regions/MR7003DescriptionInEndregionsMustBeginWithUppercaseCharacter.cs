@@ -33,7 +33,7 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Description in endregions must begin with uppercase characters.";
+        private const string Title = "Description in #endregions must begin with uppercase characters.";
 
         /// <summary>
         /// The message.
@@ -65,6 +65,11 @@ namespace XmlCommenter.Regions
         /// <param name="syntaxNodeAnalysisContext">The syntaxNodeAnalysisContext.</param>
         private void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
+            if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
+            {
+                return;
+            }
+
             var node = (EndRegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
 
             var token = node.ChildTokens().LastOrDefault();

@@ -80,6 +80,7 @@
     <Compile Include="Regions\MR7002EndregionsMustHaveDescription.cs" />
     <Compile Include="Regions\MR7003CodeFixProvider.cs" />
     <Compile Include="Regions\MR7003DescriptionInEndregionsMustBeginWithUppercaseCharacter.cs" />
+    <Compile Include="Regions\MR7004EndregionMustHaveTheSameTextAsTheRegion.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

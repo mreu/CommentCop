@@ -33,7 +33,7 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Endregions must have a description.";
+        private const string Title = "#endregions must have a description.";
 
         /// <summary>
         /// The message.
@@ -43,12 +43,12 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// The rule 9001.
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule7000 = new DiagnosticDescriptor(DiagnosticId7002, Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule7002 = new DiagnosticDescriptor(DiagnosticId7002, Title, Message, Category, DiagnosticSeverity.Warning, true);
 
         /// <summary>
         /// Gets the supported diagnostics.
         /// </summary>
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule7000);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule7002);
 
         /// <summary>
         /// Initialize.
@@ -65,6 +65,11 @@ namespace XmlCommenter.Regions
         /// <param name="syntaxNodeAnalysisContext">The syntaxNodeAnalysisContext.</param>
         private void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
+            if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
+            {
+                return;
+            }
+
             var node = (EndRegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
 
             var token = node.ChildTokens().LastOrDefault();
@@ -73,7 +78,7 @@ namespace XmlCommenter.Regions
             {
                 if (!token.HasLeadingTrivia)
                 {
-                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7000, node.GetLocation(), DiagnosticId7002));
+                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7002, node.GetLocation(), DiagnosticId7002));
                 }
             }
         }

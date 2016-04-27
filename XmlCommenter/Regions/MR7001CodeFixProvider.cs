@@ -32,7 +32,7 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Make description of region beginning with uppercase character (MR7001)";
+        private const string Title = "Make description of #region beginning with uppercase characters (MR7001)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.

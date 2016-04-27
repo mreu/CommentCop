@@ -33,12 +33,12 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Regions must have a description.";
+        private const string Title = "#regions must have a description.";
 
         /// <summary>
         /// The message.
         /// </summary>
-        private static readonly string Message = "Regions must have a description. ({0})";
+        private static readonly string Message = $"{Title} ({{0}})";
 
         /// <summary>
         /// The rule 9001.
@@ -65,6 +65,11 @@ namespace XmlCommenter.Regions
         /// <param name="syntaxNodeAnalysisContext">The syntaxNodeAnalysisContext.</param>
         private void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
+            if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
+            {
+                return;
+            }
+
             var node = (RegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
 
             var token = node.ChildTokens().LastOrDefault();
