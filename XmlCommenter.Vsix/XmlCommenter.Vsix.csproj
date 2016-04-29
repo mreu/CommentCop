@@ -13,8 +13,8 @@
     <ProjectGuid>{2F4A8CF9-EF64-46A7-B863-9FD7FB35E3EC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XmlCommenter.Vsix</RootNamespace>
-    <AssemblyName>XmlCommenter.Vsix</AssemblyName>
+    <RootNamespace>XmlCommenter</RootNamespace>
+    <AssemblyName>XmlCommenter</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <GeneratePkgDefFile>false</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>false</IncludeAssemblyInVSIXContainer>

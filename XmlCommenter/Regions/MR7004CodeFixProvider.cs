@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR7003CodeFixProvider.cs" company="Michael Reukauff">
-//   Copyright © 2016 Michael Reukauff. All rights reserved.
+// <copyright file="MR7004CodeFixProvider.cs" author="Michael Reukauff">
+//   Copyright © 2016 Michael Reukauff
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -23,21 +23,21 @@ namespace XmlCommenter.Regions
     using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
     /// <summary>
-    /// The MR7003Code fix provider class.
+    /// The MR7004 Code fix provider class.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR7003CodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR7004CodeFixProvider))]
     [Shared]
-    public class MR7003CodeFixProvider : CodeFixProvider
+    public class MR7004CodeFixProvider : CodeFixProvider
     {
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Make description of #endregion beginning with uppercase characters (MR7003)";
+        private const string Title = "Apply text from #region. (MR7004)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.
         /// </summary>
-        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MR7003DescriptionInEndregionsMustBeginWithUppercaseCharacter.DiagnosticId7003);
+        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MR7004EndregionMustHaveTheSameTextAsTheRegion.DiagnosticId7004);
 
         /// <summary>
         /// Get fix all provider.
@@ -59,17 +59,24 @@ namespace XmlCommenter.Regions
             var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
             var diagnostic = context.Diagnostics.First();
-            ////var diagnosticSpan = diagnostic.Location.SourceSpan;
+            var diagnosticSpan = diagnostic.Location.SourceSpan;
+
+            var texts = await Helper.RegionText.GetTextFromRegion(root, diagnosticSpan.Start);
+
+            if (string.IsNullOrEmpty(texts?.Item1))
+            {
+                return;
+            }
 
             // Find the type declaration identified by the diagnostic.
-            //// var declaration = root.FindToken(diagnosticSpan.Start).Parent.AncestorsAndSelf().OfType<TypeDeclarationSyntax>().First();
+            ////var declaration = root.FindToken(diagnosticSpan.Start).Parent.AncestorsAndSelf().OfType<TypeDeclarationSyntax>().First();
 
             // Register a code action that will invoke the fix.
             var identifierToken = root.FindToken(diagnostic.Location.SourceSpan.Start);
             context.RegisterCodeFix(
                 CodeAction.Create(
                     Title,
-                    cancellationToken => GetTransformedDocumentAsync(context.Document, root, identifierToken, cancellationToken),
+                    cancellationToken => GetTransformedDocumentAsync(context.Document, root, identifierToken, texts.Item1, cancellationToken),
                     Title),
                 diagnostic);
         }
@@ -80,12 +87,14 @@ namespace XmlCommenter.Regions
         /// <param name="document">The document.</param>
         /// <param name="root">The syntax root.</param>
         /// <param name="identifierToken">The syntax token.</param>
+        /// <param name="text">The text to insert/replace at #endregion.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task{Document}</returns>
         private static async Task<Document> GetTransformedDocumentAsync(
             Document document,
             SyntaxNode root,
             SyntaxToken identifierToken,
+            string text,
             CancellationToken cancellationToken)
         {
             try
@@ -103,30 +112,7 @@ namespace XmlCommenter.Regions
 
                 if (trivia != null)
                 {
-                    var text = trivia.ToString();
-                    var words = text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (var ix = 0; ix < words.Length; ix++)
-                    {
-                        if (!char.IsLetter(words[ix][0]))
-                        {
-                            continue;
-                        }
-
-                        if (MR7001DescriptionInRegionsMustBeginWithUppercaseCharacter.keepLowercase.Any(x => x.Equals(words[ix])))
-                        {
-                            continue;
-                        }
-
-                        if (!char.IsUpper(words[ix][0]))
-                        {
-                            words[ix] = words[ix].Substring(0, 1).ToUpper() + words[ix].Substring(1);
-                        }
-                    }
-
-                    var newText = string.Join(" ", words);
-
-                    var newTrivia = PreprocessingMessage(newText);
+                    var newTrivia = PreprocessingMessage(text);
 
                     return document.WithSyntaxRoot(root.ReplaceTrivia(trivia.Value, newTrivia));
                 }
@@ -135,7 +121,7 @@ namespace XmlCommenter.Regions
             }
             catch (Exception exp)
             {
-                Debug.WriteLine($"{nameof(MR7003CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
+                Debug.WriteLine($"{nameof(MR7004CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
 
                 return document;
             }

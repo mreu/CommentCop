@@ -8,6 +8,8 @@ namespace XmlCommenter.Regions
 {
     using System.Collections.Immutable;
     using System.Linq;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
 
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -20,6 +22,11 @@ namespace XmlCommenter.Regions
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class MR7001DescriptionInRegionsMustBeginWithUppercaseCharacter : DiagnosticAnalyzer
     {
+        /// <summary>
+        /// The keep lowercase keywords.
+        /// </summary>
+        public static string[] keepLowercase = { "of", "and", "in" };
+
         /// <summary>
         /// The diagnostic id.
         /// </summary>
@@ -63,40 +70,48 @@ namespace XmlCommenter.Regions
         /// Check region keyword is followed by a description.
         /// </summary>
         /// <param name="syntaxNodeAnalysisContext">The syntaxNodeAnalysisContext.</param>
-        private void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private async void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
+            await Task.Run(() =>
             {
-                return;
-            }
-
-            var node = (RegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
-
-            var token = node.ChildTokens().LastOrDefault();
-
-            if (token.IsKind(SyntaxKind.EndOfDirectiveToken))
-            {
-                if (token.HasLeadingTrivia)
+                if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
                 {
-                    var text1 = token.LeadingTrivia.ToString();
+                    return;
+                }
 
-                    var words = text1.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+                var node = (RegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
 
-                    foreach (var word in words)
+                var token = node.ChildTokens().LastOrDefault();
+
+                if (token.IsKind(SyntaxKind.EndOfDirectiveToken))
+                {
+                    if (token.HasLeadingTrivia)
                     {
-                        if (!char.IsLetter(word[0]))
-                        {
-                            continue;
-                        }
+                        var text1 = token.LeadingTrivia.ToString();
 
-                        if (!char.IsUpper(word[0]))
+                        var words = text1.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+
+                        foreach (var word in words)
                         {
-                            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7001, token.LeadingTrivia[0].GetLocation(), DiagnosticId7001));
-                            break;
+                            if (!char.IsLetter(word[0]))
+                            {
+                                continue;
+                            }
+
+                            if (keepLowercase.Any(x => x.Equals(word)))
+                            {
+                                continue;
+                            }
+
+                            if (!char.IsUpper(word[0]))
+                            {
+                                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7001, token.LeadingTrivia[0].GetLocation(), DiagnosticId7001));
+                                break;
+                            }
                         }
                     }
                 }
-            }
+            });
         }
     }
 }

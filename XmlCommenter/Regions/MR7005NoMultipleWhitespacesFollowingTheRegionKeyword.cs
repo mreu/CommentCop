@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR7004EndregionMustHaveTheSameTextAsTheRegion.cs" company="Michael Reukauff">
-//   Copyright © 2016 Michael Reukauff. All rights reserved.
+// <copyright file="MR7005NoMultipleWhitespacesFollowingTheRegionKeyword.cs" author="Michael Reukauff">
+//   Copyright © 2016 Michael Reukauff
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -16,15 +16,15 @@ namespace XmlCommenter.Regions
     using Microsoft.CodeAnalysis.Diagnostics;
 
     /// <summary>
-    /// MR7004 Endregion must have the same text as the region class.
+    /// The MR7005 No multiple whitespaces following the region keyword class.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR7004EndregionMustHaveTheSameTextAsTheRegion : DiagnosticAnalyzer
+    public class MR7005NoMultipleWhitespacesFollowingTheRegionKeyword : DiagnosticAnalyzer
     {
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId7004 = Constants.DiagnosticPrefix + "7004";
+        public const string DiagnosticId7005 = Constants.DiagnosticPrefix + "7005";
 
         /// <summary>
         /// The category.
@@ -34,7 +34,7 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Description in #endregion must be the same as in #region.";
+        private const string Title = "No multiple whitespaces following the #region keyword.";
 
         /// <summary>
         /// The message.
@@ -44,8 +44,8 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// The rule 9001.
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule7004 = new DiagnosticDescriptor(
-            DiagnosticId7004,
+        private static readonly DiagnosticDescriptor Rule7005 = new DiagnosticDescriptor(
+            DiagnosticId7005,
             Title,
             Message,
             Category,
@@ -55,7 +55,7 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// Gets the supported diagnostics.
         /// </summary>
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule7004);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule7005);
 
         /// <summary>
         /// Initialize.
@@ -63,7 +63,7 @@ namespace XmlCommenter.Regions
         /// <param name="context">The analysis context.</param>
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(CheckRegion, SyntaxKind.EndRegionDirectiveTrivia);
+            context.RegisterSyntaxNodeAction(CheckRegion, SyntaxKind.RegionDirectiveTrivia);
         }
 
         /// <summary>
@@ -72,36 +72,29 @@ namespace XmlCommenter.Regions
         /// <param name="syntaxNodeAnalysisContext">The syntaxNodeAnalysisContext.</param>
         private async void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
-
                 if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
                 {
                     return;
                 }
 
-                var node = (EndRegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
+                var node = (RegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
 
-                var token = node.ChildTokens().LastOrDefault();
+                var token = node.ChildTokens().FirstOrDefault(x => x.IsKind(SyntaxKind.RegionKeyword));
 
-                if (token.IsKind(SyntaxKind.EndOfDirectiveToken))
+                if (!token.IsKind(SyntaxKind.None))
                 {
-                    if (!token.HasLeadingTrivia)
+                    if (!token.HasTrailingTrivia)
                     {
                         return;
                     }
 
-                    var texts = await Helper.RegionText.GetTextFromRegion(node, node.SpanStart);
+                    var trivia = token.TrailingTrivia.FirstOrDefault(x => x.IsKind(SyntaxKind.WhitespaceTrivia));
 
-                    // if #region has no text, do not check
-                    if (string.IsNullOrEmpty(texts?.Item1))
+                    if (trivia.Span.Length > 1)
                     {
-                        return;
-                    }
-
-                    if (!texts.Item1.Equals(texts.Item2))
-                    {
-                        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7004, token.LeadingTrivia[0].GetLocation(), DiagnosticId7004));
+                        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7005, trivia.GetLocation(), DiagnosticId7005));
                     }
                 }
             });

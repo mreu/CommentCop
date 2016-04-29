@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR7003DescriptionInEndregionsMustBeginWithUppercaseCharacter.cs" company="Michael Reukauff">
-//   Copyright © 2016 Michael Reukauff. All rights reserved.
+// <copyright file="MR7006NoMultipleWhitespacesFollowingTheEndregionKeyword.cs" author="Michael Reukauff">
+//   Copyright © 2016 Michael Reukauff
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -16,15 +16,15 @@ namespace XmlCommenter.Regions
     using Microsoft.CodeAnalysis.Diagnostics;
 
     /// <summary>
-    /// The MR7003Description in endregions must begin with uppercase character class.
+    /// The MR7006 No multiple whitespaces following the endregion keyword class.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR7003DescriptionInEndregionsMustBeginWithUppercaseCharacter : DiagnosticAnalyzer
+    public class MR7006NoMultipleWhitespacesFollowingTheEndregionKeyword : DiagnosticAnalyzer
     {
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId7003 = Constants.DiagnosticPrefix + "7003";
+        public const string DiagnosticId7006 = Constants.DiagnosticPrefix + "7006";
 
         /// <summary>
         /// The category.
@@ -34,7 +34,7 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Description in #endregions must begin with uppercase characters.";
+        private const string Title = "No multiple whitespaces following the #endregion keyword.";
 
         /// <summary>
         /// The message.
@@ -44,12 +44,18 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// The rule 9001.
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule7003 = new DiagnosticDescriptor(DiagnosticId7003, Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule7006 = new DiagnosticDescriptor(
+            DiagnosticId7006,
+            Title,
+            Message,
+            Category,
+            DiagnosticSeverity.Warning,
+            true);
 
         /// <summary>
         /// Gets the supported diagnostics.
         /// </summary>
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule7003);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule7006);
 
         /// <summary>
         /// Initialize.
@@ -66,7 +72,7 @@ namespace XmlCommenter.Regions
         /// <param name="syntaxNodeAnalysisContext">The syntaxNodeAnalysisContext.</param>
         private async void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
                 if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
                 {
@@ -75,38 +81,20 @@ namespace XmlCommenter.Regions
 
                 var node = (EndRegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
 
-                var texts = await Helper.RegionText.GetTextFromRegion(node, node.SpanStart);
+                var token = node.ChildTokens().FirstOrDefault(x => x.IsKind(SyntaxKind.EndRegionKeyword));
 
-                if (texts == null)
+                if (!token.IsKind(SyntaxKind.None))
                 {
-                    return;
-                }
-
-                if (!string.IsNullOrEmpty(texts.Item1))
-                {
-                    return;
-                }
-
-                var token = node.ChildTokens().LastOrDefault();
-
-                var words = texts.Item2.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
-
-                foreach (var word in words)
-                {
-                    if (!char.IsLetter(word[0]))
+                    if (!token.HasTrailingTrivia)
                     {
-                        continue;
+                        return;
                     }
 
-                    if (MR7001DescriptionInRegionsMustBeginWithUppercaseCharacter.keepLowercase.Any(x => x.Equals(word)))
-                    {
-                        continue;
-                    }
+                    var trivia = token.TrailingTrivia.FirstOrDefault(x => x.IsKind(SyntaxKind.WhitespaceTrivia));
 
-                    if (!char.IsUpper(word[0]))
+                    if (trivia.Span.Length > 1)
                     {
-                        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7003, token.LeadingTrivia[0].GetLocation(), DiagnosticId7003));
-                        break;
+                        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7006, trivia.GetLocation(), DiagnosticId7006));
                     }
                 }
             });

@@ -113,6 +113,11 @@ namespace XmlCommenter.Regions
                             continue;
                         }
 
+                        if (MR7001DescriptionInRegionsMustBeginWithUppercaseCharacter.keepLowercase.Any(x => x.Equals(words[ix])))
+                        {
+                            continue;
+                        }
+
                         if (!char.IsUpper(words[ix][0]))
                         {
                             words[ix] = words[ix].Substring(0, 1).ToUpper() + words[ix].Substring(1);

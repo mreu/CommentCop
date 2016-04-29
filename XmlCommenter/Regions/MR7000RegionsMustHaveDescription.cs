@@ -8,6 +8,7 @@ namespace XmlCommenter.Regions
 {
     using System.Collections.Immutable;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -63,24 +64,27 @@ namespace XmlCommenter.Regions
         /// Check region keyword is followed by a description.
         /// </summary>
         /// <param name="syntaxNodeAnalysisContext">The syntaxNodeAnalysisContext.</param>
-        private void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private async void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
+            await Task.Run(() =>
             {
-                return;
-            }
-
-            var node = (RegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
-
-            var token = node.ChildTokens().LastOrDefault();
-
-            if (token.IsKind(SyntaxKind.EndOfDirectiveToken))
-            {
-                if (!token.HasLeadingTrivia)
+                if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
                 {
-                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7000, node.GetLocation(), DiagnosticId7000));
+                    return;
                 }
-            }
+
+                var node = (RegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
+
+                var token = node.ChildTokens().LastOrDefault();
+
+                if (token.IsKind(SyntaxKind.EndOfDirectiveToken))
+                {
+                    if (!token.HasLeadingTrivia)
+                    {
+                        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7000, node.GetLocation(), DiagnosticId7000));
+                    }
+                }
+            });
         }
     }
 }

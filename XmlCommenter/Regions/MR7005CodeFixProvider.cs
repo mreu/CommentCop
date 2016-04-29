@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR7003CodeFixProvider.cs" company="Michael Reukauff">
-//   Copyright © 2016 Michael Reukauff. All rights reserved.
+// <copyright file="MR7005CodeFixProvider.cs" author="Michael Reukauff">
+//   Copyright © 2016 Michael Reukauff
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -23,21 +23,21 @@ namespace XmlCommenter.Regions
     using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
     /// <summary>
-    /// The MR7003Code fix provider class.
+    /// The MR7005 code fix provider class.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR7003CodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR7005CodeFixProvider))]
     [Shared]
-    public class MR7003CodeFixProvider : CodeFixProvider
+    public class MR7005CodeFixProvider : CodeFixProvider
     {
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Make description of #endregion beginning with uppercase characters (MR7003)";
+        private const string Title = "Fix spacing. (MR7005)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.
         /// </summary>
-        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MR7003DescriptionInEndregionsMustBeginWithUppercaseCharacter.DiagnosticId7003);
+        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MR7005NoMultipleWhitespacesFollowingTheRegionKeyword.DiagnosticId7005);
 
         /// <summary>
         /// Get fix all provider.
@@ -62,7 +62,7 @@ namespace XmlCommenter.Regions
             ////var diagnosticSpan = diagnostic.Location.SourceSpan;
 
             // Find the type declaration identified by the diagnostic.
-            //// var declaration = root.FindToken(diagnosticSpan.Start).Parent.AncestorsAndSelf().OfType<TypeDeclarationSyntax>().First();
+            ////var declaration = root.FindToken(diagnosticSpan.Start).Parent.AncestorsAndSelf().OfType<TypeDeclarationSyntax>().First();
 
             // Register a code action that will invoke the fix.
             var identifierToken = root.FindToken(diagnostic.Location.SourceSpan.Start);
@@ -93,49 +93,27 @@ namespace XmlCommenter.Regions
                 // ReSharper disable once UnusedVariable
                 var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
-                var region = identifierToken.LeadingTrivia.FirstOrDefault(x => x.IsKind(SyntaxKind.EndRegionDirectiveTrivia));
+                var region = identifierToken.LeadingTrivia.FirstOrDefault(x => x.IsKind(SyntaxKind.RegionDirectiveTrivia));
 
-                var token = region.GetStructure() as EndRegionDirectiveTriviaSyntax;
+                var token = region.GetStructure() as RegionDirectiveTriviaSyntax;
 
-                var trivias = token?.EndOfDirectiveToken.GetAllTrivia();
-
-                var trivia = trivias?.FirstOrDefault(x => x.IsKind(SyntaxKind.PreprocessingMessageTrivia));
-
-                if (trivia != null)
+                if (token == null)
                 {
-                    var text = trivia.ToString();
-                    var words = text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    for (var ix = 0; ix < words.Length; ix++)
-                    {
-                        if (!char.IsLetter(words[ix][0]))
-                        {
-                            continue;
-                        }
-
-                        if (MR7001DescriptionInRegionsMustBeginWithUppercaseCharacter.keepLowercase.Any(x => x.Equals(words[ix])))
-                        {
-                            continue;
-                        }
-
-                        if (!char.IsUpper(words[ix][0]))
-                        {
-                            words[ix] = words[ix].Substring(0, 1).ToUpper() + words[ix].Substring(1);
-                        }
-                    }
-
-                    var newText = string.Join(" ", words);
-
-                    var newTrivia = PreprocessingMessage(newText);
-
-                    return document.WithSyntaxRoot(root.ReplaceTrivia(trivia.Value, newTrivia));
+                    return document;
                 }
 
-                return document;
+                if (!token.DirectiveNameToken.HasTrailingTrivia)
+                {
+                    return document;
+                }
+
+                var trivia = token.DirectiveNameToken.TrailingTrivia;
+
+                return document.WithSyntaxRoot(root.ReplaceTrivia(trivia, (x, y) => Whitespace(" ")));
             }
             catch (Exception exp)
             {
-                Debug.WriteLine($"{nameof(MR7003CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
+                Debug.WriteLine($"{nameof(MR7005CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
 
                 return document;
             }
