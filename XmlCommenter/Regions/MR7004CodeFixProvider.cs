@@ -18,7 +18,6 @@ namespace XmlCommenter.Regions
     using Microsoft.CodeAnalysis.CodeActions;
     using Microsoft.CodeAnalysis.CodeFixes;
     using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
@@ -71,12 +70,14 @@ namespace XmlCommenter.Regions
             // Find the type declaration identified by the diagnostic.
             ////var declaration = root.FindToken(diagnosticSpan.Start).Parent.AncestorsAndSelf().OfType<TypeDeclarationSyntax>().First();
 
-            // Register a code action that will invoke the fix.
             var identifierToken = root.FindToken(diagnostic.Location.SourceSpan.Start);
+            var trivia = identifierToken.LeadingTrivia.FirstOrDefault(x => x.SpanStart <= diagnosticSpan.Start && x.Span.End >= diagnosticSpan.Start);
+
+            // Register a code action that will invoke the fix.
             context.RegisterCodeFix(
                 CodeAction.Create(
                     Title,
-                    cancellationToken => GetTransformedDocumentAsync(context.Document, root, identifierToken, texts.Item1, cancellationToken),
+                    cancellationToken => GetTransformedDocumentAsync(context.Document, root, trivia, texts.Item1, cancellationToken),
                     Title),
                 diagnostic);
         }
@@ -86,14 +87,14 @@ namespace XmlCommenter.Regions
         /// </summary>
         /// <param name="document">The document.</param>
         /// <param name="root">The syntax root.</param>
-        /// <param name="identifierToken">The syntax token.</param>
+        /// <param name="identifierTrivia">The syntax token.</param>
         /// <param name="text">The text to insert/replace at #endregion.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task{Document}</returns>
         private static async Task<Document> GetTransformedDocumentAsync(
             Document document,
             SyntaxNode root,
-            SyntaxToken identifierToken,
+            SyntaxTrivia identifierTrivia,
             string text,
             CancellationToken cancellationToken)
         {
@@ -102,26 +103,15 @@ namespace XmlCommenter.Regions
                 // ReSharper disable once UnusedVariable
                 var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
-                var region = identifierToken.LeadingTrivia.FirstOrDefault(x => x.IsKind(SyntaxKind.EndRegionDirectiveTrivia));
+                var newTrivia = TriviaList(Trivia(EndRegionDirectiveTrivia(true)
+                            .WithEndRegionKeyword(Token(TriviaList(), SyntaxKind.EndRegionKeyword, TriviaList(Space)))
+                            .WithEndOfDirectiveToken(Token(TriviaList(PreprocessingMessage(text)), SyntaxKind.EndOfDirectiveToken, TriviaList(CarriageReturnLineFeed)))));
 
-                var token = region.GetStructure() as EndRegionDirectiveTriviaSyntax;
-
-                var trivias = token?.EndOfDirectiveToken.GetAllTrivia();
-
-                var trivia = trivias?.FirstOrDefault(x => x.IsKind(SyntaxKind.PreprocessingMessageTrivia));
-
-                if (trivia != null)
-                {
-                    var newTrivia = PreprocessingMessage(text);
-
-                    return document.WithSyntaxRoot(root.ReplaceTrivia(trivia.Value, newTrivia));
-                }
-
-                return document;
+                return document.WithSyntaxRoot(root.ReplaceTrivia(identifierTrivia, newTrivia));
             }
             catch (Exception exp)
             {
-                Debug.WriteLine($"{nameof(MR7004CodeFixProvider)} - Exception on {identifierToken} = {exp.Message}");
+                Debug.WriteLine($"{nameof(MR7004CodeFixProvider)} - Exception on {identifierTrivia} = {exp.Message}");
 
                 return document;
             }

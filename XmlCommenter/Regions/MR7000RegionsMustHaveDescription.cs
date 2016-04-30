@@ -8,7 +8,6 @@ namespace XmlCommenter.Regions
 {
     using System.Collections.Immutable;
     using System.Linq;
-    using System.Threading.Tasks;
 
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -34,7 +33,7 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "#regions must have a description.";
+        public const string Title = "#regions must have a description.";
 
         /// <summary>
         /// The message.
@@ -64,27 +63,24 @@ namespace XmlCommenter.Regions
         /// Check region keyword is followed by a description.
         /// </summary>
         /// <param name="syntaxNodeAnalysisContext">The syntaxNodeAnalysisContext.</param>
-        private async void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            await Task.Run(() =>
+            if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
             {
-                if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
+                return;
+            }
+
+            var node = (RegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
+
+            var token = node.ChildTokens().LastOrDefault();
+
+            if (token.IsKind(SyntaxKind.EndOfDirectiveToken))
+            {
+                if (!token.HasLeadingTrivia)
                 {
-                    return;
+                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7000, node.GetLocation(), DiagnosticId7000));
                 }
-
-                var node = (RegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
-
-                var token = node.ChildTokens().LastOrDefault();
-
-                if (token.IsKind(SyntaxKind.EndOfDirectiveToken))
-                {
-                    if (!token.HasLeadingTrivia)
-                    {
-                        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7000, node.GetLocation(), DiagnosticId7000));
-                    }
-                }
-            });
+            }
         }
     }
 }

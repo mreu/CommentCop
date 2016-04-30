@@ -34,7 +34,7 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Description in #endregions must begin with uppercase characters.";
+        public const string Title = "Description in #endregions must begin with uppercase characters.";
 
         /// <summary>
         /// The message.
@@ -64,52 +64,51 @@ namespace XmlCommenter.Regions
         /// Check region keyword is followed by a description.
         /// </summary>
         /// <param name="syntaxNodeAnalysisContext">The syntaxNodeAnalysisContext.</param>
-        private async void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            await Task.Run(async () =>
+            if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
             {
-                if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
+                return;
+            }
+
+            var node = (EndRegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
+
+            var task = Helper.RegionText.GetTextFromRegion(node, node.SpanStart);
+
+            if (task.Result == null)
+            {
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(task.Result.Item1))
+            {
+                return;
+            }
+
+            var token = node.ChildTokens().LastOrDefault();
+
+            var words = task.Result.Item2.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var word in words)
+            {
+                if (!char.IsLetter(word[0]))
                 {
-                    return;
+                    continue;
                 }
 
-                var node = (EndRegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
-
-                var texts = await Helper.RegionText.GetTextFromRegion(node, node.SpanStart);
-
-                if (texts == null)
+                if (MR7001DescriptionInRegionsMustBeginWithUppercaseCharacter.KeepLowercase.Any(x => x.Equals(word)))
                 {
-                    return;
+                    continue;
                 }
 
-                if (!string.IsNullOrEmpty(texts.Item1))
+                if (!char.IsUpper(word[0]))
                 {
-                    return;
+                    var diag = Diagnostic.Create(Rule7003, token.LeadingTrivia[0].GetLocation(), DiagnosticId7003);
+
+                    syntaxNodeAnalysisContext.ReportDiagnostic(diag);
+                    break;
                 }
-
-                var token = node.ChildTokens().LastOrDefault();
-
-                var words = texts.Item2.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
-
-                foreach (var word in words)
-                {
-                    if (!char.IsLetter(word[0]))
-                    {
-                        continue;
-                    }
-
-                    if (MR7001DescriptionInRegionsMustBeginWithUppercaseCharacter.keepLowercase.Any(x => x.Equals(word)))
-                    {
-                        continue;
-                    }
-
-                    if (!char.IsUpper(word[0]))
-                    {
-                        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7003, token.LeadingTrivia[0].GetLocation(), DiagnosticId7003));
-                        break;
-                    }
-                }
-            });
+            }
         }
     }
 }

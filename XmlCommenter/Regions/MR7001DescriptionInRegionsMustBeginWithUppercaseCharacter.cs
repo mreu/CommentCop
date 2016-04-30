@@ -8,8 +8,6 @@ namespace XmlCommenter.Regions
 {
     using System.Collections.Immutable;
     using System.Linq;
-    using System.Linq.Expressions;
-    using System.Threading.Tasks;
 
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -23,9 +21,9 @@ namespace XmlCommenter.Regions
     public class MR7001DescriptionInRegionsMustBeginWithUppercaseCharacter : DiagnosticAnalyzer
     {
         /// <summary>
-        /// The keep lowercase keywords.
+        /// Gets the keep lowercase keywords.
         /// </summary>
-        public static string[] keepLowercase = { "of", "and", "in" };
+        public static string[] KeepLowercase => new[] { "of", "and", "in" };
 
         /// <summary>
         /// The diagnostic id.
@@ -40,7 +38,7 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Description in #regions must begin with uppercase characters.";
+        public const string Title = "Description in #regions must begin with uppercase characters.";
 
         /// <summary>
         /// The message.
@@ -70,48 +68,45 @@ namespace XmlCommenter.Regions
         /// Check region keyword is followed by a description.
         /// </summary>
         /// <param name="syntaxNodeAnalysisContext">The syntaxNodeAnalysisContext.</param>
-        private async void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            await Task.Run(() =>
+            if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
             {
-                if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
+                return;
+            }
+
+            var node = (RegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
+
+            var token = node.ChildTokens().LastOrDefault();
+
+            if (token.IsKind(SyntaxKind.EndOfDirectiveToken))
+            {
+                if (token.HasLeadingTrivia)
                 {
-                    return;
-                }
+                    var text1 = token.LeadingTrivia.ToString();
 
-                var node = (RegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
+                    var words = text1.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
 
-                var token = node.ChildTokens().LastOrDefault();
-
-                if (token.IsKind(SyntaxKind.EndOfDirectiveToken))
-                {
-                    if (token.HasLeadingTrivia)
+                    foreach (var word in words)
                     {
-                        var text1 = token.LeadingTrivia.ToString();
-
-                        var words = text1.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
-
-                        foreach (var word in words)
+                        if (!char.IsLetter(word[0]))
                         {
-                            if (!char.IsLetter(word[0]))
-                            {
-                                continue;
-                            }
+                            continue;
+                        }
 
-                            if (keepLowercase.Any(x => x.Equals(word)))
-                            {
-                                continue;
-                            }
+                        if (KeepLowercase.Any(x => x.Equals(word)))
+                        {
+                            continue;
+                        }
 
-                            if (!char.IsUpper(word[0]))
-                            {
-                                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7001, token.LeadingTrivia[0].GetLocation(), DiagnosticId7001));
-                                break;
-                            }
+                        if (!char.IsUpper(word[0]))
+                        {
+                            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7001, token.LeadingTrivia[0].GetLocation(), DiagnosticId7001));
+                            break;
                         }
                     }
                 }
-            });
+            }
         }
     }
 }

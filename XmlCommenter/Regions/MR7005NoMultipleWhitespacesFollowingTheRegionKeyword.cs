@@ -34,7 +34,7 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "No multiple whitespaces following the #region keyword.";
+        public const string Title = "No multiple whitespaces following the #region keyword.";
 
         /// <summary>
         /// The message.
@@ -70,34 +70,31 @@ namespace XmlCommenter.Regions
         /// Check region keyword is followed by a description.
         /// </summary>
         /// <param name="syntaxNodeAnalysisContext">The syntaxNodeAnalysisContext.</param>
-        private async void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            await Task.Run(() =>
+            if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
             {
-                if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
+                return;
+            }
+
+            var node = (RegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
+
+            var token = node.ChildTokens().FirstOrDefault(x => x.IsKind(SyntaxKind.RegionKeyword));
+
+            if (!token.IsKind(SyntaxKind.None))
+            {
+                if (!token.HasTrailingTrivia)
                 {
                     return;
                 }
 
-                var node = (RegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
+                var trivia = token.TrailingTrivia.FirstOrDefault(x => x.IsKind(SyntaxKind.WhitespaceTrivia));
 
-                var token = node.ChildTokens().FirstOrDefault(x => x.IsKind(SyntaxKind.RegionKeyword));
-
-                if (!token.IsKind(SyntaxKind.None))
+                if (trivia.Span.Length > 1)
                 {
-                    if (!token.HasTrailingTrivia)
-                    {
-                        return;
-                    }
-
-                    var trivia = token.TrailingTrivia.FirstOrDefault(x => x.IsKind(SyntaxKind.WhitespaceTrivia));
-
-                    if (trivia.Span.Length > 1)
-                    {
-                        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7005, trivia.GetLocation(), DiagnosticId7005));
-                    }
+                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7005, trivia.GetLocation(), DiagnosticId7005));
                 }
-            });
+            }
         }
     }
 }

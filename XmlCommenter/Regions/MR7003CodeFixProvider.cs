@@ -113,7 +113,7 @@ namespace XmlCommenter.Regions
                             continue;
                         }
 
-                        if (MR7001DescriptionInRegionsMustBeginWithUppercaseCharacter.keepLowercase.Any(x => x.Equals(words[ix])))
+                        if (MR7001DescriptionInRegionsMustBeginWithUppercaseCharacter.KeepLowercase.Any(x => x.Equals(words[ix])))
                         {
                             continue;
                         }

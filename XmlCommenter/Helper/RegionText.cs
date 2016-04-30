@@ -8,6 +8,7 @@ namespace XmlCommenter.Helper
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -30,6 +31,9 @@ namespace XmlCommenter.Helper
             return await Task.Run(
                () =>
                {
+                   Debug.WriteLine(string.Empty);
+                   Debug.WriteLine($"Search for at {spanStart}");
+
                    var root = node.SyntaxTree.GetRoot();
 
                    var regionNodesList = new List<RegionNodes>();
@@ -38,18 +42,32 @@ namespace XmlCommenter.Helper
                    foreach (var regionDirective in regions)
                    {
                        regionNodesList.Add(new RegionNodes { RegionDirective = regionDirective });
+                       Debug.WriteLine($"{regionDirective.SpanStart}, {regionDirective.FullSpan.Start} - {regionDirective}");
                    }
 
                    var endregions = root.DescendantNodes(null, true).OfType<EndRegionDirectiveTriviaSyntax>();
                    foreach (var endRegionDirective in endregions)
                    {
-                       var reg = regionNodesList.Last(x => x.RegionDirective.SpanStart < endRegionDirective.SpanStart && x.EndRegionDirective == null);
-                       reg.EndRegionDirective = endRegionDirective;
+                       var reg = regionNodesList.LastOrDefault(x => x.RegionDirective.SpanStart < endRegionDirective.SpanStart && x.EndRegionDirective == null);
+                       if (reg != null)
+                       {
+                           reg.EndRegionDirective = endRegionDirective;
+                           Debug.WriteLine($"{endRegionDirective.SpanStart}, {endRegionDirective.FullSpan.Start} - {endRegionDirective} --> {reg.RegionDirective} {reg.RegionDirective.SpanStart}");
+                       }
                    }
 
-                   var region = regionNodesList.FirstOrDefault(x => x.EndRegionDirective.EndOfDirectiveToken.SpanStart.Equals(spanStart))
-                                ?? regionNodesList.FirstOrDefault(x => x.EndRegionDirective.EndOfDirectiveToken.FullSpan.Start.Equals(spanStart))
-                                ?? regionNodesList.FirstOrDefault(x => x.EndRegionDirective.SpanStart.Equals(spanStart));
+                   RegionNodes region;
+                   try
+                   {
+                       region = regionNodesList.FirstOrDefault(x => x.EndRegionDirective.EndOfDirectiveToken.SpanStart.Equals(spanStart))
+                                    ?? regionNodesList.FirstOrDefault(x => x.EndRegionDirective.EndOfDirectiveToken.FullSpan.Start.Equals(spanStart))
+                                    ?? regionNodesList.FirstOrDefault(x => x.EndRegionDirective.SpanStart.Equals(spanStart));
+                   }
+                   catch (Exception exp)
+                   {
+                       Debug.WriteLine("Autsch = " + exp.Message);
+                       return null;
+                   }
 
                    if (region != null)
                    {

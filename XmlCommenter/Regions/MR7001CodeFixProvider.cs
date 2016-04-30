@@ -32,7 +32,7 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Make description of #region beginning with uppercase characters (MR7001)";
+        public const string Title = "Make description of #region beginning with uppercase characters (MR7001)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.
@@ -113,7 +113,7 @@ namespace XmlCommenter.Regions
                             continue;
                         }
 
-                        if (MR7001DescriptionInRegionsMustBeginWithUppercaseCharacter.keepLowercase.Any(x => x.Equals(words[ix])))
+                        if (MR7001DescriptionInRegionsMustBeginWithUppercaseCharacter.KeepLowercase.Any(x => x.Equals(words[ix])))
                         {
                             continue;
                         }

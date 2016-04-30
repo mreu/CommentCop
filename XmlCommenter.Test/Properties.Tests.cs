@@ -307,7 +307,7 @@ namespace XmlCommenter.Test
             VerifyCSharpFix(test, fixtest);
         }
 
-        #region overrides
+        #region Overrides
         /// <summary>
         /// Get CSharp code fix provider.
         /// </summary>
@@ -325,6 +325,6 @@ namespace XmlCommenter.Test
         {
             return new MR3001_3005PropertiesMustHaveXMLComment();
         }
-        #endregion overrides
+        #endregion Overrides
     }
 }

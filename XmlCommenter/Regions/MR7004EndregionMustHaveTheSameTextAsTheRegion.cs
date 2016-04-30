@@ -34,7 +34,7 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Description in #endregion must be the same as in #region.";
+        public const string Title = "Description in #endregion must be the same as in #region.";
 
         /// <summary>
         /// The message.
@@ -70,41 +70,38 @@ namespace XmlCommenter.Regions
         /// Check region keyword is followed by a description.
         /// </summary>
         /// <param name="syntaxNodeAnalysisContext">The syntaxNodeAnalysisContext.</param>
-        private async void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
+        private void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
         {
-            await Task.Run(async () =>
+            if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
             {
+                return;
+            }
 
-                if (CodeCracker.GeneratedCodeAnalysisExtensions.IsGenerated(syntaxNodeAnalysisContext))
+            var node = (EndRegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
+
+            var token = node.ChildTokens().LastOrDefault();
+
+            if (token.IsKind(SyntaxKind.EndOfDirectiveToken))
+            {
+                if (!token.HasLeadingTrivia)
                 {
                     return;
                 }
 
-                var node = (EndRegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
+                var task = Helper.RegionText.GetTextFromRegion(node, node.SpanStart);
 
-                var token = node.ChildTokens().LastOrDefault();
-
-                if (token.IsKind(SyntaxKind.EndOfDirectiveToken))
+                // if #region has no text, do not check
+                if (string.IsNullOrEmpty(task.Result?.Item1))
                 {
-                    if (!token.HasLeadingTrivia)
-                    {
-                        return;
-                    }
-
-                    var texts = await Helper.RegionText.GetTextFromRegion(node, node.SpanStart);
-
-                    // if #region has no text, do not check
-                    if (string.IsNullOrEmpty(texts?.Item1))
-                    {
-                        return;
-                    }
-
-                    if (!texts.Item1.Equals(texts.Item2))
-                    {
-                        syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7004, token.LeadingTrivia[0].GetLocation(), DiagnosticId7004));
-                    }
+                    return;
                 }
-            });
+
+                if (!task.Result.Item1.Equals(task.Result.Item2))
+                {
+                    var diag = Diagnostic.Create(Rule7004, token.LeadingTrivia[0].GetLocation(), DiagnosticId7004);
+                    syntaxNodeAnalysisContext.ReportDiagnostic(diag);
+                }
+            }
         }
     }
 }
