@@ -18,7 +18,6 @@ namespace XmlCommenter.Regions
     using Microsoft.CodeAnalysis.CodeActions;
     using Microsoft.CodeAnalysis.CodeFixes;
     using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 

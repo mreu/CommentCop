@@ -346,7 +346,7 @@ namespace XmlCommenter
         /// <param name="isReadOnly">True if readonyl otherwise false.</param>
         /// <param name="equals">The equal synatx clause or null if not present in code.</param>
         /// <returns>The comment.</returns>
-        public static string Field(string name, bool isConst, bool isReadOnly, EqualsValueClauseSyntax @equals)
+        public static string Field(string name, bool isConst, bool isReadOnly, EqualsValueClauseSyntax equals)
         {
             var sb = new StringBuilder("The ");
 
@@ -369,10 +369,10 @@ namespace XmlCommenter
 
             if (isConst || isReadOnly)
             {
-                if (@equals != null)
+                if (equals != null)
                 {
                     sb.Append(" Value: ");
-                    sb.Append(MultiLineToSingleLine(@equals.Value.ToString()));
+                    sb.Append(MultiLineToSingleLine(equals.Value.ToString()));
                     sb.Append('.');
                 }
             }

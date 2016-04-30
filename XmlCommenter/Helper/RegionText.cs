@@ -65,7 +65,7 @@ namespace XmlCommenter.Helper
                    }
                    catch (Exception exp)
                    {
-                       Debug.WriteLine("Autsch = " + exp.Message);
+                       Debug.WriteLine("Exception = " + exp.Message);
                        return null;
                    }
 
