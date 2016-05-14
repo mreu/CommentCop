@@ -140,7 +140,7 @@ namespace XmlCommenter.Delegates
                 .WithLessThanSlashToken(Token(SyntaxKind.LessThanSlashToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
-            var summaryComment = " " + Convert.Method(theSyntaxNode.Identifier.ValueText);
+            var summaryComment = " " + Convert.Method(theSyntaxNode.Identifier.ValueText, false);
 
             var summaryText = SingletonList<XmlNodeSyntax>(
                 XmlText().NormalizeWhitespace()

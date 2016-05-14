@@ -11,6 +11,7 @@ namespace XmlCommenter
     using System.Text;
     using System.Text.RegularExpressions;
 
+    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
     /// <summary>
@@ -126,9 +127,18 @@ namespace XmlCommenter
         /// Try to convert the name of a method to useful comment.
         /// </summary>
         /// <param name="name">The name of the method.</param>
+        /// <param name="isUnittest">True if it is a unit test method otherwise false.</param>
         /// <returns>The comment.</returns>
-        public static string Method(string name)
+        public static string Method(string name, bool isUnittest)
         {
+            if (isUnittest)
+            {
+                if (name.Contains("_"))
+                {
+                    return UnittestName(name);
+                }
+            }
+
             var special = CheckForSpecialMethodNames(name);
             if (special != null)
             {
@@ -170,6 +180,40 @@ namespace XmlCommenter
             }
 
             return "The " + name.ToLower() + '.';
+        }
+
+        /// <summary>
+        /// The unittest name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The <see cref="string"/>.</returns>
+        private static string UnittestName(string name)
+        {
+            var newName = string.Empty;
+
+            var parts = name.Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries);
+
+            var first = true;
+            foreach (var part in parts)
+            {
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    newName += " --> ";
+                }
+
+                var x = SplitName(part);
+                MakeLowerCase(x, false);
+                if (x.Length > 1)
+                {
+                    newName += string.Join(" ", x);
+                }
+            }
+
+            return newName;
         }
 
         /// <summary>

@@ -54,6 +54,7 @@
     <Compile Include="Fields\MR4001-4005FieldsMustHaveXMLComment.cs" />
     <Compile Include="Helper\Extensions.cs" />
     <Compile Include="Helper\RegionText.cs" />
+    <Compile Include="Helper\Test.cs" />
     <Compile Include="Interfaces\MR2001-2002CodeFixProvider.cs" />
     <Compile Include="Interfaces\MR2001PublicInterfacesMustHaveXMLComment.cs" />
     <Compile Include="Interfaces\MR2002InternalInterfacesMustHaveXMLComment.cs" />
