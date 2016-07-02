@@ -23,7 +23,7 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// Gets the keep lowercase keywords.
         /// </summary>
-        public static string[] KeepLowercase => new[] { "and", "for", "from", "in", "of", "or" };
+        public static string[] KeepLowercase => new[] { "and", "for", "from", "in", "of", "or", "a" };
 
         /// <summary>
         /// The diagnostic id.
