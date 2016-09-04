@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR7005NoMultipleWhitespacesFollowingTheRegionKeyword.cs" author="Michael Reukauff">
+// <copyright file="MR7008NoEmptyLinePreceedingEndRegionKeyword.cs" author="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -7,23 +7,23 @@
 namespace XmlCommenter.Regions
 {
     using System.Collections.Immutable;
-    using System.Linq;
 
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Diagnostics;
+    using Microsoft.CodeAnalysis.Text;
 
     /// <summary>
-    /// The MR7005 No multiple whitespaces following the region keyword class.
+    /// The MR7008 No empty line preceeding endregion keyword class.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR7005NoMultipleWhitespacesFollowingTheRegionKeyword : DiagnosticAnalyzer
+    public class MR7008NoEmptyLinePreceedingEndRegionKeyword : DiagnosticAnalyzer
     {
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId7005 = Constants.DiagnosticPrefix + "7005";
+        public const string DiagnosticId7008 = Constants.DiagnosticPrefix + "7008";
 
         /// <summary>
         /// The category.
@@ -33,7 +33,7 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// The title.
         /// </summary>
-        public const string Title = "No multiple whitespaces following the #region keyword.";
+        public const string Title = "An #endregion must not be preceeded by a blank line.";
 
         /// <summary>
         /// The message.
@@ -43,8 +43,8 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// The rule 9001.
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule7005 = new DiagnosticDescriptor(
-            DiagnosticId7005,
+        private static readonly DiagnosticDescriptor Rule7008 = new DiagnosticDescriptor(
+            DiagnosticId7008,
             Title,
             Message,
             Category,
@@ -54,7 +54,7 @@ namespace XmlCommenter.Regions
         /// <summary>
         /// Gets the supported diagnostics.
         /// </summary>
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule7005);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule7008);
 
         /// <summary>
         /// Initialize.
@@ -62,11 +62,11 @@ namespace XmlCommenter.Regions
         /// <param name="context">The analysis context.</param>
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(CheckRegion, SyntaxKind.RegionDirectiveTrivia);
+            context.RegisterSyntaxNodeAction(CheckRegion, SyntaxKind.EndRegionDirectiveTrivia);
         }
 
         /// <summary>
-        /// Check region keyword is followed by multiple whitspaces.
+        /// Check endregion keyword is preceeded by an empty line.
         /// </summary>
         /// <param name="syntaxNodeAnalysisContext">The syntaxNodeAnalysisContext.</param>
         private void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)
@@ -76,23 +76,36 @@ namespace XmlCommenter.Regions
                 return;
             }
 
-            var node = (RegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
+            var node = (EndRegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
 
-            var token = node.ChildTokens().FirstOrDefault(x => x.IsKind(SyntaxKind.RegionKeyword));
-
-            if (!token.IsKind(SyntaxKind.None))
+            if (node?.ParentTrivia == null)
             {
-                if (!token.HasTrailingTrivia)
-                {
-                    return;
-                }
+                return;
+            }
 
-                var trivia = token.TrailingTrivia.FirstOrDefault(x => x.IsKind(SyntaxKind.WhitespaceTrivia));
+            var spanStart = node.Span.Start;
+            var parent = node.ParentTrivia.Token.Parent.ChildThatContainsPosition(spanStart - 1);
+            var lt = parent.GetLeadingTrivia();
 
-                if (trivia.Span.Length > 1)
-                {
-                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7005, trivia.GetLocation(), DiagnosticId7005));
-                }
+            var idx = lt.IndexOfTrivia(node.FullSpan) - 1;
+            if (idx < 0)
+            {
+                return;
+            }
+
+            if (lt[idx].IsKind(SyntaxKind.WhitespaceTrivia))
+            {
+                idx--;
+            }
+
+            if (idx < 0)
+            {
+                return;
+            }
+
+            if (lt[idx].IsKind(SyntaxKind.EndOfLineTrivia))
+            {
+                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7008, node.GetLocation(), DiagnosticId7008));
             }
         }
     }

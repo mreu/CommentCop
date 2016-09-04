@@ -89,6 +89,14 @@
     <Compile Include="Regions\MR7005NoMultipleWhitespacesFollowingTheRegionKeyword.cs" />
     <Compile Include="Regions\MR7006CodeFixProvider.cs" />
     <Compile Include="Regions\MR7006NoMultipleWhitespacesFollowingTheEndregionKeyword.cs" />
+    <Compile Include="Regions\MR7007CodeFixProvider.cs" />
+    <Compile Include="Regions\MR7007NoEmptyLineFollowingRegionKeyword.cs" />
+    <Compile Include="Regions\MR7008CodeFixProvider.cs" />
+    <Compile Include="Regions\MR7008NoEmptyLinePreceedingEndRegionKeyword.cs" />
+    <Compile Include="Regions\MR7009CodeFixProvider.cs" />
+    <Compile Include="Regions\MR7009EmptyLineMustFollowingRegionKeyword.cs" />
+    <Compile Include="Regions\MR7010CodeFixProvider.cs" />
+    <Compile Include="Regions\MR7010EmptyLineMustPreceedEndRegionKeyword.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

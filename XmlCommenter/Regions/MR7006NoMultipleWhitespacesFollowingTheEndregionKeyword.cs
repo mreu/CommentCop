@@ -66,7 +66,7 @@ namespace XmlCommenter.Regions
         }
 
         /// <summary>
-        /// Check region keyword is followed by a description.
+        /// Check endregion keyword is followed by multiple whitespaces.
         /// </summary>
         /// <param name="syntaxNodeAnalysisContext">The syntaxNodeAnalysisContext.</param>
         private void CheckRegion(SyntaxNodeAnalysisContext syntaxNodeAnalysisContext)

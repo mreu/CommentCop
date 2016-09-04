@@ -714,4 +714,414 @@ namespace TestProjectForRoslyn
         }
         #endregion Overrides
     }
+
+    /// <summary>
+    /// Test all properties analyzers and code fixes.
+    /// </summary>
+    [TestClass]
+    public class Regions7007 : CodeFixVerifier
+    {
+        /// <summary>
+        /// No diagnostics expected to show up
+        /// </summary>
+        [TestMethod]
+        public void TestNoDiagnostics()
+        {
+            var test = string.Empty;
+
+            VerifyCSharpDiagnostic(test);
+        }
+
+        /// <summary>
+        /// Diagnostic and CodeFix both triggered and checked for rule 7007
+        /// </summary>
+        [TestMethod]
+        public void TestRule7007()
+        {
+            const string test = @"
+namespace TestProjectForRoslyn
+{
+    /// <summary>
+    /// The regions class.
+    /// </summary>
+    public class Regions
+    {
+        /// <summary>
+        /// The method1.
+        /// </summary>
+        private void Method1()
+        {
+            #region aa of bb
+
+
+            {
+            }
+            #endregion aa of bb
+        }
+    }
+}";
+            var expected = new DiagnosticResult
+            {
+                Id = MR7007NoEmptyLineFollowingRegionKeyword.DiagnosticId7007,
+                Message = $"{MR7007NoEmptyLineFollowingRegionKeyword.Title} ({MR7007NoEmptyLineFollowingRegionKeyword.DiagnosticId7007})",
+                Severity = DiagnosticSeverity.Warning,
+                Locations =
+                    new[]
+                    {
+                        new DiagnosticResultLocation("Test0.cs", 14, 13)
+                    }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+
+            const string fixtest = @"
+namespace TestProjectForRoslyn
+{
+    /// <summary>
+    /// The regions class.
+    /// </summary>
+    public class Regions
+    {
+        /// <summary>
+        /// The method1.
+        /// </summary>
+        private void Method1()
+        {
+            #region aa of bb
+            {
+            }
+            #endregion aa of bb
+        }
+    }
+}";
+            VerifyCSharpFix(test, fixtest);
+        }
+
+        #region Overrides
+        /// <summary>
+        /// Get CSharp code fix provider.
+        /// </summary>
+        /// <returns>The code fix provider.</returns>
+        protected override CodeFixProvider GetCSharpCodeFixProvider()
+        {
+            return new MR7007CodeFixProvider();
+        }
+
+        /// <summary>
+        /// Get CSharp diagnostic analyer.
+        /// </summary>
+        /// <returns>The diagnostic analyer.</returns>
+        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+        {
+            return new MR7007NoEmptyLineFollowingRegionKeyword();
+        }
+        #endregion Overrides
+    }
+
+    /// <summary>
+    /// Test all properties analyzers and code fixes.
+    /// </summary>
+    [TestClass]
+    public class Regions7008 : CodeFixVerifier
+    {
+        /// <summary>
+        /// No diagnostics expected to show up
+        /// </summary>
+        [TestMethod]
+        public void TestNoDiagnostics()
+        {
+            var test = string.Empty;
+
+            VerifyCSharpDiagnostic(test);
+        }
+
+        /// <summary>
+        /// Diagnostic and CodeFix both triggered and checked for rule 7007
+        /// </summary>
+        [TestMethod]
+        public void TestRule7008()
+        {
+            const string test = @"
+namespace TestProjectForRoslyn
+{
+    /// <summary>
+    /// The regions class.
+    /// </summary>
+    public class Regions
+    {
+        /// <summary>
+        /// The method1.
+        /// </summary>
+        private void Method1()
+        {
+            #region aa of bb
+            {
+            }
+
+
+            #endregion aa of bb
+        }
+    }
+}";
+            var expected = new DiagnosticResult
+            {
+                Id = MR7008NoEmptyLinePreceedingEndRegionKeyword.DiagnosticId7008,
+                Message = $"{MR7008NoEmptyLinePreceedingEndRegionKeyword.Title} ({MR7008NoEmptyLinePreceedingEndRegionKeyword.DiagnosticId7008})",
+                Severity = DiagnosticSeverity.Warning,
+                Locations =
+                    new[]
+                    {
+                        new DiagnosticResultLocation("Test0.cs", 19, 13)
+                    }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+
+            const string fixtest = @"
+namespace TestProjectForRoslyn
+{
+    /// <summary>
+    /// The regions class.
+    /// </summary>
+    public class Regions
+    {
+        /// <summary>
+        /// The method1.
+        /// </summary>
+        private void Method1()
+        {
+            #region aa of bb
+            {
+            }
+            #endregion aa of bb
+        }
+    }
+}";
+            VerifyCSharpFix(test, fixtest);
+        }
+
+        #region Overrides
+        /// <summary>
+        /// Get CSharp code fix provider.
+        /// </summary>
+        /// <returns>The code fix provider.</returns>
+        protected override CodeFixProvider GetCSharpCodeFixProvider()
+        {
+            return new MR7008CodeFixProvider();
+        }
+
+        /// <summary>
+        /// Get CSharp diagnostic analyer.
+        /// </summary>
+        /// <returns>The diagnostic analyer.</returns>
+        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+        {
+            return new MR7008NoEmptyLinePreceedingEndRegionKeyword();
+        }
+        #endregion Overrides
+    }
+
+    /// <summary>
+    /// Test all properties analyzers and code fixes.
+    /// </summary>
+    [TestClass]
+    public class Regions7009 : CodeFixVerifier
+    {
+        /// <summary>
+        /// No diagnostics expected to show up
+        /// </summary>
+        [TestMethod]
+        public void TestNoDiagnostics()
+        {
+            var test = string.Empty;
+
+            VerifyCSharpDiagnostic(test);
+        }
+
+        /// <summary>
+        /// Diagnostic and CodeFix both triggered and checked for rule 7007
+        /// </summary>
+        [TestMethod]
+        public void TestRule7009()
+        {
+            const string test = @"
+namespace TestProjectForRoslyn
+{
+    /// <summary>
+    /// The regions class.
+    /// </summary>
+    public class Regions
+    {
+        /// <summary>
+        /// The method1.
+        /// </summary>
+        private void Method1()
+        {
+            #region aa of bb
+            {
+            }
+            #endregion aa of bb
+        }
+    }
+}";
+            var expected = new DiagnosticResult
+            {
+                Id = MR7009EmptyLineMustFollowingRegionKeyword.DiagnosticId7009,
+                Message = $"{MR7009EmptyLineMustFollowingRegionKeyword.Title} ({MR7009EmptyLineMustFollowingRegionKeyword.DiagnosticId7009})",
+                Severity = DiagnosticSeverity.Info,
+                Locations =
+                    new[]
+                    {
+                        new DiagnosticResultLocation("Test0.cs", 14, 13)
+                    }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+
+            const string fixtest = @"
+namespace TestProjectForRoslyn
+{
+    /// <summary>
+    /// The regions class.
+    /// </summary>
+    public class Regions
+    {
+        /// <summary>
+        /// The method1.
+        /// </summary>
+        private void Method1()
+        {
+            #region aa of bb
+
+            {
+            }
+            #endregion aa of bb
+        }
+    }
+}";
+            VerifyCSharpFix(test, fixtest);
+        }
+
+        #region Overrides
+        /// <summary>
+        /// Get CSharp code fix provider.
+        /// </summary>
+        /// <returns>The code fix provider.</returns>
+        protected override CodeFixProvider GetCSharpCodeFixProvider()
+        {
+            return new MR7009CodeFixProvider();
+        }
+
+        /// <summary>
+        /// Get CSharp diagnostic analyer.
+        /// </summary>
+        /// <returns>The diagnostic analyer.</returns>
+        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+        {
+            return new MR7009EmptyLineMustFollowingRegionKeyword();
+        }
+        #endregion Overrides
+    }
+
+    /// <summary>
+    /// Test all properties analyzers and code fixes.
+    /// </summary>
+    [TestClass]
+    public class Regions7010 : CodeFixVerifier
+    {
+        /// <summary>
+        /// No diagnostics expected to show up
+        /// </summary>
+        [TestMethod]
+        public void TestNoDiagnostics()
+        {
+            var test = string.Empty;
+
+            VerifyCSharpDiagnostic(test);
+        }
+
+        /// <summary>
+        /// Diagnostic and CodeFix both triggered and checked for rule 7010
+        /// </summary>
+        [TestMethod]
+        public void TestRule7010()
+        {
+            const string test = @"
+namespace TestProjectForRoslyn
+{
+    /// <summary>
+    /// The regions class.
+    /// </summary>
+    public class Regions
+    {
+        /// <summary>
+        /// The method1.
+        /// </summary>
+        private void Method1()
+        {
+            #region aa of bb
+            {
+            }
+            #endregion aa of bb
+        }
+    }
+}";
+            var expected = new DiagnosticResult
+            {
+                Id = MR7010EmptyLineMustPreceedEndRegionKeyword.DiagnosticId7010,
+                Message = $"{MR7010EmptyLineMustPreceedEndRegionKeyword.Title} ({MR7010EmptyLineMustPreceedEndRegionKeyword.DiagnosticId7010})",
+                Severity = DiagnosticSeverity.Info,
+                Locations =
+                    new[]
+                    {
+                        new DiagnosticResultLocation("Test0.cs", 17, 13)
+                    }
+            };
+
+            VerifyCSharpDiagnostic(test, expected);
+
+            const string fixtest = @"
+namespace TestProjectForRoslyn
+{
+    /// <summary>
+    /// The regions class.
+    /// </summary>
+    public class Regions
+    {
+        /// <summary>
+        /// The method1.
+        /// </summary>
+        private void Method1()
+        {
+            #region aa of bb
+            {
+            }
+
+            #endregion aa of bb
+        }
+    }
+}";
+            VerifyCSharpFix(test, fixtest);
+        }
+
+        #region Overrides
+        /// <summary>
+        /// Get CSharp code fix provider.
+        /// </summary>
+        /// <returns>The code fix provider.</returns>
+        protected override CodeFixProvider GetCSharpCodeFixProvider()
+        {
+            return new MR7010CodeFixProvider();
+        }
+
+        /// <summary>
+        /// Get CSharp diagnostic analyer.
+        /// </summary>
+        /// <returns>The diagnostic analyer.</returns>
+        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+        {
+            return new MR7010EmptyLineMustPreceedEndRegionKeyword();
+        }
+        #endregion Overrides
+    }
 }
