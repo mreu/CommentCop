@@ -153,7 +153,6 @@ AppPackages/
 sql/
 *.[Cc]ache
 ClientBin/
-[Ss]tyle[Cc]op.*
 ~$*
 *~
 *.dbmdl
@@ -212,6 +211,7 @@ $RECYCLE.BIN/
 [Ss]tyle[Cc]op.*
 # Cache settings file
 Settings.StyleCop
+# Allow stylecop file for StyleCop settings
 ![Ss]tyle[Cc]op.json
 
 # ==============================================================
