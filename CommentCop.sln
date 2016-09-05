@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentCop", "CommentCop\CommentCop.csproj", "{826C049E-A7F7-4157-9582-2D2F855CEC7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentCop.Test", "CommentCop.Test\CommentCop.Test.csproj", "{27D6B08A-E508-46F8-9AB1-876DACDE0DC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentCop.Vsix", "CommentCop.Vsix\CommentCop.Vsix.csproj", "{2F4A8CF9-EF64-46A7-B863-9FD7FB35E3EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{826C049E-A7F7-4157-9582-2D2F855CEC7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{826C049E-A7F7-4157-9582-2D2F855CEC7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{826C049E-A7F7-4157-9582-2D2F855CEC7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{826C049E-A7F7-4157-9582-2D2F855CEC7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27D6B08A-E508-46F8-9AB1-876DACDE0DC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27D6B08A-E508-46F8-9AB1-876DACDE0DC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27D6B08A-E508-46F8-9AB1-876DACDE0DC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27D6B08A-E508-46F8-9AB1-876DACDE0DC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F4A8CF9-EF64-46A7-B863-9FD7FB35E3EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F4A8CF9-EF64-46A7-B863-9FD7FB35E3EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F4A8CF9-EF64-46A7-B863-9FD7FB35E3EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F4A8CF9-EF64-46A7-B863-9FD7FB35E3EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+    <Metadata>
+        <Identity Id="CommentCop..0521EE68-1A5D-4C78-9970-B6A46B03FA6D" Version="1.0.0" Language="en-US" Publisher="Michael Reukauff"/>
+        <DisplayName>CommentCop</DisplayName>
+        <Description xml:space="preserve">Analyzes (mostly) xml comments and provides code fixes. Uses Roslyn C# code analyser.</Description>
+        <License>License.txt</License>
+        <Icon>Package.ico</Icon>
+        <Tags>xml comments roslyn analyser codefix</Tags>
+    </Metadata>
+    <Installation>
+        <InstallationTarget Version="[14.0,15.0)" Id="Microsoft.VisualStudio.Community" />
+        <InstallationTarget Version="[14.0,15.0)" Id="Microsoft.VisualStudio.Pro" />
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+    </Dependencies>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="CommentCop" Path="|CommentCop|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="CommentCop" Path="|CommentCop|" />
+    </Assets>
+</PackageManifest>
