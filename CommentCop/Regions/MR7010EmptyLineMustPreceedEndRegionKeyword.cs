@@ -41,7 +41,7 @@ namespace CommentCop.Regions
         private static readonly string Message = $"{Title} ({{0}})";
 
         /// <summary>
-        /// The rule 9001.
+        /// The rule 7010.
         /// </summary>
         private static readonly DiagnosticDescriptor Rule7010 = new DiagnosticDescriptor(
             DiagnosticId7010,

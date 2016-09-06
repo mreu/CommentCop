@@ -71,7 +71,7 @@ namespace CommentCop.Delegates
         /// <summary>
         /// The readonly rule5007. Value: new DiagnosticDescriptor(DiagnosticId5007, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule5007= new DiagnosticDescriptor(DiagnosticId5007, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule5007 = new DiagnosticDescriptor(DiagnosticId5007, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true);
 
         /// <summary>
         /// The readonly rule5008. Value: new DiagnosticDescriptor(DiagnosticId5008, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true).
