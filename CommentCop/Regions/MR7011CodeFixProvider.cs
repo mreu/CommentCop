@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR7010CodeFixProvider.cs" author="Michael Reukauff">
+// <copyright file="MR7011CodeFixProvider.cs" author="Michael Reukauff">
 //   Copyright © 2016 Michael Reukauff
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -20,21 +20,21 @@ namespace CommentCop.Regions
     using Microsoft.CodeAnalysis.CSharp;
 
     /// <summary>
-    /// The code fix provider.
+    /// The MR7011 Code fix provider class.
     /// </summary>
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR7010CodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MR7011CodeFixProvider))]
     [Shared]
-    public class MR7010CodeFixProvider : CodeFixProvider
+    public class MR7011CodeFixProvider : CodeFixProvider
     {
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Insert empty line preceeding #endregion. (MR7010)";
+        private const string Title = "Insert empty line preceeding #region. (MR7011)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.
         /// </summary>
-        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MR7010EmptyLineMustPreceedEndRegionKeyword.DiagnosticId7010);
+        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MR7011EmptyLineMustPreceedRegionKeyword.DiagnosticId7011);
 
         /// <summary>
         /// Get fix all provider.
@@ -91,7 +91,7 @@ namespace CommentCop.Regions
 
                 var token = root.FindToken(diagnostic.Location.SourceSpan.Start);
 
-                if (!token.LeadingTrivia.Any(x => x.IsKind(SyntaxKind.EndRegionDirectiveTrivia)))
+                if (!token.LeadingTrivia.Any(x => x.IsKind(SyntaxKind.RegionDirectiveTrivia)))
                 {
                     return document;
                 }
@@ -100,14 +100,7 @@ namespace CommentCop.Regions
 
                 var idx = token.LeadingTrivia.IndexOfTrivia(diagnostic.Location.SourceSpan) - 1;
 
-                if (idx < 0)
-                {
-                    triviaList = triviaList.Insert(0, SyntaxFactory.CarriageReturnLineFeed);
-                }
-                else
-                {
-                    triviaList = triviaList.Insert(idx, SyntaxFactory.CarriageReturnLineFeed);
-                }
+                triviaList = triviaList.Insert(idx < 0 ? 0 : idx, SyntaxFactory.CarriageReturnLineFeed);
 
                 var newtoken = token.WithLeadingTrivia(triviaList);
 
@@ -115,7 +108,7 @@ namespace CommentCop.Regions
             }
             catch (Exception exp)
             {
-                Debug.WriteLine($"{nameof(MR7010CodeFixProvider)} - Exception on {diagnostic} = {exp.Message}");
+                Debug.WriteLine($"{nameof(MR7011CodeFixProvider)} - Exception on {diagnostic} = {exp.Message}");
 
                 return document;
             }

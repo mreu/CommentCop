@@ -29,7 +29,7 @@ namespace CommentCop.Regions
         /// <summary>
         /// The title.
         /// </summary>
-        private const string Title = "Insert empty line. (MR7009)";
+        private const string Title = "Insert empty line following #region. (MR7009)";
 
         /// <summary>
         /// Gets the fixable diagnostic ids.
