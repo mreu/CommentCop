@@ -100,6 +100,8 @@
     <Compile Include="Regions\MR7010EmptyLineMustPreceedEndRegionKeyword.cs" />
     <Compile Include="Regions\MR7011CodeFixProvider.cs" />
     <Compile Include="Regions\MR7011EmptyLineMustPreceedRegionKeyword.cs" />
+    <Compile Include="Regions\MR7012CodeFixProvider.cs" />
+    <Compile Include="Regions\MR7012EmptyLineMustFollowingEndRegionKeyword.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
