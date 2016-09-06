@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR7010EmptyLineMustPreceedEndRegionKeyword.cs" author="Michael Reukauff">
-//   Copyright © 2016 Michael Reukauff
+// <copyright file="MR7011EmptyLineMustPreceedRegionKeyword.cs" company="Michael Reukauff">
+//   Copyright © 2016 Michael Reukauff. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -14,15 +14,15 @@ namespace CommentCop.Regions
     using Microsoft.CodeAnalysis.Diagnostics;
 
     /// <summary>
-    /// The MR7010 Empty line must preceed endregion keyword class.
+    /// The MR7011 Region must be preceeded by blank line class.
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MR7010EmptyLineMustPreceedEndRegionKeyword : DiagnosticAnalyzer
+    public class MR7011EmptyLineMustPreceedRegionKeyword : DiagnosticAnalyzer
     {
         /// <summary>
         /// The diagnostic id.
         /// </summary>
-        public const string DiagnosticId7010 = Constants.DiagnosticPrefix + "7010";
+        public const string DiagnosticId7011 = Constants.DiagnosticPrefix + "7011";
 
         /// <summary>
         /// The category.
@@ -32,7 +32,7 @@ namespace CommentCop.Regions
         /// <summary>
         /// The title.
         /// </summary>
-        public const string Title = "#endregion must be preceeding by a blank line.";
+        public const string Title = "#region must be preceeded by a blank line.";
 
         /// <summary>
         /// The message.
@@ -42,22 +42,18 @@ namespace CommentCop.Regions
         /// <summary>
         /// The rule 7010.
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule7010 = new DiagnosticDescriptor(
-            DiagnosticId7010,
+        private static readonly DiagnosticDescriptor Rule7011 = new DiagnosticDescriptor(
+            DiagnosticId7011,
             Title,
             Message,
             Category,
             DiagnosticSeverity.Warning,
-#if DEBUG
-            true); // set to true to simplify debugging
-#else
-            false);
-#endif
+            true);
 
         /// <summary>
         /// Gets the supported diagnostics.
         /// </summary>
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule7010);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule7011);
 
         /// <summary>
         /// Initialize.
@@ -65,7 +61,7 @@ namespace CommentCop.Regions
         /// <param name="context">The analysis context.</param>
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(CheckRegion, SyntaxKind.EndRegionDirectiveTrivia);
+            context.RegisterSyntaxNodeAction(CheckRegion, SyntaxKind.RegionDirectiveTrivia);
         }
 
         /// <summary>
@@ -79,7 +75,7 @@ namespace CommentCop.Regions
                 return;
             }
 
-            var node = (EndRegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
+            var node = (RegionDirectiveTriviaSyntax)syntaxNodeAnalysisContext.Node;
 
             if (node?.ParentTrivia == null)
             {
@@ -103,13 +99,18 @@ namespace CommentCop.Regions
 
             if (idx < 0)
             {
-                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7010, node.GetLocation(), DiagnosticId7010));
+                if (node.ParentTrivia.Token.IsKind(SyntaxKind.OpenBraceToken))
+                {
+                    return;
+                }
+
+                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7011, node.GetLocation(), DiagnosticId7011));
                 return;
             }
 
             if (!lt[idx].IsKind(SyntaxKind.EndOfLineTrivia))
             {
-                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7010, node.GetLocation(), DiagnosticId7010));
+                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7011, node.GetLocation(), DiagnosticId7011));
             }
         }
     }
