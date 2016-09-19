@@ -7,7 +7,6 @@
 namespace CommentCop.Test
 {
     using CommentCop.Misc;
-    using CommentCop.Regions;
 
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CodeFixes;
