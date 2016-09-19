@@ -31,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MR.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Classes\MR0001-0005ClassesMustHaveXMLComment.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Methods\MR1001-1005MethodsMustHaveXMLComment.cs" />
     <Compile Include="Methods\MR1006CodeFixProvider.cs" />
     <Compile Include="Methods\MR1006OperatorsMustHaveXMLComment.cs" />
+    <Compile Include="Misc\MR8000CodeFixProvider.cs" />
     <Compile Include="Misc\MR8000XMLCommentMustBePreceededByBlankLine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Property\MR3001-3005CodeFixProvider.cs" />
