@@ -7,6 +7,7 @@
 namespace CommentCop.Regions
 {
     using System.Collections.Immutable;
+    using System.Linq;
 
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -82,34 +83,17 @@ namespace CommentCop.Regions
                 return;
             }
 
-            var spanStart = node.Span.Start;
-            var parent = node.ParentTrivia.Token.Parent.ChildThatContainsPosition(spanStart - 1);
-            var lt = parent.GetLeadingTrivia();
+            var loc = node.GetLocation().GetLineSpan();
+            var lineSpan = node.SyntaxTree.GetText().Lines[loc.Span.Start.Line - 1].Span;
+            var tokens = node.SyntaxTree.GetRoot().DescendantTokens(lineSpan);
 
-            var idx = lt.IndexOfTrivia(node.FullSpan) - 1;
-            if (idx < 0)
+            if (tokens.Any())
             {
-                return;
-            }
-
-            if (lt[idx].IsKind(SyntaxKind.WhitespaceTrivia))
-            {
-                idx--;
-            }
-
-            if (idx < 0)
-            {
-                if (node.ParentTrivia.Token.IsKind(SyntaxKind.OpenBraceToken))
+                if (tokens.First().IsKind(SyntaxKind.OpenBraceToken))
                 {
                     return;
                 }
 
-                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7011, node.GetLocation(), DiagnosticId7011));
-                return;
-            }
-
-            if (!lt[idx].IsKind(SyntaxKind.EndOfLineTrivia))
-            {
                 syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule7011, node.GetLocation(), DiagnosticId7011));
             }
         }
