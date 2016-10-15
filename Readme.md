@@ -1,4 +1,4 @@
-![logo](https://github.com/mreu/CommentCop/blob/master/Logo.bmp)  CommentCop
+![logo](https://github.com/mreu/CommentCop/blob/master/Logo.png)  CommentCop
 ============================================================================
 
 A Visual Studio 2015+ Extension to check and correct XML-comments in C# code.
