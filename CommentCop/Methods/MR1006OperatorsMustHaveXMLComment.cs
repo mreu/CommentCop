@@ -34,7 +34,7 @@ namespace CommentCop.Methods
         private const string Category = Constants.DiagnosticCategory;
 
         /// <summary>
-        /// The title (const). Value: "Operators must have a xml documentation header.".
+        /// The title (const). Value: "Operator must have a xml documentation header.".
         /// </summary>
         private const string Title = "Operators must have a xml documentation header.";
 
@@ -49,6 +49,11 @@ namespace CommentCop.Methods
         private const string Description = Title;
 
         /// <summary>
+        /// The help link1005 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR1006.md".
+        /// </summary>
+        private const string HelpLink = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR1006.md";
+
+        /// <summary>
         /// The rule.
         /// </summary>
         private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
@@ -58,7 +63,8 @@ namespace CommentCop.Methods
             Category,
             DiagnosticSeverity.Warning,
             true,
-            Description);
+            Description,
+            HelpLink);
 
         /// <summary>
         /// Gets the supported diagnostics.

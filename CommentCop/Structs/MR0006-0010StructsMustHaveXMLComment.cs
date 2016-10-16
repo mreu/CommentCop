@@ -24,29 +24,79 @@ namespace CommentCop.Structs
     public class MR0006_0010StructsMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
-        /// The const diagnostic id0006. Value: Constants.DiagnosticPrefix + "0006".
+        /// The r0006 (const). Value: "0006".
         /// </summary>
-        public const string DiagnosticId0006 = Constants.DiagnosticPrefix + "0006";
+        private const string R0006 = "0006";
 
         /// <summary>
-        /// The const diagnostic id0007. Value: Constants.DiagnosticPrefix + "0007".
+        /// The r0007 (const). Value: "0007".
         /// </summary>
-        public const string DiagnosticId0007 = Constants.DiagnosticPrefix + "0007";
+        private const string R0007 = "0007";
 
         /// <summary>
-        /// The const diagnostic id0008. Value: Constants.DiagnosticPrefix + "0008".
+        /// The r0008 (const). Value: "0008".
         /// </summary>
-        public const string DiagnosticId0008 = Constants.DiagnosticPrefix + "0008";
+        private const string R0008 = "0008";
 
         /// <summary>
-        /// The const diagnostic id0009. Value: Constants.DiagnosticPrefix + "0009".
+        /// The r0009 (const). Value: "0009".
         /// </summary>
-        public const string DiagnosticId0009 = Constants.DiagnosticPrefix + "0009";
+        private const string R0009 = "0009";
 
         /// <summary>
-        /// The const diagnostic id0010. Value: Constants.DiagnosticPrefix + "0010".
+        /// The r0010 (const). Value: "0010".
         /// </summary>
-        public const string DiagnosticId0010 = Constants.DiagnosticPrefix + "0010";
+        private const string R0010 = "0010";
+
+        /// <summary>
+        /// The diagnostic id0006 (const). Value: Constants.DiagnosticPrefix + R0006.
+        /// </summary>
+        public const string DiagnosticId0006 = Constants.DiagnosticPrefix + R0006;
+
+        /// <summary>
+        /// The diagnostic id0007 (const). Value: Constants.DiagnosticPrefix + R0007.
+        /// </summary>
+        public const string DiagnosticId0007 = Constants.DiagnosticPrefix + R0007;
+
+        /// <summary>
+        /// The diagnostic id0008 (const). Value: Constants.DiagnosticPrefix + R0008.
+        /// </summary>
+        public const string DiagnosticId0008 = Constants.DiagnosticPrefix + R0008;
+
+        /// <summary>
+        /// The diagnostic id0009 (const). Value: Constants.DiagnosticPrefix + R0009.
+        /// </summary>
+        public const string DiagnosticId0009 = Constants.DiagnosticPrefix + R0009;
+
+        /// <summary>
+        /// The diagnostic id0010 (const). Value: Constants.DiagnosticPrefix + R0010.
+        /// </summary>
+        public const string DiagnosticId0010 = Constants.DiagnosticPrefix + R0010;
+
+        /// <summary>
+        /// The help link0006 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R0006 + ".md".
+        /// </summary>
+        private const string HelpLink0006 = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R0006 + ".md";
+
+        /// <summary>
+        /// The help link0007 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R0007 + ".md".
+        /// </summary>
+        private const string HelpLink0007 = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R0007 + ".md";
+
+        /// <summary>
+        /// The help link0008 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R0008 + ".md".
+        /// </summary>
+        private const string HelpLink0008 = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R0008 + ".md";
+
+        /// <summary>
+        /// The help link0009 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R0009 + ".md".
+        /// </summary>
+        private const string HelpLink0009 = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R0009 + ".md";
+
+        /// <summary>
+        /// The help link0100 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R0010 + ".md".
+        /// </summary>
+        private const string HelpLink0010 = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R0010 + ".md";
 
         /// <summary>
         /// The const category. Value: Constants.DiagnosticCategory.
@@ -66,27 +116,27 @@ namespace CommentCop.Structs
         /// <summary>
         /// The readonly rule0006. Value: new DiagnosticDescriptor(DiagnosticId0006, Constants.Public + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule0006 = new DiagnosticDescriptor(DiagnosticId0006, Constants.Public + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule0006 = new DiagnosticDescriptor(DiagnosticId0006, Constants.Public + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink0006);
 
         /// <summary>
         /// The readonly rule0007. Value: new DiagnosticDescriptor(DiagnosticId0007, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule0007 = new DiagnosticDescriptor(DiagnosticId0007, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule0007 = new DiagnosticDescriptor(DiagnosticId0007, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink0007);
 
         /// <summary>
         /// The readonly rule0008. Value: new DiagnosticDescriptor(DiagnosticId0008, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule0008 = new DiagnosticDescriptor(DiagnosticId0008, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule0008 = new DiagnosticDescriptor(DiagnosticId0008, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink0008);
 
         /// <summary>
         /// The readonly rule0009. Value: new DiagnosticDescriptor(DiagnosticId0009, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule0009 = new DiagnosticDescriptor(DiagnosticId0009, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule0009 = new DiagnosticDescriptor(DiagnosticId0009, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink0009);
 
         /// <summary>
         /// The readonly rule0010. Value: new DiagnosticDescriptor(DiagnosticId0010, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule0010 = new DiagnosticDescriptor(DiagnosticId0010, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule0010 = new DiagnosticDescriptor(DiagnosticId0010, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink0010);
 
         /// <summary>
         /// Gets the supported diagnostics.

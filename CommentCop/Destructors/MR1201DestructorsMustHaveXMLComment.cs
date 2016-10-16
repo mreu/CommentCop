@@ -44,6 +44,11 @@ namespace CommentCop.Destructors
         private static readonly string Message = $"{Title} ({DiagnosticId})";
 
         /// <summary>
+        /// The help link1201 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR1201.md".
+        /// </summary>
+        private const string HelpLink1201 = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR1201.md";
+
+        /// <summary>
         /// The rule.
         /// </summary>
         private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
@@ -52,7 +57,9 @@ namespace CommentCop.Destructors
             Message,
             Category,
             DiagnosticSeverity.Warning,
-            true);
+            true,
+            null,
+            HelpLink1201);
 
         /// <summary>
         /// Gets the supported diagnostics.

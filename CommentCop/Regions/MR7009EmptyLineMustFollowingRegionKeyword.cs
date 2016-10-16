@@ -27,7 +27,7 @@ namespace CommentCop.Regions
         /// <summary>
         /// The category.
         /// </summary>
-        private const string Category = Constants.DiagnosticCategory;
+        private const string Category = Constants.DiagnosticCategoryRegions;
 
         /// <summary>
         /// The title.
@@ -40,19 +40,26 @@ namespace CommentCop.Regions
         private static readonly string Message = $"{Title} ({{0}})";
 
         /// <summary>
-        /// The rule 9001.
+        /// The help link (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR7009.md".
+        /// </summary>
+        private const string HelpLink = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR7009.md";
+
+        /// <summary>
+        /// The rule 7009.
         /// </summary>
         private static readonly DiagnosticDescriptor Rule7009 = new DiagnosticDescriptor(
-            DiagnosticId7009,
-            Title,
-            Message,
-            Category,
-            DiagnosticSeverity.Warning,
+                                                                    DiagnosticId7009,
+                                                                    Title,
+                                                                    Message,
+                                                                    Category,
+                                                                    DiagnosticSeverity.Warning,
 #if DEBUG
-            true); // set to true to simplify debugging
+                                                                    true, // set to true to simplify debugging
 #else
-            false);
+                                                                    false,
 #endif
+                                                                    null,
+                                                                    HelpLink);
 
         /// <summary>
         /// Gets the supported diagnostics.

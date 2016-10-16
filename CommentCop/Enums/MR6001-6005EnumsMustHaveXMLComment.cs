@@ -24,29 +24,79 @@ namespace CommentCop.Enums
     public class MR6001_6005EnumsMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
-        /// The const diagnostic id6001. Value: Constants.DiagnosticPrefix + "6001".
+        /// The r6001 (const). Value: "6001".
+        /// </summary>
+        private const string R6001 = "6001";
+
+        /// <summary>
+        /// The r6002 (const). Value: "6002".
+        /// </summary>
+        private const string R6002 = "6002";
+
+        /// <summary>
+        /// The r6003 (const). Value: "6003".
+        /// </summary>
+        private const string R6003 = "6003";
+
+        /// <summary>
+        /// The r6004 (const). Value: "6004".
+        /// </summary>
+        private const string R6004 = "6004";
+
+        /// <summary>
+        /// The r6005 (const). Value: "6005".
+        /// </summary>
+        private const string R6005 = "6005";
+
+        /// <summary>
+        /// The diagnostic id6001 (const). Value: Constants.DiagnosticPrefix + "6001".
         /// </summary>
         public const string DiagnosticId6001 = Constants.DiagnosticPrefix + "6001";
 
         /// <summary>
-        /// The const diagnostic id6002. Value: Constants.DiagnosticPrefix + "6002".
+        /// The diagnostic id6002 (const). Value: Constants.DiagnosticPrefix + "6002".
         /// </summary>
         public const string DiagnosticId6002 = Constants.DiagnosticPrefix + "6002";
 
         /// <summary>
-        /// The const diagnostic id6003. Value: Constants.DiagnosticPrefix + "6003".
+        /// The diagnostic id6003 (const). Value: Constants.DiagnosticPrefix + "6003".
         /// </summary>
         public const string DiagnosticId6003 = Constants.DiagnosticPrefix + "6003";
 
         /// <summary>
-        /// The const diagnostic id6004. Value: Constants.DiagnosticPrefix + "6004".
+        /// The diagnostic id6004 (const). Value: Constants.DiagnosticPrefix + "6004".
         /// </summary>
         public const string DiagnosticId6004 = Constants.DiagnosticPrefix + "6004";
 
         /// <summary>
-        /// The const diagnostic id6005. Value: Constants.DiagnosticPrefix + "6005".
+        /// The diagnostic id6005 (const). Value: Constants.DiagnosticPrefix + "6005".
         /// </summary>
         public const string DiagnosticId6005 = Constants.DiagnosticPrefix + "6005";
+
+        /// <summary>
+        /// The help link6001 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R6001 + ".md".
+        /// </summary>
+        private const string HelpLink6001 = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R6001 + ".md";
+
+        /// <summary>
+        /// The help link6002 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R6002 + ".md".
+        /// </summary>
+        private const string HelpLink6002 = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R6002 + ".md";
+
+        /// <summary>
+        /// The help link6003 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R6003 + ".md".
+        /// </summary>
+        private const string HelpLink6003 = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R6003 + ".md";
+
+        /// <summary>
+        /// The help link6004 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R6004 + ".md".
+        /// </summary>
+        private const string HelpLink6004 = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R6004 + ".md";
+
+        /// <summary>
+        /// The help link6005 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R6005 + ".md".
+        /// </summary>
+        private const string HelpLink6005 = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R6005 + ".md";
 
         /// <summary>
         /// The const category. Value: Constants.DiagnosticCategory.
@@ -66,27 +116,27 @@ namespace CommentCop.Enums
         /// <summary>
         /// The readonly rule6001. Value: new DiagnosticDescriptor(DiagnosticId6001, Constants.Public + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule6001 = new DiagnosticDescriptor(DiagnosticId6001, Constants.Public + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule6001 = new DiagnosticDescriptor(DiagnosticId6001, Constants.Public + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink6001);
 
         /// <summary>
         /// The readonly rule6002. Value: new DiagnosticDescriptor(DiagnosticId6002, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule6002 = new DiagnosticDescriptor(DiagnosticId6002, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule6002 = new DiagnosticDescriptor(DiagnosticId6002, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink6002);
 
         /// <summary>
         /// The readonly rule6003. Value: new DiagnosticDescriptor(DiagnosticId6003, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule6003 = new DiagnosticDescriptor(DiagnosticId6003, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule6003 = new DiagnosticDescriptor(DiagnosticId6003, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink6003);
 
         /// <summary>
         /// The readonly rule6004. Value: new DiagnosticDescriptor(DiagnosticId6004, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule6004 = new DiagnosticDescriptor(DiagnosticId6004, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule6004 = new DiagnosticDescriptor(DiagnosticId6004, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink6004);
 
         /// <summary>
         /// The readonly rule6005. Value: new DiagnosticDescriptor(DiagnosticId6005, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule6005 = new DiagnosticDescriptor(DiagnosticId6005, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule6005 = new DiagnosticDescriptor(DiagnosticId6005, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink6005);
 
         /// <summary>
         /// Gets the supported diagnostics.
