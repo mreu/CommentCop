@@ -44,9 +44,14 @@ namespace CommentCop.Enums
         private static readonly string Message = $"{Title} ({DiagnosticId})";
 
         /// <summary>
+        /// The help link6006 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR6006.md".
+        /// </summary>
+        private const string HelpLink6006 = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR6006.md";
+
+        /// <summary>
         /// The rule.
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink6006);
 
         /// <summary>
         /// Gets the supported diagnostics.

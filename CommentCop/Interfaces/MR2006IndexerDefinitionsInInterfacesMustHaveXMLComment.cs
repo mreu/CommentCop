@@ -49,10 +49,14 @@ namespace CommentCop.Interfaces
         private const string Description = Title;
 
         /// <summary>
+        /// The help link (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR2006.md".
+        /// </summary>
+        private const string HelpLink = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR2006.md";
+
+        /// <summary>
         /// The rule.
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, Message, Category, DiagnosticSeverity.Warning, true,
-            Description);
+        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, Message, Category, DiagnosticSeverity.Warning, true, Description, null, HelpLink);
 
         /// <summary>
         /// Gets the supported diagnostics.

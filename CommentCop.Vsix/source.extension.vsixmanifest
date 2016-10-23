@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="CommentCop..0521EE68-1A5D-4C78-9970-B6A46B03FA6D" Version="1.2.0" Language="en-US" Publisher="Michael Reukauff"/>
+        <Identity Id="CommentCop..0521EE68-1A5D-4C78-9970-B6A46B03FA6D" Version="1.3.0" Language="en-US" Publisher="Michael Reukauff"/>
         <DisplayName>CommentCop</DisplayName>
         <Description xml:space="preserve">Analyzes (mostly) xml comments and provides code fixes. Uses Roslyn C# code analyser.</Description>
         <License>License.txt</License>

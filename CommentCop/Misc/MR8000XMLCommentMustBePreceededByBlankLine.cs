@@ -40,6 +40,11 @@ namespace CommentCop.Misc
         private static readonly string Message = $"{Title} ({{0}})";
 
         /// <summary>
+        /// The help link (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR8000.md".
+        /// </summary>
+        private const string HelpLink = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR8000.md";
+
+        /// <summary>
         /// The rule.
         /// </summary>
         private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
@@ -48,7 +53,9 @@ namespace CommentCop.Misc
             Message,
             Category,
             DiagnosticSeverity.Warning,
-            true);
+            true,
+            null,
+            HelpLink);
 
         /// <summary>
         /// Gets the supported diagnostics.

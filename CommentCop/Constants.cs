@@ -15,22 +15,27 @@ namespace CommentCop
         /// The const private. Value: "Private".
         /// </summary>
         internal const string Private = "Private";
+
         /// <summary>
         /// The const protected. Value: "Protected".
         /// </summary>
         internal const string Protected = "Protected";
+
         /// <summary>
         /// The const internal. Value: "Internal".
         /// </summary>
         internal const string Internal = "Internal";
+
         /// <summary>
         /// The const internal protected. Value: "Internal protected".
         /// </summary>
         internal const string InternalProtected = "Internal protected";
+
         /// <summary>
         /// The const public. Value: "Public".
         /// </summary>
         internal const string Public = "Public";
+
         /// <summary>
         /// The const static. Value: "Static".
         /// </summary>
@@ -50,6 +55,11 @@ namespace CommentCop
         /// The const diagnostic category. Value: "Documentation".
         /// </summary>
         internal const string DiagnosticCategory = "Documentation";
+
+        /// <summary>
+        /// The diagnostic category regions (const). Value: "Regions".
+        /// </summary>
+        internal const string DiagnosticCategoryRegions = "Regions";
 
         /// <summary>
         /// The const diagnostic prefix. Value: "MR".

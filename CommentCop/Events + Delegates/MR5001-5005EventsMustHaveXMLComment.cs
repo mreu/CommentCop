@@ -24,29 +24,54 @@ namespace CommentCop.Events
     public class MR5001_5005EventsMustHaveXMLComment : DiagnosticAnalyzer
     {
         /// <summary>
-        /// The diagnostic id.
+        /// The r5001 (const). Value: "5001".
         /// </summary>
-        public const string DiagnosticId5001 = Constants.DiagnosticPrefix + "5001";
+        private const string R5001 = "5001";
 
         /// <summary>
-        /// The const diagnostic id5002. Value: Constants.DiagnosticPrefix + "5002".
+        /// The r5002 (const). Value: "5002".
         /// </summary>
-        public const string DiagnosticId5002 = Constants.DiagnosticPrefix + "5002";
+        private const string R5002 = "5002";
 
         /// <summary>
-        /// The const diagnostic id5003. Value: Constants.DiagnosticPrefix + "5003".
+        /// The r5003 (const). Value: "5003".
         /// </summary>
-        public const string DiagnosticId5003 = Constants.DiagnosticPrefix + "5003";
+        private const string R5003 = "5003";
 
         /// <summary>
-        /// The const diagnostic id5004. Value: Constants.DiagnosticPrefix + "5004".
+        /// The r5004 (const). Value: "5004".
         /// </summary>
-        public const string DiagnosticId5004 = Constants.DiagnosticPrefix + "5004";
+        private const string R5004 = "5004";
 
         /// <summary>
-        /// The const diagnostic id5005. Value: Constants.DiagnosticPrefix + "5005".
+        /// The r5005 (const). Value: "5005".
         /// </summary>
-        public const string DiagnosticId5005 = Constants.DiagnosticPrefix + "5005";
+        private const string R5005 = "5005";
+
+        /// <summary>
+        /// The diagnostic id5001 (const). Value: Constants.DiagnosticPrefix + R5001.
+        /// </summary>
+        public const string DiagnosticId5001 = Constants.DiagnosticPrefix + R5001;
+
+        /// <summary>
+        /// The diagnostic id5002 (const). Value: Constants.DiagnosticPrefix + R5002.
+        /// </summary>
+        public const string DiagnosticId5002 = Constants.DiagnosticPrefix + R5002;
+
+        /// <summary>
+        /// The diagnostic id5003 (const). Value: Constants.DiagnosticPrefix + R5003.
+        /// </summary>
+        public const string DiagnosticId5003 = Constants.DiagnosticPrefix + R5003;
+
+        /// <summary>
+        /// The diagnostic id5004 (const). Value: Constants.DiagnosticPrefix + R5004.
+        /// </summary>
+        public const string DiagnosticId5004 = Constants.DiagnosticPrefix + R5004;
+
+        /// <summary>
+        /// The diagnostic id5005 (const). Value: Constants.DiagnosticPrefix + R5005.
+        /// </summary>
+        public const string DiagnosticId5005 = Constants.DiagnosticPrefix + R5005;
 
         /// <summary>
         /// The category (const). Value: Constants.DiagnosticCategory.
@@ -64,25 +89,54 @@ namespace CommentCop.Events
         private const string Message = "{0}" + Title + " ({1})";
 
         /// <summary>
+        /// The help link5001 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R5001 + ".md".
+        /// </summary>
+        private const string HelpLink5001 = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R5001 + ".md";
+
+        /// <summary>
+        /// The help link5002 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R5002 + ".md".
+        /// </summary>
+        private const string HelpLink5002 = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R5002 + ".md";
+
+        /// <summary>
+        /// The help link5003 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R5003 + ".md".
+        /// </summary>
+        private const string HelpLink5003 = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R5003 + ".md";
+
+        /// <summary>
+        /// The help link5004 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R5004 + ".md".
+        /// </summary>
+        private const string HelpLink5004 = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R5004 + ".md";
+
+        /// <summary>
+        /// The help link5005 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R5005 + ".md".
+        /// </summary>
+        private const string HelpLink5005 = "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R5005 + ".md";
+
+        /// <summary>
         /// The rule5001 (readonly). Value: new DiagnosticDescriptor(DiagnosticId5001, Constants.Public + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule5001 = new DiagnosticDescriptor(DiagnosticId5001, Constants.Public + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule5001 = new DiagnosticDescriptor(DiagnosticId5001, Constants.Public + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink5001);
+
         /// <summary>
         /// The rule5002 (readonly). Value: new DiagnosticDescriptor(DiagnosticId5002, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule5002 = new DiagnosticDescriptor(DiagnosticId5002, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule5002 = new DiagnosticDescriptor(DiagnosticId5002, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink5002);
+
         /// <summary>
         /// The rule5003 (readonly). Value: new DiagnosticDescriptor(DiagnosticId5003, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule5003 = new DiagnosticDescriptor(DiagnosticId5003, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule5003 = new DiagnosticDescriptor(DiagnosticId5003, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink5003);
+
         /// <summary>
         /// The rule5004 (readonly). Value: new DiagnosticDescriptor(DiagnosticId5004, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule5004 = new DiagnosticDescriptor(DiagnosticId5004, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule5004 = new DiagnosticDescriptor(DiagnosticId5004, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink5004);
+
         /// <summary>
         /// The rule5005 (readonly). Value: new DiagnosticDescriptor(DiagnosticId5005, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule5005 = new DiagnosticDescriptor(DiagnosticId5005, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true);
+        private static readonly DiagnosticDescriptor Rule5005 = new DiagnosticDescriptor(DiagnosticId5005, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink5005);
 
         /// <summary>
         /// Gets the supported diagnostics.
