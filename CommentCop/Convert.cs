@@ -19,69 +19,6 @@ namespace CommentCop
     public class Convert
     {
         /// <summary>
-        /// The work items.
-        /// </summary>
-        private static readonly string[] Verbs =
-        {
-            "add",
-            "alter",
-            "build",
-            "calculate",
-            "call",
-            "check",
-            "clean",
-            "clear",
-            "clone",
-            "close",
-            "copy",
-            "commit",
-            "convert",
-            "create",
-            "delete",
-            "discard",
-            "display",
-            "dispose",
-            "do",
-            "export",
-            "fetch",
-            "fill",
-            "find",
-            "get",
-            "goto",
-            "import",
-            "initialize",
-            "insert",
-            "load",
-            "move",
-            "open",
-            "parse",
-            "process",
-            "pull",
-            "push",
-            "put",
-            "read",
-            "rebuild",
-            "reconvert",
-            "register",
-            "remove",
-            "reset",
-            "rollback",
-            "save",
-            "search",
-            "select",
-            "set",
-            "show",
-            "start",
-            "stop",
-            "switch",
-            "test",
-            "try",
-            "update",
-            "validate",
-            "write"
-        };
-
-        /// <summary>
         /// Split at uppercase letter regex.
         /// </summary>
         private static readonly Regex SplitAtUppercase = new Regex(@"([A-Z])(?<=[a-z]\1|[A-Za-z]\1(?=[a-z]))", RegexOptions.CultureInvariant | RegexOptions.Singleline);
@@ -159,7 +96,7 @@ namespace CommentCop
                     return "Raises the " + string.Join(" ", parts.Skip(1)) + " event.";
                 }
 
-                if (Verbs.Any(x => x.Equals(parts[0], StringComparison.OrdinalIgnoreCase)))
+                if (Verbs.IsVerb(parts[0]))
                 {
                     MakeLowerCase(parts, false);
 
@@ -354,7 +291,7 @@ namespace CommentCop
 
             if (parts.Length > 0)
             {
-                if (Verbs.Any(x => x.Equals(parts[0], StringComparison.OrdinalIgnoreCase)))
+                if (Verbs.IsVerb(parts[0]))
                 {
                     MakeLowerCase(parts, false);
 
