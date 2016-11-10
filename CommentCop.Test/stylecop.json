@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
   "settings": {
     "documentationRules": {
-      "companyName": "Michael Reukauff",
+      "companyName": "Michael Reukauff, Germany",
       "copyrightText": "  Copyright © 2016 {companyName}. All rights reserved.",
       "documentPrivateElements": true,
       "documentPrivateFields": true
