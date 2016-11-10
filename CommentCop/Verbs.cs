@@ -16,7 +16,7 @@ namespace CommentCop
         /// <summary>
         /// The work items.
         /// </summary>
-        private static readonly string[] verbs =
+        private static readonly string[] VerbList =
         {
             "add",
             "alter",
@@ -84,7 +84,7 @@ namespace CommentCop
         /// <returns>The <see cref="bool"/>.True if verb is in list otherwise false.</returns>
         internal static bool IsVerb(string verb2Check)
         {
-            return verbs.Any(x => x.Equals(verb2Check, StringComparison.OrdinalIgnoreCase));
+            return VerbList.Any(x => x.Equals(verb2Check, StringComparison.OrdinalIgnoreCase));
         }
     }
 }
