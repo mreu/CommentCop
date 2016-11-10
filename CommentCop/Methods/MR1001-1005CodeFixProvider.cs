@@ -149,6 +149,7 @@ namespace CommentCop.Methods
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
             var isTest = Helper.Test.IsUnittest(theSyntaxNode);
+
             var summaryComment = " " + Convert.Method(theSyntaxNode.Identifier.ValueText, isTest);
 
             var summaryText = SingletonList<XmlNodeSyntax>(

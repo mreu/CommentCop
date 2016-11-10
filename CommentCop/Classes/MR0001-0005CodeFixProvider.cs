@@ -32,11 +32,6 @@ namespace CommentCop.Classes
     public class MR0001_0005CodeFixProvider : CodeFixProvider
     {
         /// <summary>
-        /// The test attribute names (readonly). Value: { "TestClass", "TestFixture" }.
-        /// </summary>
-        private static readonly string[] TestAttributeNames = { "TestClass", "TestFixture" };
-
-        /// <summary>
         /// The title.
         /// </summary>
         private const string Title = "Insert XML documentation header (MR0001 - MR0005)";
@@ -145,20 +140,9 @@ namespace CommentCop.Classes
                 .WithLessThanSlashToken(Token(SyntaxKind.LessThanSlashToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
-            var isTestClass = false;
-            if (theSyntaxNode.AttributeLists.Any())
-            {
-                foreach (var attributeList in theSyntaxNode.AttributeLists)
-                {
-                    isTestClass = attributeList.Attributes.Any(x => TestAttributeNames.Contains(x.Name.ToString()));
-                    if (isTestClass)
-                    {
-                        break;
-                    }
-                }
-            }
+            var isTest = Helper.Test.IsUnittest(theSyntaxNode);
 
-            var summaryComment = " " + Convert.Class(theSyntaxNode.Identifier.ValueText, isTestClass);
+            var summaryComment = " " + Convert.Class(theSyntaxNode.Identifier.ValueText, isTest);
 
             var summaryText = SingletonList<XmlNodeSyntax>(
                 XmlText().NormalizeWhitespace()

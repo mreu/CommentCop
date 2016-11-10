@@ -16,6 +16,25 @@ namespace CommentCop.Helper
     public class Test
     {
         /// <summary>
+        /// Checks if the class is a unittest class.
+        /// </summary>
+        /// <param name="class">The class.</param>
+        /// <returns>The <see cref="bool"/>.</returns>
+        public static bool IsUnittest(ClassDeclarationSyntax @class)
+        {
+            string[] verbs = { "TestClass", "TestClassAttribute", "TestFixture", "TestFixtureAttribute" };
+
+            if (!@class.AttributeLists.Any())
+            {
+                return false;
+            }
+
+            var attr = @class.AttributeLists.SelectMany(x => x.Attributes).Select(x => ((IdentifierNameSyntax)x.Name).Identifier.Text);
+
+            return attr.Any(x => verbs.Contains(x));
+        }
+
+        /// <summary>
         /// Is the method a unittest.
         /// </summary>
         /// <param name="method">The method.</param>
