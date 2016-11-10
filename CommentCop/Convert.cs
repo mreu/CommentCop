@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Convert.cs" company="Michael Reukauff">
-//   Copyright © 2016 Michael Reukauff. All rights reserved.
+// <copyright file="Convert.cs" company="Michael Reukauff, Germany">
+//   Copyright © 2016 Michael Reukauff, Germany. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -27,8 +27,9 @@ namespace CommentCop
         /// Try to convert the name of a class to useful comment.
         /// </summary>
         /// <param name="name">The name of the class.</param>
+        /// <param name="isTestClass">True if the class is a test class.</param>
         /// <returns>The comment.</returns>
-        public static string Class(string name)
+        public static string Class(string name, bool isTestClass)
         {
             var parts = SplitName(name);
 
@@ -43,7 +44,14 @@ namespace CommentCop
                 }
                 else
                 {
-                    newName = "The " + string.Join(" ", parts) + " class.";
+                    if (isTestClass)
+                    {
+                        newName = "The " + string.Join(" ", parts) + " unit test class.";
+                    }
+                    else
+                    {
+                        newName = "The " + string.Join(" ", parts) + " class.";
+                    }
                 }
 
                 return newName;

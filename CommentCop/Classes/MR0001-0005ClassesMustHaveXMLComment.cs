@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR0001-0005ClassesMustHaveXMLComment.cs" company="Michael Reukauff">
-//   Copyright © 2016 Michael Reukauff. All rights reserved.
+// <copyright file="MR0001-0005ClassesMustHaveXMLComment.cs" company="Michael Reukauff, Germany">
+//   Copyright © 2016 Michael Reukauff, Germany. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -84,9 +84,9 @@ namespace CommentCop.Classes
         private const string Title = " classes" + Constants.MustHaveXmlHeader;
 
         /// <summary>
-        /// The message (const). Value: "{0}" + Title + " ({1})".
+        /// The message (const). Value: "{0}" + Title.
         /// </summary>
-        private const string Message = "{0}" + Title + " ({1})";
+        private const string Message = "{0}" + Title;
 
         /// <summary>
         /// The rule0001 (readonly). Value: new DiagnosticDescriptor(DiagnosticId0001, Constants.Public + Title, Message, Category, DiagnosticSeverity.Warning, true).
@@ -96,22 +96,22 @@ namespace CommentCop.Classes
         /// <summary>
         /// The rule0002 (readonly). Value: new DiagnosticDescriptor(DiagnosticId0002, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule0002 = new DiagnosticDescriptor(DiagnosticId0002, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink0001);
+        private static readonly DiagnosticDescriptor Rule0002 = new DiagnosticDescriptor(DiagnosticId0002, Constants.Internal + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink0002);
 
         /// <summary>
         /// The rule0003 (readonly). Value: new DiagnosticDescriptor(DiagnosticId0003, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule0003 = new DiagnosticDescriptor(DiagnosticId0003, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink0001);
+        private static readonly DiagnosticDescriptor Rule0003 = new DiagnosticDescriptor(DiagnosticId0003, Constants.InternalProtected + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink0003);
 
         /// <summary>
         /// The rule0004 (readonly). Value: new DiagnosticDescriptor(DiagnosticId0004, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule0004 = new DiagnosticDescriptor(DiagnosticId0004, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink0001);
+        private static readonly DiagnosticDescriptor Rule0004 = new DiagnosticDescriptor(DiagnosticId0004, Constants.Protected + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink0004);
 
         /// <summary>
         /// The rule0005 (readonly). Value: new DiagnosticDescriptor(DiagnosticId0005, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true).
         /// </summary>
-        private static readonly DiagnosticDescriptor Rule0005 = new DiagnosticDescriptor(DiagnosticId0005, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink0001);
+        private static readonly DiagnosticDescriptor Rule0005 = new DiagnosticDescriptor(DiagnosticId0005, Constants.Private + Title, Message, Category, DiagnosticSeverity.Warning, true, null, HelpLink0005);
 
         /// <summary>
         /// The help link0001 (const). Value: "https://github.com/mreu/CommentCop/blob/master/Documentation/MR" + R0001 + ".md".
@@ -189,13 +189,13 @@ namespace CommentCop.Classes
 
             if (node.Modifiers.Any(SyntaxKind.PublicKeyword))
             {
-                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule0001, node.Identifier.GetLocation(), Constants.Public, DiagnosticId0001));
+                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule0001, node.Identifier.GetLocation(), Constants.Public));
                 return;
             }
 
             if (node.Modifiers.Any(SyntaxKind.PrivateKeyword))
             {
-                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule0005, node.Identifier.GetLocation(), Constants.Private, DiagnosticId0005));
+                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule0005, node.Identifier.GetLocation(), Constants.Private));
                 return;
             }
 
@@ -203,11 +203,11 @@ namespace CommentCop.Classes
             {
                 if (node.Modifiers.Any(SyntaxKind.ProtectedKeyword))
                 {
-                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule0003, node.Identifier.GetLocation(), Constants.InternalProtected, DiagnosticId0003));
+                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule0003, node.Identifier.GetLocation(), Constants.InternalProtected));
                 }
                 else
                 {
-                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule0002, node.Identifier.GetLocation(), Constants.Internal, DiagnosticId0002));
+                    syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule0002, node.Identifier.GetLocation(), Constants.Internal));
                 }
 
                 return;
@@ -215,17 +215,17 @@ namespace CommentCop.Classes
 
             if (node.Modifiers.Any(SyntaxKind.ProtectedKeyword))
             {
-                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule0004, node.Identifier.GetLocation(), Constants.Protected, DiagnosticId0004));
+                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule0004, node.Identifier.GetLocation(), Constants.Protected));
                 return;
             }
 
             if (node.Parent is NamespaceDeclarationSyntax)
             {
-                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule0002, node.Identifier.GetLocation(), Constants.Internal, DiagnosticId0002));
+                syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule0002, node.Identifier.GetLocation(), Constants.Internal));
                 return;
             }
 
-            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule0005, node.Identifier.GetLocation(), Constants.Private, DiagnosticId0005));
+            syntaxNodeAnalysisContext.ReportDiagnostic(Diagnostic.Create(Rule0005, node.Identifier.GetLocation(), Constants.Private));
         }
     }
 }

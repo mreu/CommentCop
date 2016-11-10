@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR0001-0005CodeFixProvider.cs" company="Michael Reukauff">
-//   Copyright © 2016 Michael Reukauff. All rights reserved.
+// <copyright file="MR0001-0005CodeFixProvider.cs" company="Michael Reukauff, Germany">
+//   Copyright © 2016 Michael Reukauff, Germany. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ namespace CommentCop.Classes
 
     using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-    using Convert = Convert;
+    using Convert = CommentCop.Convert;
 
     /// <summary>
     /// The code fix provider.
@@ -31,6 +31,11 @@ namespace CommentCop.Classes
     [Shared]
     public class MR0001_0005CodeFixProvider : CodeFixProvider
     {
+        /// <summary>
+        /// The test attribute names (readonly). Value: { "TestClass", "TestFixture" }.
+        /// </summary>
+        private static readonly string[] TestAttributeNames = { "TestClass", "TestFixture" };
+
         /// <summary>
         /// The title.
         /// </summary>
@@ -140,7 +145,20 @@ namespace CommentCop.Classes
                 .WithLessThanSlashToken(Token(SyntaxKind.LessThanSlashToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
-            var summaryComment = " " + Convert.Class(theSyntaxNode.Identifier.ValueText);
+            var isTestClass = false;
+            if (theSyntaxNode.AttributeLists.Any())
+            {
+                foreach (var attributeList in theSyntaxNode.AttributeLists)
+                {
+                    isTestClass = attributeList.Attributes.Any(x => TestAttributeNames.Contains(x.Name.ToString()));
+                    if (isTestClass)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            var summaryComment = " " + Convert.Class(theSyntaxNode.Identifier.ValueText, isTestClass);
 
             var summaryText = SingletonList<XmlNodeSyntax>(
                 XmlText().NormalizeWhitespace()
