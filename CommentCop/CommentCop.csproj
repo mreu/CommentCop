@@ -111,6 +111,7 @@
     </Compile>
     <Compile Include="Structs\MR0006-0010CodeFixProvider.cs" />
     <Compile Include="Structs\MR0006-0010StructsMustHaveXMLComment.cs" />
+    <Compile Include="Verbs.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
