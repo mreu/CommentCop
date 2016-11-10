@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="RegionText.cs" author="Michael Reukauff">
-//   Copyright © 2016 Michael Reukauff
+// <copyright file="RegionText.cs" company="Michael Reukauff, Germany">
+//   Copyright © 2016 Michael Reukauff, Germany. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 

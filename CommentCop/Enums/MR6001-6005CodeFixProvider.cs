@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MR6001-6005CodeFixProvider.cs" company="Michael Reukauff">
-//   Copyright © 2016 Michael Reukauff. All rights reserved.
+// <copyright file="MR6001-6005CodeFixProvider.cs" company="Michael Reukauff, Germany">
+//   Copyright © 2016 Michael Reukauff, Germany. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 

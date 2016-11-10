@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Misc.Tests.cs" author="Michael Reukauff">
-//   Copyright © 2016 Michael Reukauff
+// <copyright file="Misc.Tests.cs" company="Michael Reukauff, Germany">
+//   Copyright © 2016 Michael Reukauff, Germany. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
