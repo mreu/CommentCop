@@ -148,9 +148,7 @@ namespace CommentCop.Methods
                 .WithLessThanSlashToken(Token(SyntaxKind.LessThanSlashToken))
                 .WithGreaterThanToken(Token(SyntaxKind.GreaterThanToken));
 
-            var isTest = Helper.Test.IsUnittest(theSyntaxNode);
-
-            var summaryComment = " " + Convert.Method(theSyntaxNode.Identifier.ValueText, isTest);
+            var summaryComment = " " + Convert.Method(theSyntaxNode);
 
             var summaryText = SingletonList<XmlNodeSyntax>(
                 XmlText().NormalizeWhitespace()

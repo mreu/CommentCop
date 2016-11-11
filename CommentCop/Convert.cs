@@ -73,19 +73,37 @@ namespace CommentCop
         /// <summary>
         /// Try to convert the name of a method to useful comment.
         /// </summary>
-        /// <param name="name">The name of the method.</param>
-        /// <param name="isUnittest">True if it is a unit test method otherwise false.</param>
+        /// <param name="method">The method.</param>
         /// <returns>The comment.</returns>
-        public static string Method(string name, bool isUnittest)
+        public static string Method(MethodDeclarationSyntax method)
         {
+            var name = method.Identifier.ValueText;
+
+            var isUnittest = Helper.Test.IsUnittest(method);
+
             if (isUnittest)
             {
+                if (Helper.Test.IsSpecialAttribute(method))
+                {
+                    return UnittestSpecialName(method);
+                }
+
                 if (name.Contains("_"))
                 {
                     return UnittestName(name);
                 }
             }
 
+            return Method(name);
+        }
+
+        /// <summary>
+        /// Try to convert the name of a method to useful comment.
+        /// </summary>
+        /// <param name="name">The name of the method.</param>
+        /// <returns>The comment.</returns>
+        public static string Method(string name)
+        {
             var special = CheckForSpecialMethodNames(name);
             if (special != null)
             {
@@ -127,6 +145,16 @@ namespace CommentCop
             }
 
             return "The " + name.ToLower() + '.';
+        }
+
+        /// <summary>
+        /// Get the unittest special name.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <returns>The <see cref="string"/>. The text of the special unittest method.</returns>
+        private static string UnittestSpecialName(MethodDeclarationSyntax method)
+        {
+            return Helper.Test.GetSpecialAttributeText(method);
         }
 
         /// <summary>
